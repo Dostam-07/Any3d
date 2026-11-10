@@ -365,5 +365,3 @@ docs/
 **Port already in use?** `npm run dev:client` and `npm run dev:server` can be started separately; set `PORT` for the API.
 
 **Can I use it on a phone?** Yes, the project page stacks into a single column.
-
-<img src="docs/assets/mobile-home.png" alt="Any3d on a phone: stacked project view with the composer ready for a prompt" width="320" />
