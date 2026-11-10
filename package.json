@@ -1,0 +1,42 @@
+{
+  "name": "any3d",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n \"API,VITE\" -c \"blue,green\" \"node server/index.js\" \"vite\"",
+    "dev:server": "node server/index.js",
+    "dev:client": "vite",
+    "build": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
+    "start": "node server/index.js",
+    "test:payload": "esbuild scripts/test-scene-payload.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/payload.test.mjs && node .tmp/payload.test.mjs",
+    "test:diff": "esbuild scripts/test-diff.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/diff.test.mjs && node .tmp/diff.test.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "cors": "^2.8.5",
+    "esbuild": "^0.25.0",
+    "express": "^4.21.2",
+    "gifenc": "^1.0.3",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.8",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@types/three": "^0.174.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "playwright": "^1.65.0",
+    "tailwindcss": "^4.0.8",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}

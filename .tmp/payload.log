@@ -1,0 +1,9 @@
+npm notice run any3d@1.0.0 test:payload
+npm notice run esbuild scripts/test-scene-payload.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/payload.test.mjs && node .tmp/payload.test.mjs
+
+presets round-tripped : 33
+largest preset        : svg/powder.js (17270 B code)
+largest payload       : 8117 chars (svg/powder.js)
+compression ratio     : 54.2% of raw code
+share route sample    : 3389 chars
+assertions            : 182 passed, 0 failed

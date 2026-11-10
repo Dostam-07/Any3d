@@ -1,0 +1,34 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args:['--use-fake-device-for-media-stream','--autoplay-policy=no-user-gesture-required'] });
+const p = await b.newPage({ viewport:{width:1440,height:900} });
+const errs=[]; p.on('pageerror',e=>errs.push(e.message.slice(0,160)));
+p.on('console',m=>{if(m.type()==='error')errs.push('console: '+m.text().slice(0,160));});
+await p.goto('http://localhost:5173/#/studio',{waitUntil:'networkidle'});
+await p.waitForTimeout(2200);
+await p.getByRole('button',{name:/gallery|presets/i}).first().click().catch(()=>{});
+await p.waitForTimeout(700);
+const modal = p.locator('div.fixed.inset-0.z-50').filter({hasText:'Benchmark Gallery'}).first();
+await modal.locator('div.p-4.rounded-2xl').filter({hasText:/coffee|harbour|lighthouse/i}).first().click({force:true});
+await p.waitForTimeout(3200);
+await p.getByRole('button',{name:/clip/i}).first().click();
+await p.locator('[role="dialog"][aria-label="Turntable clip"] video').evaluate(v=>{v.pause();});
+await p.locator('[role="dialog"][aria-label="Turntable clip"]').waitFor({timeout:30000});
+await p.waitForTimeout(1800);
+const r = await p.evaluate(async () => {
+  const v=document.querySelector('[role="dialog"] video');
+  await new Promise(res=>v.readyState>=2?res():v.addEventListener('loadeddata',res,{once:true}));
+  const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;
+  const ctx=c.getContext('2d');ctx.drawImage(v,0,0);
+  const d=ctx.getImageData(0,0,c.width,c.height).data;
+  const colours=new Set();
+  for(let i=0;i<d.length;i+=4*97)colours.add(d[i]+','+d[i+1]+','+d[i+2]);
+  // sample the centre block for non-flat content
+  const cx=Math.floor(c.width/2), cy=Math.floor(c.height/2);
+  const mid=ctx.getImageData(cx-100,cy-100,200,200).data;
+  const mset=new Set();for(let i=0;i<mid.length;i+=4)mset.add(mid[i]+','+mid[i+1]+','+mid[i+2]);
+  return {distinctColours:colours.size, centreColours:mset.size, firstPixel:[d[0],d[1],d[2],d[3]]};
+});
+console.log(JSON.stringify(r));
+console.log(r.distinctColours<=2?'VIDEO IS BLANK':'VIDEO HAS CONTENT');
+if(errs.length)console.log('ERRORS:\n'+errs.slice(0,5).join('\n'));
+await b.close();

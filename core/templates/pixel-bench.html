@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" class="embed">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>/*TITLE*/</title>
+<script>
+  document.documentElement.className = 'embed';
+</script>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #090b11; color: #f1f5f9; font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; }
+  main { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; box-sizing: border-box; position: relative; }
+  canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; max-width: 100%; max-height: 100%; object-fit: contain; }
+  p { margin: 0; }
+  h1, #means, #hint { display: none; }
+  .read { display: none; }
+  .embed main { min-height: 0; padding: 0; gap: 0; position: relative; width: 100%; height: 100%; }
+  .embed canvas { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .embed h1, .embed #means, .embed #hint { display: none; }
+  .embed .read { display: none; }
+</style>
+</head>
+<body class="embed">
+<main>
+  <canvas id="stage" role="img"></canvas>
+  <h1 id="title"></h1>
+  <p id="means"></p>
+  <p id="hint" class="soft"></p>
+  <p id="read" class="read" aria-live="polite"></p>
+</main>
+<script>
+if (typeof window.Any3d === 'undefined') {
+  window.Any3d = { figure: function() {} };
+
+}
+/*KERNEL*/
+</script>
+<script>
+/*SCENE*/
+</script>
+<script>
+(function () {
+  var spec = (Pixel.scenes && Pixel.scenes.length > 0) ? Pixel.scenes[Pixel.scenes.length - 1] : null;
+  var canvas = document.getElementById('stage');
+  if (!spec) {
+    console.warn('[Pixel] No scene specification found to mount.');
+    return;
+  }
+  var q = new URLSearchParams(location.search), embed = q.has('embed') || (window.parent !== window);
+  if (embed) document.documentElement.className = 'embed';
+  document.getElementById('title').textContent = spec.title || spec.name || 'Pixel Scene';
+  document.getElementById('means').textContent = spec.means || '';
+  document.getElementById('hint').textContent = spec.hint || '';
+  var read = document.getElementById('read');
+  canvas.setAttribute('aria-label', spec.means || spec.title || spec.name || 'Pixel Scene');
+  var rt = Pixel.mount(spec, canvas, {
+    still: q.has('still'),
+    reduced: q.has('reduced') ? true : undefined,
+    onRead: function (line) {
+      read.textContent = line;
+      try {
+        window.parent.postMessage({ type: 'any3d-pixel', read: line, name: spec.name || spec.title }, '*');
+      } catch (e) {}
+    }
+  });
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || d.type !== 'any3d-pixel') return;
+    if (d.look !== undefined && rt.setLook) rt.setLook(d.look);
+    if (d.want === 'png') {
+      try {
+        window.parent.postMessage({ type: 'any3d-pixel', png: { id: d.id, name: spec.name || spec.title, dataUrl: canvas.toDataURL('image/png') } }, '*');
+      } catch (err) {
+        window.parent.postMessage({ type: 'any3d-pixel', png: { id: d.id, error: (err && err.message) || 'PNG capture failed' } }, '*');
+      }
+    }
+  });
+  if (window.parent !== window) {
+    try {
+      window.parent.postMessage({ type: 'any3d-pixel', ready: true, name: spec.name || spec.title }, '*');
+    } catch (e) {}
+  }
+  /* whole-number enlargement so every pixel is the same size */
+  function fit() {
+    if (embed) return;
+    var avail = Math.min(document.documentElement.clientWidth - 32, 1100), k = Math.max(1, Math.floor(avail / canvas.width));
+    if (avail < canvas.width) { canvas.style.width = avail + 'px'; return; }
+    canvas.style.width = canvas.width * k + 'px';
+  }
+  fit(); addEventListener('resize', fit);
+  window.__pixel = { spec: spec, runtime: rt };
+})();
+</script>
+</body>
+</html>

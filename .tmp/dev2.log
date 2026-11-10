@@ -1,0 +1,1626 @@
+npm notice run any3d@1.0.0 dev
+npm notice run concurrently -n "API,VITE" -c "blue,green" "node server/index.js" "vite"
+[API] [Any3d Studio API] Listening on port 3001
+[VITE] 
+[VITE]   [32m[1mVITE[22m v6.4.5[39m  [2mready in [0m[1m645[22m[2m[0m ms[22m
+[VITE] 
+[VITE]   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[VITE] [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[VITE] [2m9:52:00 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m9:52:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m9:55:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m9:56:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SandboxPreview.tsx, /src/index.css[22m
+[VITE] [2m9:56:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m9:56:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2m.tmp/embed/scene.html[22m
+[VITE] [2m9:56:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2m.tmp/embed/demo.html[22m
+[VITE] [2m9:57:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2m.tmp/embed/scene.html[22m
+[VITE] [2m9:57:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2m.tmp/embed/demo.html[22m
+[VITE] [2m10:01:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m10:01:51 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m10:17:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/index.js[22m
+[VITE] [2m10:17:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/index.js[22m
+[VITE] [2m10:17:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:18:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m10:18:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m10:18:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:18:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[API] node server/index.js exited with code 1
+[VITE] [2m10:21:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mscripts/test-scene-payload.ts[22m
+[VITE] [2m10:22:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:22:10 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:22:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:22:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:22:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:23:04 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:23:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ClipControl.tsx, /src/index.css[22m
+[VITE] [2m10:23:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\dosta\Downloads\Any3d\src\components\StoryboardControl.tsx, /src/index.css[22m
+[VITE] [2m10:23:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:23:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:23:31 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:24:33 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mREADME.md[22m
+[VITE] [2m10:54:42 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:58:20 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m10:58:31 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css[22m
+[VITE] [2m10:58:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m10:58:41 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m10:58:42 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m10:58:42 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m10:58:50 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Homepage.tsx, /src/index.css[22m
+[VITE] [2m10:59:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m10:59:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css[22m
+[VITE] [2m10:59:39 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[31m[33m>[31m
+[VITE]  [90m 182 |[31m               [33m<[31m[33mBox[31m className[33m=[31m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 183 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE]  [90m 185 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m10:59:40 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[31m[33m>[31m
+[VITE]  [90m 182 |[31m               [33m<[31m[33mBox[31m className[33m=[31m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 183 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE]  [90m 185 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m10:59:40 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[31m[33m>[31m
+[VITE]  [90m 182 |[31m               [33m<[31m[33mBox[31m className[33m=[31m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 183 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE]  [90m 185 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m10:59:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m10:59:58 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m10:59:59 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m10:59:59 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m11:00:07 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ConversationPanel.tsx, /src/index.css[22m
+[VITE] [2m11:00:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/PromptBar.tsx[22m
+[VITE] [2m11:00:32 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/PresetGallery.tsx, /src/index.css[22m
+[VITE] [2m11:00:42 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ApiKeyModal.tsx, /src/index.css[22m
+[VITE] [2m11:00:52 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[VITE] [2m11:01:02 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[VITE] [2m11:01:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:02:02 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m11:02:05 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[39m   onResetCode[33m,[39m
+[VITE]  [90m 163 |[39m   previewRef[33m,[39m
+[VITE] [31m[1m>[22m[39m[90m 164 |[39m   theme[33m,[39m
+[VITE]  [90m     |[39m   [31m[1m^[22m[39m
+[VITE]  [90m 165 |[39m   onToggleTheme[33m,[39m
+[VITE]  [90m 166 |[39m }) [33m=>[39m {
+[VITE]  [90m 167 |[39m   [36mconst[39m [draft[33m,[39m setDraft] [33m=[39m useState([32m''[39m)[33m;[39m[0m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE] [2m11:02:05 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[39m[33m>[39m
+[VITE]  [90m 182 |[39m               [33m<[39m[33mBox[39m className[33m=[39m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[39m [33m/[39m[33m>[39m
+[VITE] [31m[1m>[22m[39m[90m 183 |[39m             [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+[VITE]  [90m     |[39m             [31m[1m^[22m[39m
+[VITE]  [90m 184 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[39m [33m/[39m[33m>[39m
+[VITE]  [90m 185 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[VITE]  [90m 186 |[39m           [33m<[39m[33mdiv[39m className[33m=[39m[32m"hidden sm:block"[39m[33m>[39m[0m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE] [2m11:02:13 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[31m[33m>[31m
+[VITE]  [90m 182 |[31m               [33m<[31m[33mBox[31m className[33m=[31m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 183 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE]  [90m 185 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:02:14 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\ProjectPage.tsx: Identifier 'theme' has already been declared. (164:2)
+[VITE] 
+[VITE] [0m [90m 162 |[31m   onResetCode[33m,[31m
+[VITE]  [90m 163 |[31m   previewRef[33m,[31m
+[VITE] [31m[1m>[22m[31m[90m 164 |[31m   theme[33m,[31m
+[VITE]  [90m     |[31m   [31m[1m^[22m[31m
+[VITE]  [90m 165 |[31m   onToggleTheme[33m,[31m
+[VITE]  [90m 166 |[31m }) [33m=>[31m {
+[VITE]  [90m 167 |[31m   [36mconst[31m [draft[33m,[31m setDraft] [33m=[31m useState([32m''[31m)[33m;[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/ProjectPage.tsx[39m:164:2
+[VITE] [33m  162|    onResetCode,
+[VITE]   163|    previewRef,
+[VITE]   164|    theme,
+[VITE]      |    ^
+[VITE]   165|    onToggleTheme,
+[VITE]   166|  }) => {[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1625:19)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:1608:14)
+[VITE]       at TypeScriptScopeHandler.declareName (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4902:11)
+[VITE]       at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7674:16)
+[VITE]       at TypeScriptParserMixin.checkIdentifier (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7657:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7604:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7648:12)
+[VITE]       at TypeScriptParserMixin.checkLVal (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7644:16)
+[VITE]       at TypeScriptParserMixin.checkParams (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9126:12)
+[VITE]       at TypeScriptParserMixin.<anonymous> (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9101:14)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10362:48)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8679:12)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseVar (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10414:91)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10260:10)
+[VITE]       at TypeScriptParserMixin.parseVarStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13287:31)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9869:23)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10966:17)
+[VITE]       at TypeScriptParserMixin.parseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13517:85)
+[VITE]       at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10922:31)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10841:29)
+[VITE]       at TypeScriptParserMixin.parseExport (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13264:20)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9896:27)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseModuleItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9761:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:36)
+[VITE] [2m11:02:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:02:15 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[39m[33m>[39m
+[VITE]  [90m 182 |[39m               [33m<[39m[33mBox[39m className[33m=[39m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[39m [33m/[39m[33m>[39m
+[VITE] [31m[1m>[22m[39m[90m 183 |[39m             [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+[VITE]  [90m     |[39m             [31m[1m^[22m[39m
+[VITE]  [90m 184 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[39m [33m/[39m[33m>[39m
+[VITE]  [90m 185 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[VITE]  [90m 186 |[39m           [33m<[39m[33mdiv[39m className[33m=[39m[32m"hidden sm:block"[39m[33m>[39m[0m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE] [2m11:02:15 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[31m[33m>[31m
+[VITE]  [90m 182 |[31m               [33m<[31m[33mBox[31m className[33m=[31m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 183 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE]  [90m 185 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:02:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:02:27 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (183:12)
+[VITE] 
+[VITE] [0m [90m 181 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center"[31m[33m>[31m
+[VITE]  [90m 182 |[31m               [33m<[31m[33mBox[31m className[33m=[31m[32m"w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 183 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE]  [90m 185 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:183:12
+[VITE] [33m  181|              <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
+[VITE]   182|                <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
+[VITE]   183|              </button>
+[VITE]      |              ^
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:03:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css[22m
+[VITE] [2m11:03:25 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (185:10)
+[VITE] 
+[VITE] [0m [90m 183 |[31m             [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 185 |[31m           [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m           [31m[1m^[22m[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m
+[VITE]  [90m 187 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"flex items-center gap-2"[31m[33m>[31m
+[VITE]  [90m 188 |[31m               [33m<[31m[33mspan[31m className[33m=[31m[32m"font-extrabold text-sm tracking-tight text-white flex items-center font-sans"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:185:10
+[VITE] [33m  183|              </div>
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </button>
+[VITE]      |            ^
+[VITE]   186|            <div className="hidden sm:block">
+[VITE]   187|              <div className="flex items-center gap-2">[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE] [2m11:03:25 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (185:10)
+[VITE] 
+[VITE] [0m [90m 183 |[39m             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[VITE]  [90m 184 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[39m [33m/[39m[33m>[39m
+[VITE] [31m[1m>[22m[39m[90m 185 |[39m           [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+[VITE]  [90m     |[39m           [31m[1m^[22m[39m
+[VITE]  [90m 186 |[39m           [33m<[39m[33mdiv[39m className[33m=[39m[32m"hidden sm:block"[39m[33m>[39m
+[VITE]  [90m 187 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex items-center gap-2"[39m[33m>[39m
+[VITE]  [90m 188 |[39m               [33m<[39m[33mspan[39m className[33m=[39m[32m"font-extrabold text-sm tracking-tight text-white flex items-center font-sans"[39m[33m>[39m[0m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:185:10
+[VITE] [33m  183|              </div>
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </button>
+[VITE]      |            ^
+[VITE]   186|            <div className="hidden sm:block">
+[VITE]   187|              <div className="flex items-center gap-2">[39m
+[VITE] [2m11:03:25 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (185:10)
+[VITE] 
+[VITE] [0m [90m 183 |[31m             [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 185 |[31m           [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m           [31m[1m^[22m[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m
+[VITE]  [90m 187 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"flex items-center gap-2"[31m[33m>[31m
+[VITE]  [90m 188 |[31m               [33m<[31m[33mspan[31m className[33m=[31m[32m"font-extrabold text-sm tracking-tight text-white flex items-center font-sans"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:185:10
+[VITE] [33m  183|              </div>
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </button>
+[VITE]      |            ^
+[VITE]   186|            <div className="hidden sm:block">
+[VITE]   187|              <div className="flex items-center gap-2">[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE] [2m11:03:26 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (185:10)
+[VITE] 
+[VITE] [0m [90m 183 |[31m             [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 184 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]"[31m [33m/[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 185 |[31m           [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m           [31m[1m^[22m[31m
+[VITE]  [90m 186 |[31m           [33m<[31m[33mdiv[31m className[33m=[31m[32m"hidden sm:block"[31m[33m>[31m
+[VITE]  [90m 187 |[31m             [33m<[31m[33mdiv[31m className[33m=[31m[32m"flex items-center gap-2"[31m[33m>[31m
+[VITE]  [90m 188 |[31m               [33m<[31m[33mspan[31m className[33m=[31m[32m"font-extrabold text-sm tracking-tight text-white flex items-center font-sans"[31m[33m>[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:185:10
+[VITE] [33m  183|              </div>
+[VITE]   184|              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
+[VITE]   185|            </button>
+[VITE]      |            ^
+[VITE]   186|            <div className="hidden sm:block">
+[VITE]   187|              <div className="flex items-center gap-2">[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE]       at TypeScriptParserMixin.parseArrowExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9067:10)
+[VITE] [2m11:04:12 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css[22m
+[VITE] [2m11:04:12 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (194:12)
+[VITE] 
+[VITE] [0m [90m 192 |[31m                 v2[35m.0[31m
+[VITE]  [90m 193 |[31m               [33m<[31m[33m/[31m[33mspan[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 194 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 195 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 196 |[31m         [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 197 |[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:194:12
+[VITE] [33m  192|                  v2.0
+[VITE]   193|                </span>
+[VITE]   194|              </button>
+[VITE]      |              ^
+[VITE]   195|            </div>
+[VITE]   196|          </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:04:12 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (194:12)
+[VITE] 
+[VITE] [0m [90m 192 |[39m                 v2[35m.0[39m
+[VITE]  [90m 193 |[39m               [33m<[39m[33m/[39m[33mspan[39m[33m>[39m
+[VITE] [31m[1m>[22m[39m[90m 194 |[39m             [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+[VITE]  [90m     |[39m             [31m[1m^[22m[39m
+[VITE]  [90m 195 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[VITE]  [90m 196 |[39m         [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[VITE]  [90m 197 |[39m[0m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:194:12
+[VITE] [33m  192|                  v2.0
+[VITE]   193|                </span>
+[VITE]   194|              </button>
+[VITE]      |              ^
+[VITE]   195|            </div>
+[VITE]   196|          </div>[39m
+[VITE] [2m11:04:12 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (194:12)
+[VITE] 
+[VITE] [0m [90m 192 |[31m                 v2[35m.0[31m
+[VITE]  [90m 193 |[31m               [33m<[31m[33m/[31m[33mspan[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 194 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 195 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 196 |[31m         [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 197 |[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:194:12
+[VITE] [33m  192|                  v2.0
+[VITE]   193|                </span>
+[VITE]   194|              </button>
+[VITE]      |              ^
+[VITE]   195|            </div>
+[VITE]   196|          </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:04:13 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (194:12)
+[VITE] 
+[VITE] [0m [90m 192 |[31m                 v2[35m.0[31m
+[VITE]  [90m 193 |[31m               [33m<[31m[33m/[31m[33mspan[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 194 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 195 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 196 |[31m         [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 197 |[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:194:12
+[VITE] [33m  192|                  v2.0
+[VITE]   193|                </span>
+[VITE]   194|              </button>
+[VITE]      |              ^
+[VITE]   195|            </div>
+[VITE]   196|          </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:04:50 pm[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\dosta\Downloads\Any3d\src\components\Header.tsx: Expected corresponding JSX closing tag for <div>. (194:12)
+[VITE] 
+[VITE] [0m [90m 192 |[31m                 v2[35m.0[31m
+[VITE]  [90m 193 |[31m               [33m<[31m[33m/[31m[33mspan[31m[33m>[31m
+[VITE] [31m[1m>[22m[31m[90m 194 |[31m             [33m<[31m[33m/[31m[33mbutton[31m[33m>[31m
+[VITE]  [90m     |[31m             [31m[1m^[22m[31m
+[VITE]  [90m 195 |[31m           [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 196 |[31m         [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+[VITE]  [90m 197 |[31m[0m[39m
+[VITE]   Plugin: [35mvite:react-babel[39m
+[VITE]   File: [36mC:/Users/dosta/Downloads/Any3d/src/components/Header.tsx[39m:194:12
+[VITE] [33m  192|                  v2.0
+[VITE]   193|                </span>
+[VITE]   194|              </button>
+[VITE]      |              ^
+[VITE]   195|            </div>
+[VITE]   196|          </div>[39m
+[VITE]       at constructor (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:368:19)
+[VITE]       at TypeScriptParserMixin.raise (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6630:19)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4748:16)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4719:32)
+[VITE]       at TypeScriptParserMixin.jsxParseElement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4770:17)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4780:19)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:39
+[VITE]       at TypeScriptParserMixin.tryParse (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:6996:20)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13663:18)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9426:12)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7771:17)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9493:17)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8668:28)
+[VITE]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13915:26)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8324:23)
+[VITE]       at TypeScriptParserMixin.parseExprAtom (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:4785:20)
+[VITE]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8066:23)
+[VITE]       at TypeScriptParserMixin.parseUpdate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8051:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:8031:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13725:18)
+[VITE]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7877:61)
+[VITE]       at TypeScriptParserMixin.parseExprOps (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7882:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7859:23)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7807:21)
+[VITE]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13674:20)
+[VITE]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7755:23)
+[VITE]       at C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:39
+[VITE]       at TypeScriptParserMixin.allowInAnd (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9421:16)
+[VITE]       at TypeScriptParserMixin.parseExpression (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:7751:17)
+[VITE]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10172:28)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9815:21)
+[VITE]       at TypeScriptParserMixin.parseStatementContent (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:13387:18)
+[VITE]       at TypeScriptParserMixin.parseStatementLike (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9784:17)
+[VITE]       at TypeScriptParserMixin.parseStatementListItem (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9764:17)
+[VITE]       at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10346:61)
+[VITE]       at TypeScriptParserMixin.parseBlockBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10339:10)
+[VITE]       at TypeScriptParserMixin.parseBlock (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:10327:10)
+[VITE]       at TypeScriptParserMixin.parseFunctionBody (C:\Users\dosta\Downloads\Any3d\node_modules\@babel\parser\lib\index.js:9095:24)
+[VITE] [2m11:04:51 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css[22m
+[VITE] [2m11:05:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m11:06:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:06:49 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ApiKeyModal.tsx, /src/index.css[22m
+[VITE] [2m11:09:33 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:10:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m11:11:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[VITE] [2m11:11:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[VITE] [2m11:11:34 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:11:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:12:00 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:15:27 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:16:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:19:01 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:21:08 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:21:47 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Header.tsx, /src/index.css[22m
+[VITE] [2m11:22:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:22:45 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\dosta\Downloads\Any3d\src\components\StoryboardControl.tsx, /src/index.css[22m
+[VITE] [2m11:23:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:23:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:24:53 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:27:31 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[VITE] [2m11:40:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:46:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/index.js[22m
+[VITE] [2m11:46:34 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\dosta\Downloads\Any3d\src\components\PaletteFromPhoto.tsx, /src/index.css[22m
+[VITE] [2m11:46:52 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/guides/palette-from-photo.md[22m
+[VITE] [2m11:49:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m11:50:52 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mREADME.md[22m
+[VITE] [2m11:52:53 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-world.js[22m
+[VITE] [2m11:53:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-world.js[22m
+[VITE] [2m11:53:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-pixel.js[22m
+[VITE] [2m11:53:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-pixel.js[22m
+[VITE] [2m11:54:35 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-dither.js[22m
+[VITE] [2m11:55:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m11:56:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/pixel-bench.html[22m
+[VITE] [2m11:56:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/pixel-bench.html[22m
+[VITE] [2m11:57:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/dither-bench.html[22m
+[VITE] [2m11:57:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/dither-bench.html[22m
+[VITE] [2m11:58:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SandboxPreview.tsx, /src/index.css[22m
+[VITE] [2m11:58:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SandboxPreview.tsx, /src/index.css[22m
+[VITE] [2m12:02:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/types.ts[22m
+[VITE] [2m12:02:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:02:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\dosta\Downloads\Any3d\src\components\PaletteFromPhoto.tsx, /src/index.css[22m
+[VITE] [2m12:02:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\dosta\Downloads\Any3d\src\components\PaletteFromPhoto.tsx, /src/index.css[22m
+[VITE] [2m12:02:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m12:02:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m12:03:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/index.js[22m
+[VITE] [2m12:03:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/index.js[22m
+[VITE] [2m12:28:32 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-world.js[22m
+[VITE] [2m12:28:49 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-world.js[22m
+[VITE] [2m12:28:59 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-world.js[22m
+[VITE] [2m12:29:07 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:37:52 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/kernels.js[22m
+[VITE] [2m12:37:56 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/kernels.js[22m
+[VITE] [2m12:38:00 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/kernels.js[22m
+[VITE] [2m12:38:03 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/kernels.js[22m
+[VITE] [2m12:38:08 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/validator.js[22m
+[VITE] [2m12:38:08 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/validator.js[22m
+[VITE] [2m12:38:14 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/index.js[22m
+[VITE] [2m12:38:19 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/enhancer.js[22m
+[VITE] [2m12:38:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:38:46 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:38:50 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:38:53 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:39:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-world.js[22m
+[VITE] [2m12:39:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-pixel.js[22m
+[VITE] [2m12:39:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-dither.js[22m
+[VITE] [2m12:39:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/diorama-svg.js[22m
+[VITE] [2m12:39:11 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-pixel.js[22m
+[VITE] [2m12:39:17 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:39:35 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-dither.js[22m
+[VITE] [2m12:39:40 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-dither.js[22m
+[VITE] [2m12:40:22 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ProjectPage.tsx, /src/index.css[22m
+[VITE] [2m12:40:25 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SandboxPreview.tsx, /src/index.css[22m
+[VITE] [2m12:40:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SandboxPreview.tsx, /src/index.css[22m
+[VITE] [2m12:40:29 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SandboxPreview.tsx, /src/index.css[22m
+[VITE] [2m12:40:32 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[VITE] [2m12:40:34 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css, /@fs/C:\Users\dosta\Downloads\Any3d\src\components\PaletteFromPhoto.tsx[22m
+[VITE] [2m12:40:36 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/SandboxPreview.tsx, /@fs/C:\Users\dosta\Downloads\Any3d\src\components\StoryboardControl.tsx[22m
+[VITE] [2m12:40:38 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/SandboxPreview.tsx, /@fs/C:\Users\dosta\Downloads\Any3d\src\components\StoryboardControl.tsx[22m
+[VITE] [2m12:40:56 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:41:13 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m12:41:15 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m12:41:18 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m12:41:20 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[VITE] [2m12:41:23 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Homepage.tsx, /src/index.css[22m
+[VITE] [2m12:41:25 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Homepage.tsx, /src/index.css[22m
+[VITE] [2m12:41:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Homepage.tsx, /src/index.css[22m
+[VITE] [2m12:41:30 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/ClipControl.tsx, /src/components/SandboxPreview.tsx, /@fs/C:\Users\dosta\Downloads\Any3d\src\components\StoryboardControl.tsx[22m
+[VITE] [2m12:42:37 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:42:40 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:42:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:42:47 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:42:50 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:42:53 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:42:56 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:43:14 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:43:16 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:43:19 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:43:22 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/engine/bundler.js[22m
+[VITE] [2m12:44:01 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mscripts/test-atmosphere.ts[22m
+[VITE] [2m12:44:04 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mscripts/test-atmosphere.ts[22m
+[VITE] [2m12:44:07 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mscripts/verify-look.mjs[22m
+[VITE] [2m12:44:10 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mscripts/verify-look.mjs[22m
+[VITE] [2m12:44:13 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mREADME.md[22m
+[VITE] [2m12:44:16 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mREADME.md[22m
+[VITE] [2m12:44:19 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m12:44:52 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:44:55 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:44:57 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:45:00 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:45:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/guides/atmosphere-and-look.md[22m
+[VITE] [2m12:45:05 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m12:45:07 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdocs/ROADMAP.md[22m
+[VITE] [2m12:45:38 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:45:41 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:45:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/svg-bench.html[22m
+[VITE] [2m12:45:46 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/pixel-bench.html[22m
+[VITE] [2m12:45:49 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/pixel-bench.html[22m
+[VITE] [2m12:45:51 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/pixel-bench.html[22m
+[VITE] [2m12:45:54 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/dither-bench.html[22m
+[VITE] [2m12:45:57 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/dither-bench.html[22m
+[VITE] [2m12:46:00 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/dither-bench.html[22m
+[VITE] [2m12:46:03 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/dither-bench.html[22m
+[VITE] [2m12:46:31 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:46:36 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:46:40 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:46:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:46:48 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:46:52 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-world.js[22m
+[VITE] [2m12:46:56 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/templates/pixel-bench.html[22m
+[VITE] [2m12:47:12 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:47:31 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:47:34 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:48:03 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:48:07 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mcore/kernels/any3d-svg.js[22m
+[VITE] [2m12:54:05 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:54:05 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:54:24 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:54:53 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m
+[VITE] [2m12:56:19 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mserver/llm/service.js[22m

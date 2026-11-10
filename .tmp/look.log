@@ -1,0 +1,11 @@
+1. noon: {"fills":128,"luma":0.533,"warmth":0.169,"background":"linear-gradient(rgb(245, 241, 234) 0%, rgb(245, 241, 234) 100%)","look":{"name":"noon","t":0.333,"weather":"clear"},"weatherNodes":0}
+2. night: {"fills":128,"luma":0.422,"warmth":0.109,"background":"linear-gradient(rgb(59, 67, 85) 0%, rgb(76, 91, 120) 100%)","look":{"name":"night","t":1,"weather":"clear"},"weatherNodes":0}
+3. after drag: {"fills":133,"luma":0.433,"warmth":0.119,"background":"linear-gradient(rgb(86, 82, 108) 0%, rgb(87, 100, 131) 100%)","look":{"name":"night","t":0.95,"weather":"clear"},"weatherNodes":0}
+4. golden hour: {"fills":133,"luma":0.47,"warmth":0.193,"background":"linear-gradient(rgb(219, 159, 152) 0%, rgb(138, 139, 178) 100%)","look":{"name":"dusk","t":0.72,"weather":"clear"},"weatherNodes":0}
+5. rain: {"fills":133,"luma":0.47,"warmth":0.193,"background":"linear-gradient(rgb(219, 159, 152) 0%, rgb(138, 139, 178) 100%)","look":{"name":"dusk","t":0.72,"weather":"rain"},"weatherNodes":90}
+6. snow: {"fills":133,"luma":0.47,"warmth":0.193,"background":"linear-gradient(rgb(219, 159, 152) 0%, rgb(138, 139, 178) 100%)","look":{"name":"dusk","t":0.72,"weather":"snow"},"weatherNodes":55}
+7. bundle requests during scrub: 0
+7b. repaint per look change: {"avgMs":6.7,"p95Ms":13}
+8. payload round-trip: {"v":2,"look":{"timeOfDay":0.72,"weather":"rain"},"chars":175}
+9. export bake: {"hasLook":true,"bytes":119822}
+RESULT: PASSED

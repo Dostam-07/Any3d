@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" class="embed">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Any3d</title>
+<script>
+  document.documentElement.classList.add('embed');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+  :root{--page:#090b11;--ink:#f1f5f9;--ink-2:#94a3b8;--ink-3:#64748b;--line:rgba(255,255,255,.08);--card:#0d0f18;--accent:#6366f1;
+    --f-display:'Bricolage Grotesque','Figtree',system-ui,sans-serif;--f-body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;width:100%;height:100%;background:transparent;color:var(--ink);font-family:var(--f-body);-webkit-font-smoothing:antialiased;overflow:hidden}
+  body{display:flex;align-items:center;justify-content:center;padding:0}
+  .wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .card{background:transparent;border:0;border-radius:0;box-shadow:none;overflow:hidden;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  .head{display:none}
+  .stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:transparent}
+  .stage canvas{display:block;max-width:100%;max-height:100%;object-fit:contain}
+  .means{display:none}
+  .foot{display:none}
+  .err{color:#f87171;font-size:13px;padding:12px 18px}
+  html.embed,body.embed{background:transparent;width:100%;height:100%}
+  body.embed{padding:0;display:flex;align-items:center;justify-content:center}
+  body.embed .wrap{width:100%;height:100%}
+  body.embed .card{width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:transparent;padding:0}
+  body.embed .head,body.embed .means,body.embed .foot{display:none}
+  body.embed .stage{margin:0;width:100%;height:100%}
+</style>
+</head>
+<body class="embed">
+<div class="wrap" id="wrap"></div>
+<script>
+/*KERNEL*/
+</script>
+<script>
+/*FIGURE*/
+</script>
+<script>
+(function () {
+  var fig = window.Any3d && window.Any3d.figures && window.Any3d.figures[window.Any3d.figures.length - 1];
+  var wrap = document.getElementById('wrap');
+  var q = new URLSearchParams(location.search);
+  if (!fig) { wrap.innerHTML = '<div class="card cardsize"><div class="err">No figure declared: the page needs one Any3d.figure({ … }) call.</div></div>'; return; }
+  document.title = fig.name + ' · Any3d';
+  var inFrame = (window.parent !== window) || q.has('embed');
+  if (inFrame) { document.body.classList.add('embed'); document.documentElement.classList.add('embed'); }
+  var card = document.createElement('div');
+  var stage = document.createElement('div'); stage.className = 'stage'; stage.id = 'stage';
+  var means = fig.means || '';
+  {
+    card.className = 'card ' + (fig.size === 'hero' ? 'hero' : fig.size === 'mini' ? 'minisize' : 'cardsize');
+    var head = document.createElement('div'); head.className = 'head';
+    head.innerHTML = '<span class="n"></span><span class="k"></span>';
+    head.querySelector('.n').textContent = fig.title || fig.name; head.querySelector('.k').textContent = fig.size || 'card';
+    card.appendChild(head); card.appendChild(stage);
+    var m = document.createElement('div'); m.className = 'means'; m.textContent = means + (fig.hint ? ' ' : ''); if (fig.hint) { var hb = document.createElement('b'); hb.textContent = fig.hint; m.appendChild(hb); } card.appendChild(m);
+  }
+  wrap.appendChild(card);
+  var foot = document.createElement('div'); foot.className = 'foot';
+  var still = document.createElement('button'); still.type = 'button'; still.textContent = 'Still frame'; still.setAttribute('aria-pressed', 'false');
+  var note = document.createElement('span'); note.className = 'read'; note.setAttribute('aria-live', 'polite'); note.textContent = 'Move the pointer over the scene.';
+  foot.appendChild(still); foot.appendChild(note); wrap.appendChild(foot);
+  var lookPick = null;
+  if (q.get('look')) { try { lookPick = JSON.parse(q.get('look')); } catch (e) { lookPick = null; } }
+  if (!lookPick && window.__any3dLook) lookPick = window.__any3dLook;
+  var ctx, figAccent = fig.theme && typeof fig.theme === 'object' ? fig.theme.accent : null;
+  var figBase = typeof fig.theme === 'object' ? fig.theme.base || 'toy' : fig.theme || 'toy';
+  /* a theme picked here swaps the look and keeps the figure's own accent, which is the brand's colour; a swatch
+     (or ?accent=hex) recolours the subject, which every figure paints with pal.accent */
+  var themePick = q.get('theme') || null, accentPick = q.get('accent') ? '#' + q.get('accent').replace(/^#/, '') : null;
+  function picked() { var a = accentPick || figAccent; return themePick || accentPick ? (a ? { base: themePick || figBase, accent: a } : themePick) : undefined; }
+  if (figAccent) document.documentElement.style.setProperty('--accent', figAccent);
+  var Api = window.Any3d;
+  function mountIt(reduced) {
+    if (ctx) ctx.destroy();
+    try {
+      ctx = Api.mount(fig, { el: stage, reduced: reduced, still: q.has('t') ? +q.get('t') : undefined, theme: picked(), look: lookPick });
+      window.__any3d = ctx;
+      /* what the embed honoured: reduced motion, a still frame, or full motion */
+      window.__any3dMotion = reduced ? 'reduced' : 'full';
+    }
+    catch (err) { stage.innerHTML = '<div class="err">' + (err && err.message || err) + '</div>'; console.error(err); }
+  }
+  var themes = Object.keys(Api.THEMES), sel = document.createElement('span'); sel.className = 'themes';
+  themes.forEach(function (t) {
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.dataset.theme = t;
+    b.setAttribute('aria-pressed', String(t === (themePick || figBase)));
+    b.addEventListener('click', function () { themePick = t; sel.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); mountIt(reducedNow()); });
+    sel.appendChild(b);
+  });
+  foot.insertBefore(sel, note);
+  /* the swatches: the figure's own accent first, then five of the palette's */
+  var own = figAccent || Api.PAL.coral, sw = document.createElement('span'); sw.className = 'swatches'; sw.setAttribute('role', 'group'); sw.setAttribute('aria-label', 'Accent');
+  [['own', own], ['mustard', Api.PAL.mustard], ['mint', Api.PAL.mint], ['cobalt', Api.PAL.cobalt], ['rose', Api.PAL.rose], ['plum', Api.PAL.plum]].forEach(function (s) {
+    if (s[0] !== 'own' && s[1].toLowerCase() === own.toLowerCase()) return;
+    var b = document.createElement('button'); b.type = 'button'; b.style.background = s[1]; b.dataset.accent = s[1]; b.title = s[0] === 'own' ? 'the figure’s own accent' : s[0]; b.setAttribute('aria-label', 'Accent ' + s[0]);
+    b.setAttribute('aria-pressed', String((accentPick || own).toLowerCase() === s[1].toLowerCase()));
+    b.addEventListener('click', function () { accentPick = s[0] === 'own' ? null : s[1]; sw.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); mountIt(reducedNow()); });
+    sw.appendChild(b);
+  });
+  foot.insertBefore(sw, note);
+  var isStill = q.has('still');
+  /* Reduced motion is honoured three ways: a still frame, ?motion=none from the
+     embed loader, or the OS preference. */
+  var motionQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var forceStill = q.get('motion') === 'none';
+  function reducedNow() { return isStill || forceStill || !!(motionQ && motionQ.matches); }
+  if (motionQ && motionQ.addEventListener) {
+    motionQ.addEventListener('change', function () { mountIt(reducedNow()); });
+  }
+  mountIt(reducedNow()); still.setAttribute('aria-pressed', String(isStill));
+  still.addEventListener('click', function () { isStill = !isStill; still.setAttribute('aria-pressed', String(isStill)); mountIt(isStill); });
+  /* the read-out: what the pointer is on, what is switched on, or what the figure says it is doing */
+  function readout() {
+    if (!ctx) return '';
+    if (ctx.hover) return ctx.hover.name || 'something';
+    if (ctx.active) return (ctx.active.name || 'something') + ' · on';
+    return ctx.read || '';
+  }
+  var lastRead = null;
+  (function watch() {
+    var h = readout();
+    if (h !== lastRead) {
+      lastRead = h;
+      if (h) { note.textContent = ''; var b = document.createElement('b'); b.textContent = h; note.appendChild(b); } else note.textContent = 'Move the pointer over the scene.';
+      if (inFrame) {
+        try {
+          window.parent.postMessage({ type: 'any3d', name: fig.name, hover: h }, '*');
+        } catch (e) {}
+      }
+    }
+    requestAnimationFrame(watch);
+  })();
+  /* in a frame: take a theme, an accent or a still request from the parent */
+  if (inFrame) {
+    window.addEventListener('message', function (e) {
+      var d = e.data; if (!d || d.type !== 'any3d') return;
+      if (d.theme !== undefined) { themePick = d.theme || null; sel.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.theme === (themePick || figBase))); }); mountIt(reducedNow()); }
+      if (d.accent !== undefined) { accentPick = d.accent || null; sw.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.accent.toLowerCase() === (accentPick || own).toLowerCase())); }); mountIt(reducedNow()); }
+      if (d.still !== undefined) { isStill = !!d.still; still.setAttribute('aria-pressed', String(isStill)); mountIt(reducedNow()); }
+      /* a look is a live change: no re-mount, no re-bundle */
+      if (d.look !== undefined && ctx && ctx.setLook) { lookPick = d.look; try { ctx.setLook(d.look); } catch (err) { console.error(err); } }
+      /* capture happens here, inside the frame, so an opaque sandbox can still export */
+      if (d.want === 'png') {
+        (function () {
+          function post(extra) {
+            var payload = { type: 'any3d', png: { id: d.id, name: fig.name } };
+            for (var k in extra) payload.png[k] = extra[k];
+            try { window.parent.postMessage(payload, '*'); } catch (e) {}
+          }
+          var svg = stage.querySelector('svg');
+          if (!svg) { post({ error: 'No SVG in the stage' }); return; }
+          try {
+            var box = svg.getBoundingClientRect();
+            var scale = Math.max(1, Math.min(4, d.scale || 2));
+            var blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var img = new Image();
+            img.onload = function () {
+              var c = document.createElement('canvas');
+              c.width = Math.max(1, Math.round((box.width || 800) * scale));
+              c.height = Math.max(1, Math.round((box.height || 600) * scale));
+              var g = c.getContext('2d');
+              if (g) g.drawImage(img, 0, 0, c.width, c.height);
+              URL.revokeObjectURL(url);
+              post(g ? { dataUrl: c.toDataURL('image/png') } : { error: 'Canvas unavailable' });
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); post({ error: 'Could not rasterise the SVG' }); };
+            img.src = url;
+          } catch (err) { post({ error: (err && err.message) || 'PNG capture failed' }); }
+        })();
+      }
+    });
+    var hello = function () {
+      try {
+        window.parent.postMessage({ type: 'any3d', name: fig.name, ready: true, hint: fig.hint || '', hot: (ctx && ctx.parts && ctx.parts.hot ? ctx.parts.hot.map(function (g) { return g.name; }).filter(Boolean) : []) }, '*');
+      } catch (e) {}
+    };
+    window.addEventListener('message', function (e) { var d = e.data; if (d && d.type === 'any3d' && d.hello) hello(); });
+    hello();
+  }
+})();
+</script>
+</body>
+</html>

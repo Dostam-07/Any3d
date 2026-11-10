@@ -1,0 +1,17 @@
+1. Studio loaded, url = http://localhost:5173/#/studio
+   /svg vector/i presets: 19
+   gallery closed after pick: true
+2. preview content: {"hasSvg":true,"hasCanvas":false,"vb":"-7.36 -5.9 14.72 11.04","w":698}
+3. SVG raster probe: {"svg":true,"naturalWidth":1080,"naturalHeight":1080}
+   text sharpness (viewBox-only → fixed size): {"soft":86.1,"crisp":86.1,"ratio":1}
+   video: {"type":"video/webm;codecs=vp9","bytes":200296,"w":1080,"h":1080,"readyState":4}
+4. meta: 1080×1080 · 5.1s · 7 fps · 196 KB · webm
+   dialog closed: true
+5. gif: {"type":"image/gif","bytes":1770753,"head":"GIF89a","w":640,"h":640}
+   gif meta: 640×640 · 4.0s · 15 fps · 1729 KB · gif
+6. dialog box: {"x":432,"y":83.75,"width":576,"height":732.5}
+   /three\.js 3d/i presets: 7
+   gallery closed after pick: true
+7. worlds canvas: {"hasCanvas":true,"w":698,"h":696}
+8. worlds video: {"bytes":245435,"w":698,"h":696} | meta: 698×696 · 5.1s · 60 fps · 240 KB · webm
+RESULT: PASSED

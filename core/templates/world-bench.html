@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" class="embedded">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090b11">
+  <link rel="icon" href="data:,">
+  <title>Any3d Worlds</title>
+  <script>
+    document.documentElement.classList.add('embedded');
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f1f5f9;
+      --muted: #94a3b8;
+      --stroke: rgba(255, 255, 255, 0.1);
+      --space: 16px;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #090b11;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #090b11; }
+    main { width: 100%; height: 100%; margin: 0; padding: 0; position: relative; }
+    header { display: none; }
+    .controls { display: none; }
+    #stage { position: absolute; inset: 0; overflow: hidden; width: 100%; height: 100%; min-height: 0; background: #090b11; margin: 0; border: none; border-radius: 0; }
+    #stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
+    #stage[data-state="unavailable"] { display: grid; place-items: center; color: var(--muted); padding: 32px; font-size: 13px; }
+    .footnote { display: none; }
+    noscript { display: block; padding: 32px; color: #fff; }
+    .embedded body, .embedded main, .embed body, .embed main { width: 100%; height: 100%; max-width: none; padding: 0; margin: 0; }
+    .embedded header, .embedded .controls, .embedded .footnote, .embed header, .embed .controls, .embed .footnote { display: none !important; }
+    .embedded #stage, .embed #stage { position: absolute; inset: 0; height: 100%; width: 100%; min-height: 0; aspect-ratio: auto; margin: 0; border: none; border-radius: 0; }
+  </style>
+</head>
+<body class="embedded">
+  <main>
+    <div id="stage"></div>
+    <noscript>Enable JavaScript to see this miniature world.</noscript>
+  </main>
+  <!-- SCRIPT_INJECTION -->
+  <script>
+  /* Capture inside the frame so an opaque sandbox can still export a still. */
+  (function () {
+    window.addEventListener('message', function (e) {
+      var d = e.data;
+      if (!d || d.type !== 'any3d-world' || d.want !== 'png') return;
+      function post(extra) {
+        var payload = { type: 'any3d-world', png: { id: d.id } };
+        for (var k in extra) payload.png[k] = extra[k];
+        try { window.parent.postMessage(payload, '*'); } catch (err) {}
+      }
+      try {
+        var canvas = document.querySelector('#stage canvas');
+        if (!canvas) { post({ error: 'No canvas in the stage' }); return; }
+        post({ dataUrl: canvas.toDataURL('image/png') });
+      } catch (err) { post({ error: (err && err.message) || 'PNG capture failed' }); }
+    });
+  })();
+  </script>
+</body>
+</html>
+
