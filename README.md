@@ -367,11 +367,3 @@ docs/
 **Can I use it on a phone?** Yes, the project page stacks into a single column.
 
 <img src="docs/assets/mobile-home.png" alt="Any3d on a phone: stacked project view with the composer ready for a prompt" width="320" />
-
----
-
-## License
-
-No `LICENSE` file is included yet. Add one (MIT or Apache-2.0 are the usual choices) before distributing or accepting contributions.
-#   A n y 3 d  
- 
