@@ -37,9 +37,9 @@
 <script>
 
 /* ============================================================================
-   Diorama kernel · one global `Diorama`, no dependency: it draws SVG.
+   Any3d kernel · one global `Any3d`, no dependency: it draws SVG.
 
-   A diorama is a small world built from blocks (boxes, cylinders, balls,
+   A scene is a small world built from blocks (boxes, cylinders, balls,
    cones) on a rounded base, seen through an orthographic isometric camera,
    in a theme. The kernel fakes the 3D the way an illustrator does: every
    solid is projected to the page, its faces are painted flat in a tone
@@ -47,14 +47,14 @@
    of the scene to the front, the shadows are the solids' outlines thrown
    onto the ground, and the ink, when a theme asks for it, is drawn over
    the top. No WebGL, no three.js, no canvas: a `<svg>` the page can style.
-   The kernel gives a figure everything that is the same from one diorama
+   The kernel gives a figure everything that is the same from one scene
    to the next: the stage, the camera, the light, the shadows, the fit, the
    loop, the pointer, the themes, the primitives and a few props. The
    figure gives the scene and its motion.
 
    INDEX · what a figure may call. Do not read below the hash line.
 
-   Diorama.figure(spec)       declare a figure; spec is:
+   Any3d.figure(spec)       declare a figure; spec is:
      name      lowercase-hyphen, the file and page name
      size      'hero' | 'card' | 'mini'            (frame and detail budget)
      means     one sentence, ≤140 chars, shown under the stage
@@ -62,7 +62,7 @@
      theme     'toy' (default) | 'soft' | 'mono' | 'line' | 'night' | 'print',
                or { base: 'mono', …overrides } with any of the theme fields:
                  bg          css colour | 'transparent'
-                 palette     { …overrides of Diorama.PAL } (also spec.palette)
+                 palette     { …overrides of Any3d.PAL } (also spec.palette)
                  accent      the subject's colour in every theme, and the one colour mono and line keep (default
                              pal.coral). Paint the thing that matters with pal.accent and nothing else with it: a
                              brand hex goes here and nowhere else, and the bench's swatches recolour the subject live.
@@ -80,7 +80,7 @@
                  stroke      the line colour; strokeWidth in css px (default 1.1)
                  glow        multiplier on emissive (night: 2.6, line: 0)
                  halo        0..1 opacity of the soft shadow the base throws on the page (toy .3, line .16, night .6;
-                             0: none). It is what makes the diorama a thing on a table rather than a cut-out
+                             0: none). It is what makes the scene a thing on a table rather than a cut-out
                  wobble      css px of hand tremor on the ink (default 0; 1.2 is a pen, 2.5 a felt tip). Edges bow
                              and overshoot a little at the corners, like a figure drawn by hand. Only where the
                              theme draws ink (line, print, or edges on another theme)
@@ -94,7 +94,7 @@
                                     ctx.active. Set ctx.read = 'truck · at the dock' (≤ 40 chars) to tell the page
                                     what the scene is doing: it shows it as the read-out when the pointer is on nothing
 
-   Diorama.mount(fig, { el, theme, reduced, still })  mount into an element; returns ctx:
+   Any3d.mount(fig, { el, theme, reduced, still })  mount into an element; returns ctx:
      ctx.t ctx.dt         seconds; dt is 0 on the still frame
      ctx.pointer          { x, y (−1..1), inside, down, world: Vector3|null on the ground plane }
      ctx.hover            the group under the pointer among parts.hot, or null
@@ -111,7 +111,7 @@
      ctx.start() ctx.stop() ctx.stillFrame()
      ctx.destroy()        stop everything, remove the drawing
 
-   M (the maths, also Diorama.M and D.M): Vector3 (set, copy, clone, add, sub, multiplyScalar, dot, cross,
+   M (the maths, also Any3d.M): Vector3 (set, copy, clone, add, sub, multiplyScalar, dot, cross,
      length, normalize, lerp, applyMatrix4, transformDirection), Matrix4, Color. Every group and mesh has
      position, rotation { x, y, z }, scale, visible, name, userData, children, add(), traverse(),
      updateMatrixWorld(), localToWorld(v), getWorldPosition(v), as three.js had them.
@@ -133,7 +133,7 @@
      D.ball(r, c, x, y, z, parent)
      D.dome(r, c, x, y, z, parent)   a half sphere, flat side down
      D.wedge(w, h, d, c, x, y, z, parent)  a gable (triangular prism along x)
-     D.slab(w, d, c, x, y, z, parent, { h, r, side })  a rounded plate, the diorama base: c on top, side on the walls.
+     D.slab(w, d, c, x, y, z, parent, { h, r, side })  a rounded plate, the scene base: c on top, side on the walls.
                                      Zones on it (grass, roads) are boxes that stay r inside its corners, or slabs of their own
      D.torus(r, tube, c, x, y, z, parent)
      D.wheel(r, w, c, x, y, z, parent)  a cylinder on its side, axle along z, so it rolls along x
@@ -1344,7 +1344,7 @@ var Any3d = (function () {
       var w = elHost.clientWidth || 300, h = Math.round(w / size.aspect);
       svg.style.height = h + 'px';
       var ds = elHost.dataset || {};
-      if (elHost.style.height === '' || ds.any3dHeight || ds.dioramaHeight) { elHost.style.height = h + 'px'; if (elHost.dataset) elHost.dataset.any3dHeight = '1'; }
+      if (elHost.style.height === '' || ds.any3dHeight) { elHost.style.height = h + 'px'; if (elHost.dataset) elHost.dataset.any3dHeight = '1'; }
       scalePx();
     }
     fit(); resize();
@@ -1771,7 +1771,7 @@ Any3d.figure({
     if (ctx) ctx.destroy();
     try {
       ctx = Api.mount(fig, { el: stage, reduced: reduced, still: q.has('t') ? +q.get('t') : undefined, theme: picked(), look: lookPick });
-      window.__any3d = ctx; window.__diorama = ctx;
+      window.__any3d = ctx;
       /* what the embed honoured: reduced motion, a still frame, or full motion */
       window.__any3dMotion = reduced ? 'reduced' : 'full';
     }
@@ -1822,7 +1822,7 @@ Any3d.figure({
       if (inFrame) {
         try {
           window.parent.postMessage({ type: 'any3d', name: fig.name, hover: h }, '*');
-          window.parent.postMessage({ type: 'diorama', name: fig.name, hover: h }, '*');
+          window.parent.postMessage({ type: 'any3d', name: fig.name, hover: h }, '*');
         } catch (e) {}
       }
     }
@@ -1831,7 +1831,7 @@ Any3d.figure({
   /* in a frame: take a theme, an accent or a still request from the parent */
   if (inFrame) {
     window.addEventListener('message', function (e) {
-      var d = e.data; if (!d || (d.type !== 'any3d' && d.type !== 'diorama')) return;
+      var d = e.data; if (!d || d.type !== 'any3d') return;
       if (d.theme !== undefined) { themePick = d.theme || null; sel.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.theme === (themePick || figBase))); }); mountIt(reducedNow()); }
       if (d.accent !== undefined) { accentPick = d.accent || null; sw.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.accent.toLowerCase() === (accentPick || own).toLowerCase())); }); mountIt(reducedNow()); }
       if (d.still !== undefined) { isStill = !!d.still; still.setAttribute('aria-pressed', String(isStill)); mountIt(reducedNow()); }
@@ -1841,10 +1841,9 @@ Any3d.figure({
     var hello = function () {
       try {
         window.parent.postMessage({ type: 'any3d', name: fig.name, ready: true, hint: fig.hint || '', hot: (ctx && ctx.parts && ctx.parts.hot ? ctx.parts.hot.map(function (g) { return g.name; }).filter(Boolean) : []) }, '*');
-        window.parent.postMessage({ type: 'diorama', name: fig.name, ready: true, hint: fig.hint || '', hot: (ctx && ctx.parts && ctx.parts.hot ? ctx.parts.hot.map(function (g) { return g.name; }).filter(Boolean) : []) }, '*');
       } catch (e) {}
     };
-    window.addEventListener('message', function (e) { var d = e.data; if (d && (d.type === 'any3d' || d.type === 'diorama') && d.hello) hello(); });
+    window.addEventListener('message', function (e) { var d = e.data; if (d && d.type === 'any3d' && d.hello) hello(); });
     hello();
   }
 })();

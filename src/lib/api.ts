@@ -1,4 +1,4 @@
-import { PresetScene, ValidationReport, OllamaModelInfo, GeneratorConfig, RenderFormat, LLMProvider } from '../types';
+import { PresetScene, ValidationReport, OllamaModelInfo, GeneratorConfig, RenderFormat, LLMProvider, VisualReference } from '../types';
 
 export async function fetchPresets(): Promise<PresetScene[]> {
   const res = await fetch('/api/presets');
@@ -47,6 +47,12 @@ export async function generateAny3d(config: GeneratorConfig): Promise<{
   format: RenderFormat;
   model?: string;
   fallbackNotice?: string;
+  visualResearch?: {
+    query: string;
+    count: number;
+    references: VisualReference[];
+    decomposition?: any;
+  };
 }> {
   const model = config.provider === 'gemini' ? config.geminiModel : config.ollamaModel;
   let res: Response;
@@ -60,8 +66,10 @@ export async function generateAny3d(config: GeneratorConfig): Promise<{
         ollamaHost: config.ollamaHost,
         model,
         format: config.format,
+        size: config.size || 'card',
         prompt: config.prompt,
         seed: config.seed ?? null,
+        visualReferences: config.visualReferences,
       }),
     });
   } catch (err: any) {
@@ -215,6 +223,37 @@ export async function extractPaletteApi(params: {
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error(data.error || 'Could not extract a palette from that image');
+  }
+  return res.json();
+}
+
+/**
+ * Web image search — searches the web for images matching a query.
+ * Returns image results with thumbnails, URLs, and source info.
+ * Requires WEB_SEARCH_API_KEY and WEB_SEARCH_ENGINE env vars on the server.
+ */
+export async function webSearchApi(params: {
+  query: string;
+  limit?: number;
+}): Promise<{
+  query: string;
+  count: number;
+  results: VisualReference[];
+  searchEngine: string;
+  hasApiKey: boolean;
+  message?: string;
+}> {
+  const res = await fetch('/api/web-search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: params.query,
+      limit: params.limit ?? 8,
+    }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || 'Web search failed');
   }
   return res.json();
 }

@@ -64,10 +64,19 @@ if (typeof window.Any3d === 'undefined') {
       } catch (e) {}
     }
   });
+  if (window.__any3dLook && rt.setLook) {
+    rt.setLook(window.__any3dLook);
+  }
   window.addEventListener('message', function (e) {
     var d = e.data;
     if (!d || d.type !== 'any3d-dither') return;
     if (d.look !== undefined && rt.setLook) rt.setLook(d.look);
+    if (typeof d.still === 'boolean') {
+      if (d.still) rt.stop(); else rt.start();
+    }
+    if (typeof d.paused === 'boolean') {
+      if (d.paused) rt.stop(); else rt.start();
+    }
     if (d.want === 'png') {
       try {
         window.parent.postMessage({ type: 'any3d-dither', png: { id: d.id, name: spec.name || spec.title, dataUrl: canvas.toDataURL('image/png') } }, '*');

@@ -5,6 +5,13 @@ import { validatePromptFidelity } from './fidelityValidator.js';
 
 const TEST_PROMPTS = [
   {
+    id: 'User-Screenshot-Office',
+    prompt: `A detailed isometric scene of an office with desktop and chairs, featuring directional rim lighting and tactile material contrast, and a synchronized continuous motion loop in tick().`,
+    expectedSubject: 'office',
+    expectedProps: ['desk', 'chair', 'computer', 'lamp'],
+    forbidden: ['unrequested dustbin/trashcan', 'unrequested outdoor trees', 'unrequested rogue cat']
+  },
+  {
     id: 'User-Screenshot-Bakery',
     prompt: `A charming isometric vignette on an architectural beveled pedestal slab with contrasting material textures: a detailed modular scene bringing to life "A baker taking out a cake from an oven and presenting it on a table", featuring layered structural elements, tactile storytelling micro-props, directional rim lighting, and a synchronized continuous motion loop in tick().`,
     expectedSubject: 'baker',

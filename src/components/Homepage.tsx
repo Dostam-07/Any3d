@@ -16,15 +16,21 @@ import {
   ChevronDown,
   Compass,
   CheckCircle2,
+  Clock,
+  Play,
+  Image,
+  Search,
+  ExternalLink,
 } from 'lucide-react';
-import { RenderFormat, LLMProvider, OllamaModelInfo, PresetScene } from '../types';
+import { RenderFormat, LLMProvider, OllamaModelInfo, PresetScene, VisualReference, WebPresentationSize } from '../types';
+import { SceneSession } from './Sidebar';
 
 interface HomepageProps {
-  onStartScene: (prompt: string, format: RenderFormat, size: 'hero' | 'card' | 'mini') => void;
+  onStartScene: (prompt: string, format: RenderFormat, size: WebPresentationSize) => void;
   format: RenderFormat;
   setFormat: (f: RenderFormat) => void;
-  size: 'hero' | 'card' | 'mini';
-  setSize: (s: 'hero' | 'card' | 'mini') => void;
+  size: WebPresentationSize;
+  setSize: (s: WebPresentationSize) => void;
   provider: LLMProvider;
   setProvider: (p: LLMProvider) => void;
   ollamaModel: string;
@@ -39,6 +45,8 @@ interface HomepageProps {
   onEnhancePrompt: (promptText: string) => Promise<string | void>;
   presets: PresetScene[];
   onSelectPreset: (preset: PresetScene) => void;
+  sessions?: SceneSession[];
+  onSelectSession?: (session: SceneSession) => void;
 }
 
 interface InspirationItem {
@@ -124,6 +132,32 @@ const QUICK_PROMPTS = [
   'A mountain watermill forge with spinning wheel',
 ];
 
+const FORMAT_ICONS: Record<RenderFormat, React.FC<{ className?: string }>> = {
+  svg: Shapes,
+  worlds: Cuboid,
+  pixel: Grid3X3,
+  dither: Sparkles,
+};
+
+const FORMAT_BADGES: Record<RenderFormat, string> = {
+  svg: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+  worlds: 'text-indigo-400 border-indigo-500/30 bg-indigo-500/10',
+  pixel: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+  dither: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
+};
+
+function formatRelativeTime(ts?: number): string {
+  if (!ts) return 'recently';
+  const diff = Math.max(0, Date.now() - ts);
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
+
 export const Homepage: React.FC<HomepageProps> = ({
   onStartScene,
   format,
@@ -144,6 +178,8 @@ export const Homepage: React.FC<HomepageProps> = ({
   onEnhancePrompt,
   presets,
   onSelectPreset,
+  sessions = [],
+  onSelectSession,
 }) => {
   const [localPrompt, setLocalPrompt] = useState('');
   const [isEnhancingLocal, setIsEnhancingLocal] = useState(false);
@@ -234,74 +270,23 @@ export const Homepage: React.FC<HomepageProps> = ({
 
           {/* Capsule Bottom Action Bar */}
           <div className="pt-2 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-2.5">
-            {/* Left Controls: Engine Format Selector */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {/* Format Segmented Buttons */}
-              <div className="flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/[0.08] text-xs">
-                <button
-                  type="button"
-                  onClick={() => setFormat('svg')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                    format === 'svg'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  <Shapes className="w-3 h-3" />
-                  <span>SVG</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormat('worlds')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                    format === 'worlds'
-                      ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  <Cuboid className="w-3 h-3" />
-                  <span>Worlds 3D</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormat('pixel')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                    format === 'pixel'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  <Grid3X3 className="w-3 h-3" />
-                  <span>Pixel</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormat('dither')}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                    format === 'dither'
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  <Sparkles className="w-3 h-3" />
-                  <span>Dither</span>
-                </button>
-              </div>
-
+            {/* Left Controls: Size Selector & Provider Indicator */}
+            <div className="flex items-center gap-2 flex-wrap">
               {/* Size Selector */}
-              <div className="hidden sm:flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/[0.08] text-xs">
-                {(['hero', 'card', 'mini'] as const).map((s) => (
+              <div className="flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/[0.08] text-xs">
+                {(['hero', 'card'] as const).map((s) => (
                   <button
                     key={s}
                     type="button"
                     onClick={() => setSize(s)}
-                    className={`px-2 py-1 rounded-lg font-medium capitalize transition cursor-pointer ${
+                    title={s === 'hero' ? 'Webpage Hero Section (Wide 16:9 banner)' : 'Website Feature Card (Compact 4:3 component)'}
+                    className={`px-3 py-1 rounded-lg font-medium capitalize transition cursor-pointer ${
                       size === s
                         ? 'bg-zinc-800 text-white shadow-sm'
                         : 'text-zinc-500 hover:text-zinc-300'
                     }`}
                   >
-                    {s}
+                    {s === 'hero' ? 'Hero' : 'Card'}
                   </button>
                 ))}
               </div>
@@ -350,19 +335,72 @@ export const Homepage: React.FC<HomepageProps> = ({
         </div>
 
         {/* Quick Suggestion Chips */}
-        <div className="flex items-center gap-2 flex-wrap justify-center mb-12">
+        <div className="flex items-center gap-2 flex-wrap justify-center mb-8">
           <span className="text-xs text-zinc-500 font-medium">Try:</span>
           {QUICK_PROMPTS.map((qp, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleSelectQuickPrompt(qp)}
-              className="text-xs px-2.5 py-1 rounded-full bg-white/[0.03] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 border border-white/[0.06] transition cursor-pointer"
+              className="text-xs px-2.5 py-1 rounded-full bg-white/[0.03] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 border border-white/[0.06] transition cursor-pointer active:scale-95"
             >
               {qp}
             </button>
           ))}
         </div>
+
+        {/* Jump Back In / Recent Projects Row (Visible when user has saved scenes) */}
+        {sessions.length > 0 && (
+          <div className="w-full mb-10">
+            <div className="flex items-center justify-between mb-3.5">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-indigo-400" />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-300">
+                  Jump Back In
+                </h2>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/25">
+                  {sessions.length} {sessions.length === 1 ? 'scene' : 'scenes'}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {sessions.slice(0, 6).map((sess) => {
+                const Icon = FORMAT_ICONS[sess.format] || Shapes;
+                return (
+                  <button
+                    key={sess.id}
+                    type="button"
+                    onClick={() => onSelectSession?.(sess)}
+                    className="group flex flex-col justify-between p-3.5 rounded-2xl bg-[#0c0e17] hover:bg-[#111422] border border-white/[0.08] hover:border-indigo-500/35 transition-all text-left cursor-pointer shadow-sm hover:shadow-lg hover:shadow-indigo-950/25"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${FORMAT_BADGES[sess.format]}`}>
+                          <Icon className="w-2.5 h-2.5" />
+                          <span className="uppercase">{sess.format}</span>
+                        </span>
+                        <span className="text-[10px] text-zinc-500 font-mono">
+                          {formatRelativeTime(sess.updatedAt)}
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-xs text-zinc-100 group-hover:text-white line-clamp-1 mb-1 transition">
+                        {sess.title}
+                      </h3>
+                      <p className="text-[11px] text-zinc-400 line-clamp-1">
+                        {sess.messages?.length ? `${sess.messages.length} messages` : '1 version'}
+                      </p>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-white/[0.05] flex items-center justify-between text-[11px] text-indigo-400 group-hover:text-indigo-300 font-medium">
+                      <span>Resume workspace</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Section Heading: Curated Inspirations */}
         <div className="w-full flex items-center justify-between mb-4">

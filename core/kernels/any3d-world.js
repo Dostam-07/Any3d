@@ -338,9 +338,10 @@ void main(){
   gl_FragColor=vec4(color,c.a);
 }`;
 
-export function mountWorld(def, { el, finish = 'miniature', paused = false } = {}) {
+export function mountWorld(def, { el, finish = 'miniature', size = 'card', paused = false } = {}) {
   if (!el) throw new Error('mountWorld needs a container.');
   if (!FINISHES.includes(finish)) throw new Error('Unknown finish.');
+  let stageSize = ['hero', 'card'].includes(size) ? size : (def.size || 'card');
   let renderer;    try { renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: 'low-power', preserveDrawingBuffer: true }); }
   catch { el.textContent = 'This world needs WebGL 2. Try a browser with hardware acceleration enabled.'; el.dataset.state = 'unavailable'; return null; }
   el.replaceChildren(renderer.domElement); el.dataset.state = 'ready';
@@ -401,7 +402,12 @@ export function mountWorld(def, { el, finish = 'miniature', paused = false } = {
   function resize() {
     if (disposed) return;
     const rect = el.getBoundingClientRect(); width = Math.max(1, Math.round(rect.width)); height = Math.max(1, Math.round(rect.height));
-    const aspect = width / height, spanY = Math.max(maxY - minY, (maxX - minX) / aspect) * 1.12;
+    const aspect = width / height;
+    // Adapt frustum framing to the web presentation format:
+    // 'hero': wide panoramic webpage hero framing (1.35x), letting the wide landscape breathe across the banner
+    // 'card': tight, focused website feature card framing (1.02x), crisp pedestal fitting inside a UI card
+    const sizeMultiplier = stageSize === 'hero' ? 1.35 : 1.02;
+    const spanY = Math.max(maxY - minY, (maxX - minX) / aspect) * sizeMultiplier;
     camera.left = centerX - spanY * aspect / 2; camera.right = centerX + spanY * aspect / 2;
     camera.top = centerY + spanY / 2; camera.bottom = centerY - spanY / 2; camera.updateProjectionMatrix();
     const scale = finish === 'pixel' ? 1 / (width < 600 ? 2 : 3) : Math.min(devicePixelRatio || 1, 1.5);
@@ -457,6 +463,8 @@ export function mountWorld(def, { el, finish = 'miniature', paused = false } = {
     scene,
     content,
     setFinish(value) { if (!FINISHES.includes(value)) throw new Error('Unknown finish.'); finish = value; postMaterial.uniforms.mode.value = FINISHES.indexOf(value); resize(); },
+    setSize(value) { if (['hero', 'card'].includes(value)) { stageSize = value; resize(); } },
+    getSize() { return stageSize; },
     setLook(value) { applyLook(value); render(time); },
     setPaused(value) { paused = Boolean(value); synchronize(); },
     setSpeed(value) { if (!Number.isFinite(value) || value < .25 || value > 3) throw new Error('Speed must be between 0.25 and 3.'); anchor = time; epoch = performance.now(); speed = value; },

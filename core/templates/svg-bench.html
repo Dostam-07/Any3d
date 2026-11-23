@@ -53,7 +53,7 @@
   var stage = document.createElement('div'); stage.className = 'stage'; stage.id = 'stage';
   var means = fig.means || '';
   {
-    card.className = 'card ' + (fig.size === 'hero' ? 'hero' : fig.size === 'mini' ? 'minisize' : 'cardsize');
+    card.className = 'card ' + (fig.size === 'hero' ? 'hero' : 'cardsize');
     var head = document.createElement('div'); head.className = 'head';
     head.innerHTML = '<span class="n"></span><span class="k"></span>';
     head.querySelector('.n').textContent = fig.title || fig.name; head.querySelector('.k').textContent = fig.size || 'card';
@@ -143,6 +143,11 @@
       if (d.theme !== undefined) { themePick = d.theme || null; sel.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.theme === (themePick || figBase))); }); mountIt(reducedNow()); }
       if (d.accent !== undefined) { accentPick = d.accent || null; sw.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.accent.toLowerCase() === (accentPick || own).toLowerCase())); }); mountIt(reducedNow()); }
       if (d.still !== undefined) { isStill = !!d.still; still.setAttribute('aria-pressed', String(isStill)); mountIt(reducedNow()); }
+      if (d.size !== undefined && fig) {
+        fig.size = d.size;
+        card.className = 'card ' + (fig.size === 'hero' ? 'hero' : 'cardsize');
+        mountIt(reducedNow());
+      }
       /* a look is a live change: no re-mount, no re-bundle */
       if (d.look !== undefined && ctx && ctx.setLook) { lookPick = d.look; try { ctx.setLook(d.look); } catch (err) { console.error(err); } }
       /* capture happens here, inside the frame, so an opaque sandbox can still export */

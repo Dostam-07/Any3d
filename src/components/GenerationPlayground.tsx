@@ -46,21 +46,21 @@ interface Debris {
 
 const STAGES = [
   {
-    pct: 20,
-    title: 'Spatial Architecture & Slab',
-    desc: 'Laying isometric foundation plate, coordinate bounds and camera angle',
+    pct: 15,
+    title: 'Semantic Architecture & Decomposition',
+    desc: 'Analyzing prompt semantics, primary subject geometry, and material palette',
     icon: Compass,
   },
   {
-    pct: 45,
-    title: 'Modular Assembly & Parts',
-    desc: 'Extruding structural geometry, columns, vehicles, and detail props',
+    pct: 40,
+    title: 'Spatial Architecture & Slab',
+    desc: 'Laying isometric foundation plate, coordinate bounds and camera angle',
     icon: Layers,
   },
   {
-    pct: 75,
-    title: 'Palette Shading & Lighting',
-    desc: 'Balancing contrast across paper, ink, accent swatches and sun vectors',
+    pct: 70,
+    title: 'Modular Assembly & Parts',
+    desc: 'Extruding structural geometry, columns, vehicles, and detail props',
     icon: Palette,
   },
   {
@@ -148,8 +148,13 @@ export const GenerationPlayground: React.FC<GenerationPlaygroundProps> = ({
       if (hasReadyScene) {
         setProgress(100);
         setSceneReadyNotified(true);
-        // Directly reveal scene immediately without waiting for a manual click or CTA
-        onRevealScene?.();
+        // If the user has not started playing yet (score is 0), reveal scene automatically after brief pause
+        if (score === 0) {
+          const timer = setTimeout(() => {
+            onRevealScene?.();
+          }, 1200);
+          return () => clearTimeout(timer);
+        }
       }
       return;
     }
@@ -608,6 +613,11 @@ export const GenerationPlayground: React.FC<GenerationPlaygroundProps> = ({
     };
   }, [gameOver]);
 
+  const cleanDisplayPrompt = (prompt || '')
+    .replace(/^(?:Enhance|Generate|Create)\s+(?:this\s+)?3D\s+scene\s+prompt[^:]*:\s*["'`]?/i, '')
+    .replace(/^["'`]|["'`]$/g, '')
+    .trim() || 'Generating 3D isometric figure';
+
   const activeStageIndex = Math.min(
     STAGES.length - 1,
     STAGES.findIndex((s) => progress <= s.pct) === -1
@@ -637,7 +647,7 @@ export const GenerationPlayground: React.FC<GenerationPlaygroundProps> = ({
               </span>
             </div>
             <p className="text-xs text-zinc-300 truncate max-w-sm sm:max-w-md font-medium mt-0.5">
-              "{prompt || 'Generating isometric 3D figure'}"
+              "{cleanDisplayPrompt}"
             </p>
           </div>
         </div>
@@ -745,14 +755,27 @@ export const GenerationPlayground: React.FC<GenerationPlaygroundProps> = ({
                       : `High score: ${highScore}`}
                   </p>
 
+                  {hasReadyScene && onRevealScene && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRevealScene();
+                      }}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/30 mb-2 cursor-pointer"
+                    >
+                      <Eye className="w-4 h-4" />
+                      <span>View Generated 3D Scene →</span>
+                    </button>
+                  )}
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       initGame();
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition shadow-lg shadow-indigo-600/30"
+                    className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.12] text-zinc-300 font-semibold text-xs transition border border-white/10 cursor-pointer"
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <RotateCcw className="w-3.5 h-3.5" />
                     <span>Stack Again</span>
                   </button>
                 </div>
@@ -824,17 +847,17 @@ export const GenerationPlayground: React.FC<GenerationPlaygroundProps> = ({
 
         {/* Scene Ready Notification Banner */}
         {hasReadyScene && (
-          <div className="absolute top-4 right-4 z-20 flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-2xl animate-bounce">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-emerald-950/90 border border-emerald-500/60 backdrop-blur-md shadow-2xl shadow-emerald-950/50 animate-bounce">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <div className="text-xs text-emerald-200">
               <span className="font-bold">Scene Ready!</span>
             </div>
             {onRevealScene && (
               <button
                 onClick={onRevealScene}
-                className="ml-2 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-zinc-950 hover:bg-emerald-400 transition"
+                className="ml-1 px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-zinc-950 hover:bg-emerald-400 transition cursor-pointer shadow-sm"
               >
-                View
+                View 3D Scene →
               </button>
             )}
           </div>

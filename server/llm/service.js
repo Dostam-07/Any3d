@@ -17,82 +17,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '../../');
 
-function findMatchingPreset(prompt, format) {
-  const core = unwrapCorePrompt(prompt);
-  const p = `${core} ${prompt}`.toLowerCase();
-  const semantics = extractPromptSemantics(prompt);
-
-  if (format === 'svg') {
-    if (/\b(rocket\s*launch|launchpad|launch\s*pad|space\s*shuttle|orbital\s*launch|apollo|nasa|flame\s*trench)\b/i.test(p)) return 'launchpad';
-    if (/\b(airport|runway|aeroplane|airplane|jetliner|aircraft|tarmac|hangar)\b/i.test(p)) return 'airport';
-    if (/\b(harbour|harbor|quay|pier\s*nine|gantry\s*crane|container\s*ship|shipping\s*port)\b/i.test(p)) return 'harbour';
-    if (/\b(warehouse|forklift|pallet\s*rack|distribution\s*centre|cargo\s*depot)\b/i.test(p)) return 'warehouse';
-    if (/\b(lighthouse|rocky\s*island|coastal\s*island|beacon\s*tower)\b/i.test(p)) return 'island';
-    if (/\b(observatory|astronomy\s*dome|stargazing\s*dome|celestial\s*telescope)\b/i.test(p)) return 'observatory';
-    if (/\b(coffee\s*shop|espresso|cafe|barista|bistro|coffee\s*cart)\b/i.test(p)) return 'cafe';
-    if (/\b(town\s*square|tram\s*line|city\s*blocks|street\s*tram|urban\s*avenue)\b/i.test(p)) return 'town';
-    if (/\b(assembly\s*line|pcb|circuit\s*board|surface\s*mount|soldering|smt)\b/i.test(p)) return 'assembly';
-    if (/\b(typewriter|writing\s*desk|antique\s*desk)\b/i.test(p)) return 'desk';
-    if (/\b(farmstead|red\s*barn|grain\s*silo|wheat\s*field|country\s*farm)\b/i.test(p)) return 'farm';
-    if (/\b(bakery\s*kitchen|pastry\s*kitchen|chef\s*kitchen|kneading\s*dough)\b/i.test(p)) return 'kitchen';
-    if (/\b(mailbox|postbox|letter\s*box|postal\s*box)\b/i.test(p)) return 'mailbox';
-    if (/\b(ski\s*slope|skiing|snowboard|chairlift|piste|ski\s*resort)\b/i.test(p)) return 'powder';
-    if (/\b(server\s*rack|datacenter\s*rack|blade\s*servers)\b/i.test(p)) return 'rack';
-    if (/\b(seedling|botanical\s*greenhouse|plant\s*nursery|sprout\s*pot)\b/i.test(p)) return 'seedling';
-    if (/\b(blade\s*server|edge\s*server|cluster\s*node)\b/i.test(p)) return 'server';
-    if (/\b(turntable|vinyl\s*record|record\s*player|phonograph)\b/i.test(p)) return 'turntable';
-    if (/\b(vending\s*machine|soda\s*machine|can\s*dispenser)\b/i.test(p)) return 'vending';
-    if (/\b(badminton|shuttlecock|racket|court\s*sport|net\s*game)\b/i.test(p)) return 'badminton';
-  } else if (format === 'worlds') {
-    // Only match bakery preset if dough/rolling pin bread work was asked, not cake presentation
-    if (/\b(bread\s*dough|knead|rolling\s*pin|loaves|bread\s*bench)\b/i.test(p)) return 'bakery';
-    if (/\b(bakery|bread\s*oven|pastry\s*shop)\b/i.test(p) && !/\bcake\b/i.test(p)) return 'bakery';
-    if (/\b(basketball|hoop|court|dunk|dribble)\b/i.test(p)) return 'basketball';
-    if (/\b(juggler|juggling|cascade|street\s*juggler)\b/i.test(p)) return 'street-juggler';
-    if (/\b(florist|flower\s*stall|flower\s*shop)\b/i.test(p)) return 'florist';
-    if (/\b(pottery|potter|clay\s*wheel|pottery\s*studio)\b/i.test(p)) return 'pottery-studio';
-    if (/\b(cricket|cricket\s*pitch|batsman|wicket)\b/i.test(p)) return 'cricket';
-    if (/\b(observatory|telescope|dome\s*stars)\b/i.test(p)) return 'observatory';
-  } else if (format === 'pixel') {
-    if (/\b(flower\s*stall|tulip\s*awning|sunflower\s*stall)\b/i.test(p)) return 'flower-stall';
-    if (/\b(fishing\s*pier|pier\s*dock|dock\s*net)\b/i.test(p)) return 'pier';
-    if (/\b(allotment|vegetable\s*patch|garden\s*shed)\b/i.test(p)) return 'allotment';
-  } else if (format === 'dither') {
-    if (/\b(blacksmith|forge|iron\s*anvil|waterwheel\s*forge)\b/i.test(p)) return 'forge';
-    if (/\b(cliff\s*lighthouse|beacon\s*rock)\b/i.test(p)) return 'lighthouse';
-    if (/\b(tea\s*house|zen\s*garden|bamboo\s*tea)\b/i.test(p)) return 'tea-house';
-    if (/\b(windmill|canal\s*mill|dutch\s*windmill)\b/i.test(p)) return 'windmill';
-  }
-  return null;
-}
-
-function adaptPreset(presetName, format, prompt) {
-  const filePath = path.join(rootDir, 'server', 'presets', format, `${presetName}.js`);
-  if (!fs.existsSync(filePath)) return null;
-  let code = fs.readFileSync(filePath, 'utf8');
-  const slug = prompt.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30).replace(/^-|-$/g, '') || presetName;
-  const cleanTitle = prompt.slice(0, 50).replace(/'/g, "\\'");
-  const cleanMeans = prompt.slice(0, 130).replace(/'/g, "\\'");
-
-  if (format === 'svg') {
-    code = code
-      .replace(/\bname:\s*['"`][^'"`]+['"`]/, `name: '${slug}'`)
-      .replace(/\btitle:\s*['"`][^'"`]+['"`]/, `title: '${cleanTitle}'`)
-      .replace(/\bmeans:\s*['"`][^'"`]+['"`]/, `means: '${cleanMeans}'`);
-  } else if (format === 'worlds') {
-    code = code
-      .replace(/\bname:\s*['"`][^'"`]+['"`]/, `name: '${slug}'`)
-      .replace(/\btitle:\s*['"`][^'"`]+['"`]/, `title: '${cleanTitle}'`)
-      .replace(/\bdescription:\s*['"`][^'"`]+['"`]/, `description: '${cleanMeans}'`);
-  } else if (format === 'pixel' || format === 'dither') {
-    code = code
-      .replace(/\bname:\s*['"`][^'"`]+['"`]/, `name: '${slug}'`)
-      .replace(/\btitle:\s*['"`][^'"`]+['"`]/, `title: '${cleanTitle}'`)
-      .replace(/\bmeans:\s*['"`][^'"`]+['"`]/, `means: '${cleanMeans}'`);
-  }
-  return code;
-}
-
 export async function getOllamaModels(host = 'http://localhost:11434') {
   try {
     const res = await fetch(`${host}/api/tags`);
@@ -148,7 +72,7 @@ async function callOllamaWithFallback({ host = 'http://localhost:11434', model, 
       const res = await fetch(`${host}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(60000), // 60s per model; smaller models on CPU should finish well within this
+        signal: AbortSignal.timeout(90000), // 90s per model; allows cold-start model weight loading
         body: JSON.stringify({
           model: candidate,
           messages: [
@@ -161,8 +85,8 @@ async function callOllamaWithFallback({ host = 'http://localhost:11434', model, 
             // sampler deterministic for a given model and prompt.
             temperature: seed == null ? 0.25 : 0,
             seed: seed == null ? undefined : seed,
-            num_ctx: 16384,
-            num_predict: 8192,
+            num_ctx: 4096,
+            num_predict: 2048,
           }
         })
       });
@@ -312,9 +236,12 @@ export async function generateScene({
   ollamaHost = 'http://localhost:11434',
   model = '',
   format = 'svg', // 'svg' | 'worlds' | 'pixel' | 'dither'
+  size = 'card', // 'hero' | 'card' | 'mini'
   prompt = '',
   seed = null,
   maxRetries = 1,
+  visualResearch = null,
+  visualReferences = [], // client-selected web image search results
 }) {
   let systemPrompt = SVG_SYSTEM_PROMPT;
   let formatLabel = 'Any3d SVG figure';
@@ -333,15 +260,31 @@ export async function generateScene({
   const corePrompt = unwrapCorePrompt(prompt);
   const semantics = extractPromptSemantics(prompt);
 
-  let currentPrompt = `Create a detailed, multi-part Any3d ${formatLabel} for: "${corePrompt}".
-CRITICAL PROMPT FIDELITY:
-- Primary Subject: "${semantics.primarySubject}" must be prominently modeled as the main focus.
-${semantics.secondaryObjects.length ? `- Mandatory Props: Include ${semantics.secondaryObjects.join(', ')}.` : '- Mandatory Props: Build at least 3-5 supporting props around the main subject.'}
-${semantics.actions.length ? `- Action & Animation: Model ${semantics.actions.join(', ')} in geometry and tick().` : '- Animation: Include a subtle looping motion (tick function) so the scene feels alive.'}
-- Setting: ${semantics.environment}. Build a complete environment, not just one object.
-- DO NOT invent unrelated items (${semantics.prohibitedObjects.join(', ') || 'no rogue trees or trashcans'}).
-
-CONSTRUCTION RULES (follow exactly):
+  let constructionRules = '';
+  if (format === 'worlds') {
+    constructionRules = `CONSTRUCTION RULES FOR THREE.JS WORLDS (follow exactly):
+1. Start with an expansive terrain foundation: W.terrain(11.0, 8.5, '#1e293b', 24); box(10.5, 0.08, 8.0, '#334155', 0, 0.04, 0);
+2. EXPANSIVE ENVIRONMENT: Build a rich, complete miniature world with 25-50 modular parts across multiple zones (NEVER generate a single lone chair/table or tiny chunk).
+3. If an office: compose multiple workstations/desks, dual monitors, partitions, whiteboard meeting zone, water cooler, lounge chairs, and bookshelves.
+4. If a city: compose multiple skyscrapers/buildings with lit windows, avenue with crosswalks, streetlights, traffic signals, and driving cars.
+5. If a farm: compose red timber barn, silo, spinning windpump, crop rows, tractor, hay bales, and fenced animal paddocks.
+6. Use W.box, W.cylinder, W.ball, W.person, W.group with rich contrasting materials.
+7. Implement tick({ t, parts, W }) with synchronized looping animation (spinning wheels/fans, moving vehicles, swiveling chairs).
+8. Output ONLY raw JavaScript starting with "import { defineWorld } from '@any3d/worlds';" and ending with "});".`;
+  } else if (format === 'pixel') {
+    constructionRules = `CONSTRUCTION RULES FOR PIXEL 320x240 (follow exactly):
+1. Start with ground: { rx: 4.0, rz: 3.0, wobble: 0.25, fade: 0.35, rect: true, zone: function(x, z, P) { ... } }
+2. Use rich, colorful custom ramps in materials (tileLight, tileAccent, deskTeal, chairRed, screenGlow, gold, cyan, blue, ruby).
+3. Build complete environments with 20-40 parts (e.g. multi-desk office, street corner with storefronts, full farmstead).
+4. Implement tick(ctx) with looping animation.
+5. Output ONLY raw JavaScript starting with "Pixel.scene({" and ending with "});".`;
+  } else if (format === 'dither') {
+    constructionRules = `CONSTRUCTION RULES FOR DITHER (follow exactly):
+1. Declare Dither.scene({ ... }).
+2. Build 20-35 parts with rich retro Bayer dithering and textures.
+3. Output ONLY raw JavaScript starting with "Dither.scene({" and ending with "});".`;
+  } else {
+    constructionRules = `CONSTRUCTION RULES (follow exactly):
 1. Always start with a ground slab: D.slab(11, 9, pal.ground, 0, 0, 0, null, { h: 0.6, r: 1.2, side: pal.base })
 2. NEVER make a single monolithic blob. Compose 15-35 parts from slender boxes, cylinders, wedges, cones, and groups.
 3. Use at least 5-7 contrasting colors from pal (pal.paper, pal.wood, pal.steel, pal.accent, pal.coral, pal.mustard, pal.sky, etc.)
@@ -350,8 +293,41 @@ CONSTRUCTION RULES (follow exactly):
 6. ALWAYS add lighting: D.props.lamp at perimeter positions
 7. Give interactive parts a .name and add them to parts.hot array
 8. Implement tick(ctx) with a looping motion using D.smooth(D.phase(t, period)) or D.wave(t, period)
+9. Output ONLY raw JavaScript starting with "Any3d.figure({" and ending with "});".`;
+  }
 
-Build the scene now. Output ONLY raw JavaScript starting with Any3d.figure({ and ending with });`;
+  let visualSection = '';
+  if (visualResearch?.references?.length) {
+    const compStr = visualResearch.decomposition?.components?.join(', ') || '';
+    const palStr = visualResearch.decomposition?.palette?.join(', ') || '';
+    const layoutStr = visualResearch.decomposition?.spatialLayout?.join(' | ') || '';
+    visualSection = `
+REAL-WORLD WEB VISUAL REFERENCES (Analyzed from ${visualResearch.references.length} web photos):
+- Authentic Components to Replicate: ${compStr}
+- Dominant Real-World Palette: ${palStr}
+- Spatial Architecture: ${layoutStr}
+REPLICATE these authentic real-world physical parts and color relationships in the 3D scene!`;
+  }
+
+  if (visualReferences && visualReferences.length) {
+    const refList = visualReferences.map((r) => `- ${r.title || 'Untitled image'} (${r.url})`).join('\n');
+    visualSection += `
+
+CLIENT-SELECTED WEB IMAGES (Use these as direct visual references - match composition, colors, and style):
+${refList}
+REPLICATE the look, materials, color palette, and arrangement from these reference images in your 3D scene.`;
+  }
+
+  let currentPrompt = `Create a detailed, multi-part Any3d ${formatLabel} for: "${corePrompt}".
+CRITICAL PROMPT FIDELITY:
+- Primary Subject: "${semantics.primarySubject}" must be prominently modeled as the main focus.
+${semantics.secondaryObjects.length ? `- Mandatory Props: Include ${semantics.secondaryObjects.join(', ')}.` : '- Mandatory Props: Build at least 5-10 supporting environmental props around the main subject.'}
+${semantics.actions.length ? `- Action & Animation: Model ${semantics.actions.join(', ')} in geometry and tick().` : '- Animation: Include a subtle looping motion (tick function) so the scene feels alive.'}
+- Setting: ${semantics.environment}. Build a complete environment, not just one object.
+- DO NOT invent unrelated items (${semantics.prohibitedObjects.join(', ') || 'no rogue trees or trashcans'}).
+${visualSection}
+
+${constructionRules}`;
 
   let lastCode = '';
   let lastValidation = null;
@@ -414,28 +390,8 @@ You MUST build a multi-part scene with these requirements:
 Output ONLY raw JavaScript starting with Any3d.figure({ and ending with });`;
     }
   } catch (llmErr) {
-    console.warn(`[Any3d AI] Model error: ${llmErr.message}. Attempting architectural preset fallback...`);
-    const matchedPreset = findMatchingPreset(prompt, format);
-    if (matchedPreset) {
-      const adapted = adaptPreset(matchedPreset, format, prompt);
-      if (adapted) {
-        const enrichedValidation = validateScene(adapted, format, prompt);
-        if (enrichedValidation.valid) {
-          return {
-            code: adapted,
-            validation: enrichedValidation,
-            format,
-            provider,
-            model: usedModelName,
-            fallbackNotice: fallbackNotice || `Enriched with Any3d architectural composition for "${corePrompt}".`
-          };
-        }
-      }
-    }
-
-    // Dynamic procedural scene generation for custom prompts without presets
-    console.log(`[Any3d AI] Synthesizing custom procedural Any3d scene for "${prompt}"...`);
-    const proceduralCode = synthesizeProceduralScene(prompt, format);
+    console.warn(`[Any3d AI] Model error: ${llmErr.message}. Synthesizing custom procedural Any3d scene for "${prompt}"...`);
+    const proceduralCode = synthesizeProceduralScene(prompt, format, visualResearch, size);
     const procValidation = validateScene(proceduralCode, format, prompt);
     return {
       code: proceduralCode,
@@ -443,34 +399,14 @@ Output ONLY raw JavaScript starting with Any3d.figure({ and ending with });`;
       format,
       provider,
       model: usedModelName,
-      fallbackNotice: fallbackNotice || `Synthesized dynamic high-fidelity Any3d scene for "${corePrompt.slice(0, 45)}".`
+      fallbackNotice: `Synthesized dynamic procedural Any3d scene for "${corePrompt.slice(0, 45)}" (AI engine unavailable/timed out).`,
     };
   }
 
-  // Double Safety Net: If model failed validation or prompt fidelity after retries
+  // Safety Net: If model output failed validation after retries
   if (!lastValidation?.valid) {
-    const matchedPreset = findMatchingPreset(prompt, format);
-    if (matchedPreset) {
-      const adapted = adaptPreset(matchedPreset, format, prompt);
-      if (adapted) {
-        const enrichedValidation = validateScene(adapted, format, prompt);
-        if (enrichedValidation.valid) {
-          console.log(`[Any3d AI] Enriched scene using architectural preset "${matchedPreset}" for prompt "${prompt}".`);
-          return {
-            code: adapted,
-            validation: enrichedValidation,
-            format,
-            provider,
-            model: usedModelName,
-            fallbackNotice: fallbackNotice || `Enriched with Any3d high-density architectural composition for "${corePrompt}".`
-          };
-        }
-      }
-    }
-
-    // Procedural fallback with strict fidelity
     console.log(`[Any3d AI] Model output invalid/lacking fidelity, synthesizing custom procedural Any3d scene for "${prompt}"...`);
-    const proceduralCode = synthesizeProceduralScene(prompt, format);
+    const proceduralCode = synthesizeProceduralScene(prompt, format, null, size);
     const procValidation = validateScene(proceduralCode, format, prompt);
     return {
       code: proceduralCode,
@@ -478,7 +414,7 @@ Output ONLY raw JavaScript starting with Any3d.figure({ and ending with });`;
       format,
       provider,
       model: usedModelName,
-      fallbackNotice: `Synthesized dynamic high-fidelity Any3d scene for "${corePrompt.slice(0, 45)}".`
+      fallbackNotice: `Synthesized dynamic procedural Any3d scene for "${corePrompt.slice(0, 45)}".`,
     };
   }
 
@@ -489,6 +425,6 @@ Output ONLY raw JavaScript starting with Any3d.figure({ and ending with });`;
     provider,
     model: usedModelName,
     seed,
-    fallbackNotice
+    fallbackNotice,
   };
 }

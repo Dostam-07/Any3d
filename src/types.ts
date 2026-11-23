@@ -10,11 +10,13 @@ export interface ValidationCheck {
   message: string;
 }
 
+export type WebPresentationSize = 'hero' | 'card';
+
 export interface ValidationReport {
   valid: boolean;
   format: RenderFormat;
   name: string;
-  size?: 'hero' | 'card' | 'mini';
+  size?: WebPresentationSize;
   checks: ValidationCheck[];
   fidelity?: {
     valid: boolean;
@@ -48,10 +50,39 @@ export interface GeneratorConfig {
   ollamaHost: string;
   apiKey: string;
   format: RenderFormat;
-  size: 'hero' | 'card' | 'mini';
+  size: WebPresentationSize;
   prompt: string;
   /** Locked generation seed: same model + seed + prompt should reproduce a scene. */
   seed?: number | null;
+  /** Visual references from web image search to guide scene generation. */
+  visualReferences?: VisualReference[];
+}
+
+export interface VisualReference {
+  id: string;
+  title: string;
+  thumbnail: string;
+  url: string;
+  source: string;
+  snippet?: string;
+  width?: number;
+  height?: number;
+}
+
+export interface VisualDecomposition {
+  primarySubject: string;
+  category?: string;
+  components: string[];
+  palette: string[];
+  spatialLayout: string[];
+  summary: string;
+}
+
+export interface VisualResearchData {
+  query: string;
+  count: number;
+  references: VisualReference[];
+  decomposition: VisualDecomposition;
 }
 
 export type SlashCommandType = '/svg' | '/worlds' | '/pixel' | '/dither' | '/enhance' | '/glb' | '/html' | '/undo' | '/clear';
@@ -70,4 +101,5 @@ export interface ChatMessage {
   seed?: number;
   /** 'ask' messages are read-only answers: they never carry a code snapshot. */
   kind?: 'edit' | 'ask';
+  visualReferences?: VisualReference[];
 }

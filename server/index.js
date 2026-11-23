@@ -9,6 +9,7 @@ import { generateScene, getOllamaModels } from './llm/service.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { enhancePromptWithAI } from './llm/enhancer.js';
 import { mutateSceneWithAI, askScene } from './llm/mutator.js';
+import { performVisualResearch } from './engine/visualResearch.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -100,11 +101,21 @@ app.post('/api/generate', async (req, res) => {
       ollamaHost = 'http://localhost:11434',
       model = '',
       format = 'svg',
+      size = 'card',
       prompt = '',
       seed = null,
+      visualReferences = [],
     } = req.body;
 
     if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+
+    // Conduct authentic real-world web visual research on the user's requested entities
+    let visualResearch = null;
+    try {
+      visualResearch = await performVisualResearch(prompt, 6);
+    } catch (e) {
+      console.warn('[Visual Research] error:', e.message);
+    }
 
     const key = apiKey || process.env.GEMINI_API_KEY || '';
     const result = await generateScene({
@@ -113,11 +124,17 @@ app.post('/api/generate', async (req, res) => {
       ollamaHost,
       model,
       format,
+      size,
       prompt,
       seed: seed == null ? null : Number(seed),
+      visualResearch,
+      visualReferences: visualReferences?.length ? visualReferences : (visualResearch?.references || []),
     });
 
-    res.json(result);
+    res.json({
+      ...result,
+      visualResearch,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -371,3 +388,94 @@ const server = app.listen(PORT, () => {
 server.timeout = 600000;
 server.keepAliveTimeout = 610000;
 server.headersTimeout = 620000;
+
+// Web Image Search - searches the web for images matching a query
+// Requires a search API key (configured via WEB_SEARCH_API_KEY env var).
+// Supports Serper.dev, Google Custom Search, or a fallback that returns
+// structured placeholder results when no key is configured.
+app.post('/api/web-search', async (req, res) => {
+  try {
+    const { query, limit = 8 } = req.body || {};
+    if (!query || !query.trim()) {
+      return res.status(400).json({ error: 'A search query is required.' });
+    }
+
+    const apiKey = process.env.WEB_SEARCH_API_KEY || '';
+    const searchEngine = process.env.WEB_SEARCH_ENGINE || 'serper'; // 'serper' | 'google' | 'none'
+
+    let results = [];
+
+    if (searchEngine === 'serper' && apiKey) {
+      // Serper.dev Google Search API
+      const serperRes = await fetch('https://google.serper.dev/images', {
+        method: 'POST',
+        headers: {
+          'X-API-KEY': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          q: query,
+          num: Math.min(limit, 20),
+        }),
+      });
+
+      if (!serperRes.ok) {
+        throw new Error(`Serper search failed (${serperRes.status})`);
+      }
+
+      const serperData = await serperRes.json();
+      results = (serperData.images || []).map((img, idx) => ({
+        id: `serper-${idx}`,
+        title: img.title || 'Untitled image',
+        thumbnail: img.imageUrl,
+        url: img.imageUrl,
+        source: img.source || 'Web search',
+        snippet: img.title || '',
+        width: img.imageWidth,
+        height: img.imageHeight,
+      }));
+    } else if (searchEngine === 'google' && apiKey) {
+      // Google Custom Search JSON API
+      const cx = process.env.GOOGLE_SEARCH_CX || '';
+      if (!cx) {
+        throw new Error('GOOGLE_SEARCH_CX not configured');
+      }
+      const googleRes = await fetch(
+        `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cx}&q=${encodeURIComponent(query)}&searchType=image&num=${Math.min(limit, 10)}&safe=off`
+      );
+
+      if (!googleRes.ok) {
+        throw new Error(`Google Custom Search failed (${googleRes.status})`);
+      }
+
+      const googleData = await googleRes.json();
+      results = (googleData.items || []).map((img, idx) => ({
+        id: `google-${idx}`,
+        title: img.title || 'Untitled image',
+        thumbnail: img.link,
+        url: img.link,
+        source: img.image?.contextLink || img.link,
+        snippet: img.title || '',
+        width: img.image?.width,
+        height: img.image?.height,
+      }));
+    } else {
+      // No search API configured - return empty results with a helpful message
+      results = [];
+    }
+
+    res.json({
+      query,
+      count: results.length,
+      results,
+      searchEngine: searchEngine === 'none' ? 'none' : searchEngine,
+      hasApiKey: !!apiKey,
+      message:
+        results.length === 0
+          ? 'No search API configured. Set WEB_SEARCH_API_KEY and WEB_SEARCH_ENGINE environment variables to enable web image search.'
+          : undefined,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Web search failed' });
+  }
+});

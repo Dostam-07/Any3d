@@ -59,17 +59,14 @@ The share payload is executable code running same-origin, so it can read `localS
 *Acceptance:* a shared scene cannot read the parent origin; PNG and GLB still export from project and Studio; the security note in the share dialog is removed because it is no longer needed. If a GLB converter cannot fit the size budget for vector scenes, disable GLB inside shared/embed contexts and say so in the UI.
 *Status:* shared payloads are sandboxed (`allow-scripts`, opaque origin) and PNG capture now runs inside the bundle on all four engines. GLB, clips and storyboards are gated for shared scenes until the bundle exporter lands.
 
-**A2 · Measure locked-seed reproduction.**
-Add a script that runs the same prompt twice with a locked seed against a deterministic provider, then compares the two scenes. Report code identity for procedural scenes and a pixel delta for model scenes.
-*Acceptance:* the guide states a measured threshold and the exact command; the claim “same seed ≈ same scene” is either backed by numbers or softened.
+**A2 · Measure locked-seed reproduction.** — DONE 2026-11-23
+`scripts/test-seed-lock.mjs` runs the same prompt twice through the deterministic procedural fallback across 6 prompt × format cases; all 6 are byte-identical (code identity). Model-path (Ollama/Gemini) seed reproduction requires a live provider and is documented in the script; the claim is softened to “procedural fallback is deterministic; model output reproducible only when provider/model/temperature/seed are fixed.”
 
-**A3 · Finish the remix entry points.**
-Add **Remix** to preset cards and to the export/share surface. Remix opens a new project with the scene loaded as version 1 — no model call, no shared-link trust gate.
-*Acceptance:* from gallery → Remix → project with the scene, one version, and the preset name in the title; the source project is untouched.
+**A3 · Finish the remix entry points.** — DONE 2026-11-23
+`handleRemixPreset` (`src/App.tsx:662-707`) opens a brand-new project with the scene as version 1, no model call, no trust gate. Wired to the `PresetGallery` Remix button (`src/components/PresetGallery.tsx:185-198`) and the ProjectPage empty-state “Start from a preset” (`src/components/ProjectPage.tsx:707-728`). Title is `Remix · <preset title>`; source project untouched.
 
-**A4 · Publish the embed demo.**
-Move the fixture out of `.tmp/embed` into `docs/` with a static demo page and a copy-paste snippet. Exercise `file://` in a real browser and record the result.
-*Acceptance:* a link in the README opens a working embed; reduced-motion path verified; `file://` either verified or documented as a known limitation with the reason.
+**A4 · Publish the embed demo.** — DONE 2026-11-23
+Fixture moved from `.tmp/embed/` into `docs/embed/`: `demo.html` (static demo page), `embed.md` (copy-paste snippet + guide), sandboxed `embed.js` (copy of `public/embed.js`, `allow-scripts` without `allow-same-origin`), `scene.html` fixture. `file://` works for the loader itself (no scene fetch); bundle runtime from `file://` documented as a browser-dependent limitation.
 
 ---
 
@@ -77,17 +74,14 @@ Move the fixture out of `.tmp/embed` into `docs/` with a static demo page and a 
 
 Chat editing is the product’s differentiator, but the instant path only covers SVG.
 
-**B1 · Offline look and theme on every engine.**
-Wire the deterministic path to the look/theme message for Worlds, Pixel and Dither (no code rewrite needed). Keep structural edits model-only there.
-*Acceptance:* `make it night` changes all four engines with zero model calls; unsupported requests return a short, accurate reply with a one-click **Use model** action.
+**B1 · Offline look and theme on every engine.** — DONE (Phase 2)
+`editSceneOffline` now handles theme/finish switches and live look changes for SVG, Worlds, Pixel, and Dither. It is wired into `handleSendMessage` (`src/App.tsx`): the deterministic offline editor runs first (zero model calls), and the LLM fallback (`mutateSceneApi`) only runs when it cannot apply the edit. Unsupported requests return a short, accurate reply with two concrete rephrasings plus a one-click **Use model** path.
 
-**B2 · Undo the last edit from chat.**
-Add `/undo` and an **Undo** button in the composer. It restores the previous checkpoint without creating a new one.
-*Acceptance:* after an edit, `/undo` restores the exact prior code; a second `/undo` walks back another version; no new checkpoint is added.
+**B2 · Undo the last edit from chat.** — DONE (Phase 2)
+Added an **Undo** button in the ProjectPage composer (next to Surprise), backed by `/undo`. It restores the previous checkpoint (`codeVersions[length-2]`) without creating a new one; repeated Undo walks back versions. No new checkpoint is added.
 
-**B3 · Resolve references and recover from failure.**
-Resolve “it”, “that”, “the car” against the last edited object. When an offline edit cannot run, reply with two concrete rephrasings instead of a generic failure.
-*Acceptance:* a three-turn conversation (“add a car” → “make it red” → “move it left”) applies each step to the same object; failed edits offer usable next prompts.
+**B3 · Resolve references and recover from failure.** — DONE (Phase 2)
+Pronoun resolution ("it"/"that"/"the last thing") works for add/remove/move across all four engines via `/*a3d:...*/` markers. Color change ("make it red", "change it to blue") works on SVG, Pixel, Dither, and Worlds (when the target's creation line carries visible hex colors). Failed offline edits reply with two concrete rephrasings instead of a generic failure.
 
 ---
 
@@ -95,32 +89,30 @@ Resolve “it”, “that”, “the car” against the last edited object. When
 
 44 presets are only useful if people can find them.
 
-**C1 · Search and filter the gallery.**
-Text search plus engine and subject filters, keyboard navigation, and an empty state that suggests a prompt.
-*Acceptance:* filtering to SVG + “food” surfaces the food truck; keyboard-only selection works; no layout shift at 390 px.
+**C1 · Search and filter the gallery.** — DONE (Phase 3)
+`PresetGallery` now has keyboard navigation (arrow keys move focus, Enter selects, Escape closes, Home/End jump to first/last), an empty state with a "Clear filters" button when no results match, and focused-card scroll-into-view. Text search and engine/subject filter tabs were already present.
+*Acceptance:* filtering to SVG + "food" surfaces the food truck; keyboard-only selection works; no layout shift at 390 px.
 
-**C2 · Start from a preset inside a project.**
-A “Start from a preset” row on the project empty state, using the same Remix path as A3.
+**C2 · Start from a preset inside a project.** — Already DONE (Phase 1, Track A3)
+`handleRemixPreset` (`src/App.tsx`) opens a new project at version 1 with no model call. Wired to PresetGallery Remix button and ProjectPage empty-state "Start from a preset" row (`ProjectPage.tsx:707-728`). Two clicks from blank project to rendered scene.
 *Acceptance:* two clicks from a blank project to a rendered scene with one version and a sensible title.
 
-**C3 · First-run panel.**
-Show model status (Ollama detected / key missing), an engine picker and three starters. Replace blank-canvas states with one clear next action.
+**C3 · First-run panel.** — DONE (Phase 3)
+New `FirstRunPanel` component (`src/components/FirstRunPanel.tsx`) shows model status (Ollama models detected / Gemini key missing), an engine picker (SVG/Worlds/Pixel/Dither), and three starters (Coffee Cart SVG, Lighthouse Island Worlds, Mountain Forge Pixel). Wired into App.tsx: shown on Home when `sessions.length === 0` and no model is configured; replaced by the normal Homepage once a model is available or a session exists. Gives new users one clear next action with no dead ends when the API is down.
 *Acceptance:* a new user can tell whether a model is available before typing; no dead ends when the API is down.
 
 ---
 
-### Track D — Distribution polish (shipped; canvas storyboards dropped)
+### Track D — Distribution polish (Phase 4 — DONE 2026-11-23)
 
-**D1 · Share card instead of Open Graph.**
-Hash payloads cannot be rendered by a server, so generate a PNG preview client-side and use the Web Share API where available, with a download fallback.
-*Acceptance:* sharing produces a link plus an image on supporting browsers; the fallback still copies the link.
+**D1 · Share card instead of Open Graph.** — DONE
+`shareCard()` generates a PNG preview client-side via `snapshotPng()` and shares it through the Web Share API together with the scene link URL. Fallback copies the link to the clipboard. Sharing produces both a link and an image on supporting browsers; the fallback copies the link.
 
-**D2 · Decide the canvas storyboard.**
-**Decided: drop it for v2.** The camera lives inside Three.js, so four angles is real work for a low-frequency export. The button stays disabled with that explanation, and canvas storyboards are no longer planned.
+**D2 · Decide the canvas storyboard.** — Dropped (decision recorded).
+The camera lives inside Three.js, so four angles is real work for a low-frequency export. The button stays disabled with that explanation; canvas storyboards are no longer planned.
 
-**D3 · Share-size guardrails.**
-Show the size verdict earlier, and switch the primary action to **Export HTML** above `SHARE_ROUTE_SOFT_LIMIT`.
-*Acceptance:* a scene over 6 KB offers the file path first; the link path remains available but secondary.
+**D3 · Share-size guardrails.** — DONE
+The share dialog shows the character count and a verdict (safe vs. may be truncated). Above `SHARE_ROUTE_SOFT_LIMIT` (6 KB), **Export HTML** becomes the primary action (gradient emerald/teal button), with Open and Share card/Copy link as secondary actions.
 
 ---
 

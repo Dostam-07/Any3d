@@ -17,7 +17,19 @@
  */
 export function unwrapCorePrompt(rawPrompt) {
   if (!rawPrompt || typeof rawPrompt !== 'string') return '';
-  const trimmed = rawPrompt.trim();
+  let trimmed = rawPrompt.trim();
+
+  // Pattern 0: Strip meta prompt scaffolding (e.g. "Enhance this 3D scene prompt for the WORLDS engine: \"...\"")
+  const metaWrapper = /^(?:Enhance|Generate|Create|Optimize)\s+(?:this\s+)?3D\s+scene\s+prompt\s+for\s+(?:the\s+)?[A-Za-z0-9_-]+\s+engine:\s*["'`]?/i;
+  if (metaWrapper.test(trimmed)) {
+    trimmed = trimmed.replace(metaWrapper, '').replace(/["'`]\s*$/, '').trim();
+  }
+
+  // Pattern 0b: Strip general prefix commands like "Create a detailed 3D scene of ..." or "Create a 3D scene for ..."
+  const makeWrapper = /^(?:Please\s+)?(?:create|build|generate|make|render|show)\s+(?:me\s+)?(?:a|an)\s+(?:detailed\s+|multi-part\s+|isometric\s+|3d\s+)*(?:scene|figure|world|diorama)\s+(?:of|for|depicting|showing)\s*:\s*["'`]?/i;
+  if (makeWrapper.test(trimmed)) {
+    trimmed = trimmed.replace(makeWrapper, '').replace(/["'`]\s*$/, '').trim();
+  }
 
   // Pattern 1: bringing to life ["']([^"']+)["']
   const quotedLifeMatch = /bringing\s+to\s+life\s+["'`]([^"'`]+)["'`]/i.exec(trimmed);
@@ -49,6 +61,24 @@ export function unwrapCorePrompt(rawPrompt) {
     return depictingMatch[1].trim();
   }
 
+  // Pattern 6: Generalized enhanced/descriptive prefixes: "A detailed isometric scene of <core>, featuring..."
+  const scenePrefixMatch = /^(?:A|An)\s+(?:[\w-]+\s+){0,6}?(?:scene|vignette|illustration|view|composition)\s+(?:of|depicting|showing|centered\s+on|where)\s+(?:an?\s+)?(.+?)(?:,\s*(?:featuring\s+directional|featuring\s+|accompanied\s+by|with\s+directional|with\s+tactile)|\.|$)/i.exec(trimmed);
+  if (scenePrefixMatch && scenePrefixMatch[1].trim().length > 3) {
+    return scenePrefixMatch[1].trim();
+  }
+
+  // Pattern 7: Strip trailing synthetic scaffolding if present
+  let out = trimmed;
+  const trailingScaffolding = /,\s*(?:featuring\s+(?:directional|warm|ambient|tactile|specular|glossy|clean|subtle)[^.]*|and\s+a\s+synchronized\s+[^.]*in\s+tick\(\))\.*$/i;
+  if (trailingScaffolding.test(out)) {
+    out = out.replace(trailingScaffolding, '').trim();
+    const leadingPrefix = /^(?:A|An)\s+(?:[\w-]+\s+){0,6}?(?:scene|vignette|illustration|view|composition)\s+(?:of|depicting|showing|centered\s+on|where)\s+(?:an?\s+)?/i;
+    if (leadingPrefix.test(out)) {
+      out = out.replace(leadingPrefix, '').trim();
+    }
+    return out;
+  }
+
   return trimmed;
 }
 
@@ -71,7 +101,8 @@ const MODIFIERS = new Set([
   'vintage', 'classic', 'antique', 'weathered', 'rusty', 'polished', 'shiny', 'matte',
   'proud', 'brave', 'fierce', 'gentle', 'weary', 'happy', 'sad', 'angry', 'lonely',
   'spring', 'autumn', 'winter', 'summer', 'quick', 'brown', 'lazy', 'sleeping',
-  'sleek', 'slim', 'sleek', 'bold', 'delicate', 'ornate', 'minimal', 'minimalist',
+  'sleek', 'slim', 'bold', 'delicate', 'ornate', 'minimal', 'minimalist',
+  'isometric', 'scene', 'scenes', 'vignette', 'vignettes', 'illustration', 'render', 'model', 'figure', 'composition', 'depicting', 'showing', 'modular', 'stylized', 'view'
 ]);
 
 /**
@@ -140,6 +171,7 @@ export function extractPromptSemantics(rawPrompt) {
   const corpus = `${cp} ${cp} ${p}`;
 
   // 1. Specific Domain Checks
+  const hasOffice = /\b(office|workspace|workstation|cubicle|desktop|desk|computer|laptop|chair|chairs|study|study\s*room)\b/i.test(corpus);
   const hasBaker = /\b(baker|bakery|bake|bread|cake|pastry|pastries|croissant|oven|baking|dough)\b/i.test(corpus);
   const hasBlacksmith = /\b(blacksmith|forge|anvil|smithy|metalsmith|hammering\s*sword|forging)\b/i.test(corpus);
   const hasSubmarine = /\b(submarine|submersible|u-boat|underwater\s*drone)\b/i.test(corpus);
@@ -150,12 +182,24 @@ export function extractPromptSemantics(rawPrompt) {
   const hasWaterfall = /\b(waterfall|cascade|rapids|pond.*rocks|waterfall.*pond)\b/i.test(corpus);
   const hasSculpture = /\b(sculpture|abstract|geometric\s*sculpture|metallic\s*rings|rings.*sculpture|floating.*rings)\b/i.test(corpus);
   const hasRocket = /\b(rocket|spaceship|spacecraft|shuttle|launchpad|flame\s*trench)\b/i.test(corpus);
+  const hasBus = /\b(bus|transit\s*bus|city\s*bus|coach|minibus|double\s*decker)\b/i.test(corpus);
+  const hasCity = !hasBus && /\b(city|metropolis|downtown|urban|skyline|city\s*street|street\s*corner|street|avenue|boulevard|crossroad|crossroads|cityscape|town|skyscraper|skyscrapers|tram|traffic|crosswalk|cobblestone|crane)\b/i.test(corpus);
+  const hasFarm = /\b(farm|farmstead|farmland|barn|farmhouse|ranch|countryside|pasture|crop|crops|orchard|tractor|hay|silo|livestock|windmill|windpump)\b/i.test(corpus);
+  const hasPark = /\b(park|botanical|meadow|nature\s*park|greenery|campsite|camping)\b/i.test(corpus);
+  const hasHarbor = /\b(harbor|harbour|port|pier|dock|docks|marina|wharf|seaport|quay|dockyard|container\s*ship|cargo\s*ship)\b/i.test(corpus);
+  const hasCastle = /\b(castle|fortress|medieval|kingdom|citadel|rampart|towers|stronghold)\b/i.test(corpus);
+  const hasLighthouse = /\b(lighthouse|light\s*station|beacon\s*tower|rocky\s*island)\b/i.test(corpus);
+  const hasClassroom = /\b(classroom|class\s*room|teacher|lesson|lecture|school\s*class|students|pupils|chalkboard|blackboard|desks?|chalk)\b/i.test(corpus);
+  const hasSports = /\b(badminton|tennis|court|ping\s*pong|table\s*tennis|basketball|volleyball|soccer|football|racket|shuttlecock|referee)\b/i.test(corpus);
+  const hasCampus = !hasClassroom && /\b(school|college|university|campus|academy|high\s*school|quadrangle|lecture\s*hall|dormitory)\b/i.test(corpus);
+  const hasAirport = /\b(airport|airfield|aerodrome|terminal|hangar|air\s*traffic\s*control|concourse|runway|tarmac)\b/i.test(corpus);
+  const hasSea = !hasHarbor && !hasLighthouse && !hasSubmarine && /\b(sea|ocean|open\s*water|deep\s*sea|marine|maritime|sailing|yacht|sailboat|schooner|beach|coast)\b/i.test(corpus);
 
   // 2. Identify High-Level Subject Type
-  const isHumanoid = hasBaker || hasBlacksmith || hasWizard || /\b(person|man|woman|baker|samurai|botanist|chef|scientist|worker|dancer|kid|child|mechanic|sailor|knight|guard|pilot|warrior|astronaut|farmer|artist|diver|juggler|florist)\b/i.test(corpus);
+  const isHumanoid = hasClassroom || hasBaker || hasBlacksmith || hasWizard || /\b(person|man|woman|baker|samurai|botanist|chef|scientist|worker|dancer|kid|child|mechanic|sailor|knight|guard|pilot|warrior|astronaut|farmer|artist|diver|juggler|florist|teacher|student|students|player|players)\b/i.test(corpus);
   const isVehicle = hasAviation || hasRacing || hasCar || hasSubmarine || hasRocket || /\b(car|truck|plane|aeroplane|airplane|submarine|boat|ship|train|locomotive|motorcycle|bike|rover|shuttle|rocket)\b/i.test(corpus);
-  const isWater = hasWaterfall || hasSubmarine || /\b(water|pond|ocean|sea|river|lake|stream|coral)\b/i.test(corpus);
-  const isIndoor = hasBaker || hasBlacksmith || hasWizard || /\b(indoor|kitchen|bakery|library|workshop|room|diner|lab|laboratory|hall|inside)\b/i.test(corpus);
+  const isWater = hasWaterfall || hasSubmarine || hasHarbor || /\b(water|pond|ocean|sea|river|lake|stream|coral)\b/i.test(corpus);
+  const isIndoor = hasClassroom || hasBaker || hasBlacksmith || hasWizard || hasOffice || /\b(indoor|kitchen|bakery|library|workshop|office|room|diner|lab|laboratory|hall|inside|classroom|barbershop)\b/i.test(corpus);
   const isAbstractVoid = hasSculpture || (!isHumanoid && !isVehicle && !isWater && /\b(sculpture|abstract|geometric|rings|torus|void|gyro)\b/i.test(corpus));
 
   // Determine Primary Subject Name
@@ -163,7 +207,59 @@ export function extractPromptSemantics(rawPrompt) {
   let category = 'custom';
   let environment = 'pedestal';
 
-  if (hasBaker) {
+  if (hasBus) {
+    category = 'transit_bus';
+    primarySubject = 'bus';
+    environment = 'transit_avenue';
+  } else if (hasClassroom) {
+    category = 'classroom';
+    primarySubject = 'classroom';
+    environment = 'indoor_classroom';
+  } else if (hasSports) {
+    category = 'sports';
+    primarySubject = /\bbadminton\b/i.test(corpus) ? 'badminton court' : 'tennis court';
+    environment = 'sports_arena';
+  } else if (hasOffice) {
+    category = 'office';
+    primarySubject = 'office';
+    environment = 'indoor_office';
+  } else if (hasCity) {
+    category = 'city';
+    primarySubject = 'city';
+    environment = 'urban_avenue';
+  } else if (hasFarm) {
+    category = 'farm';
+    primarySubject = 'farm';
+    environment = 'countryside_farm';
+  } else if (hasPark) {
+    category = 'park';
+    primarySubject = 'park';
+    environment = 'nature_park';
+  } else if (hasLighthouse) {
+    category = 'lighthouse';
+    primarySubject = 'lighthouse';
+    environment = 'coastal_shore';
+  } else if (hasAirport) {
+    category = 'airport';
+    primarySubject = 'airport';
+    environment = 'airport_terminal';
+  } else if (hasHarbor) {
+    category = 'harbor';
+    primarySubject = 'harbor';
+    environment = 'coastal_harbor';
+  } else if (hasCampus) {
+    category = 'campus';
+    primarySubject = 'campus';
+    environment = 'academic_campus';
+  } else if (hasSea) {
+    category = 'sea';
+    primarySubject = 'ocean';
+    environment = 'open_ocean';
+  } else if (hasCastle) {
+    category = 'castle';
+    primarySubject = 'castle';
+    environment = 'medieval_kingdom';
+  } else if (hasBaker) {
     category = 'bakery';
     primarySubject = 'baker';
     environment = 'indoor_bakery';
@@ -242,7 +338,12 @@ export function extractPromptSemantics(rawPrompt) {
 
   addSecondary('cake', ['cake', 'pastry', 'pie', 'tart', 'loaf', 'bread']);
   addSecondary('oven', ['oven', 'kiln', 'stove', 'furnace', 'hearth']);
-  addSecondary('table', ['table', 'bench', 'counter', 'stand', 'pedestal', 'desk']);
+  addSecondary('desk', ['desk', 'desktop', 'workstation', 'work\\s*table', 'study\\s*table', 'cubicle']);
+  addSecondary('chair', ['chair', 'chairs', 'seat', 'armchair', 'swivel\\s*chair', 'stool']);
+  addSecondary('computer', ['computer', 'desktop', 'monitor', 'screen', 'laptop', 'pc']);
+  addSecondary('keyboard', ['keyboard', 'keypad']);
+  addSecondary('lamp', ['lamp', 'desk\\s*lamp', 'street\\s*lamp', 'lantern', 'torch', 'sconce', 'task\\s*lamp']);
+  addSecondary('table', ['table', 'bench', 'counter', 'stand', 'pedestal']);
   addSecondary('runway', ['runway', 'tarmac', 'airstrip']);
   addSecondary('landing gear', ['landing\\s*gear', 'gear', 'wheels', 'struts']);
   addSecondary('wings', ['wings', 'wing']);
@@ -264,6 +365,31 @@ export function extractPromptSemantics(rawPrompt) {
   addSecondary('trees', ['tree', 'trees', 'pines', 'foliage']);
   addSecondary('wall', ['wall', 'barrier', 'fence']);
   addSecondary('fire', ['fire', 'flame', 'campfire', 'bonfire']);
+  addSecondary('buildings', ['building', 'buildings', 'skyscraper', 'skyscrapers', 'tower', 'towers']);
+  addSecondary('barn', ['barn', 'silo', 'farmhouse']);
+  addSecondary('tractor', ['tractor', 'harvester']);
+  addSecondary('street', ['street', 'road', 'avenue', 'crosswalk']);
+  addSecondary('traffic light', ['traffic\\s*light', 'stoplight', 'signal']);
+  addSecondary('windmill', ['windmill', 'windpump']);
+  addSecondary('lighthouse', ['lighthouse', 'beacon']);
+  addSecondary('terminal', ['terminal', 'concourse', 'jet\\s*bridge', 'hangar']);
+  addSecondary('control tower', ['control\\s*tower', 'atc']);
+  addSecondary('crane', ['crane', 'gantry\\s*crane', 'cargo\\s*crane']);
+  addSecondary('passengers', ['passenger', 'passengers', 'passanger', 'passangers', 'commuter', 'commuters', 'riders', 'crowd']);
+  addSecondary('conductor', ['conductor', 'bus\\s*conductor', 'ticket\\s*collector', 'ticket\\s*inspector', 'driver']);
+  addSecondary('bus stop', ['bus\\s*stop', 'bus\\s*shelter', 'shelter', 'transit\\s*stop']);
+  addSecondary('tram', ['tram', 'streetcar', 'trolley', 'light\\s*rail']);
+  addSecondary('containers', ['containers', 'cargo\\s*containers', 'shipping\\s*containers']);
+  addSecondary('tugboat', ['tugboat', 'boat', 'freighter', 'ship', 'schooner', 'yacht']);
+  addSecondary('clock tower', ['clock\\s*tower', 'bell\\s*tower']);
+  addSecondary('fountain', ['fountain', 'water\\s*fountain']);
+  addSecondary('drawbridge', ['drawbridge', 'moat']);
+  addSecondary('chalkboard', ['chalkboard', 'blackboard', 'whiteboard', 'board']);
+  addSecondary('teacher', ['teacher', 'instructor', 'professor', 'lecturer']);
+  addSecondary('students', ['student', 'students', 'pupil', 'pupils']);
+  addSecondary('net', ['net', 'badminton\\s*net', 'tennis\\s*net']);
+  addSecondary('racket', ['racket', 'rackets', 'racquet']);
+  addSecondary('shuttlecock', ['shuttlecock', 'shuttle', 'birdie']);
 
   // 4. Extract Actions & Interactions
   const actions = [];
@@ -287,6 +413,16 @@ export function extractPromptSemantics(rawPrompt) {
   addAction('rotating', ['rotating', 'spinning', 'turning', 'revolving', 'twisting']);
   addAction('practicing', ['practicing', 'sparring', 'training']);
   addAction('examining', ['examining', 'inspecting', 'scanning', 'studying']);
+  addAction('working', ['working', 'typing', 'computing', 'coding', 'writing']);
+  addAction('sitting', ['sitting', 'seated', 'swivel', 'swiveling']);
+
+  // 4b. Extract Explicit Size Intent (hero: webpage hero section vs card: website feature card)
+  let requestedSize = null;
+  if (/\b(hero|hero\s*section|webpage\s*hero|panoramic|16:9|banner|wide\s*stage|landing\s*page|header)\b/i.test(corpus)) {
+    requestedSize = 'hero';
+  } else if (/\b(card|feature\s*card|website\s*card|component\s*card|diorama|4:3)\b/i.test(corpus)) {
+    requestedSize = 'card';
+  }
 
   // 5. Build Prohibited Objects Guard
   // (Prevents unrequested rogue trees, walls, dustbins, or cats from dominating the scene)
@@ -305,6 +441,7 @@ export function extractPromptSemantics(rawPrompt) {
     secondaryObjects,
     actions,
     environment,
+    requestedSize,
     isIndoor,
     isWater,
     isAbstractVoid,

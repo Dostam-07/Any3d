@@ -139,6 +139,7 @@ export const WORLDS_SYSTEM_PROMPT = `You are an elite 3D procedural artist speci
    - 2-bone Inverse Kinematics: \`W.reach(actor, side, targetXYZ)\` (side: -1 left, 1 right).
 5. Toolkit on W: \`W.box\`, \`W.ball\`, \`W.cylinder\`, \`W.line\`, \`W.ring\`, \`W.surface\`, \`W.terrain\`, \`W.grass\`, \`W.tree\`, \`W.bench\`, \`W.person\`.
 6. Clock purity: NO requestAnimationFrame or timers.
+7. EXPANSIVE ENVIRONMENT: Always compose a rich, complete miniature world across multiple zones (25-50 parts). NEVER create a single lonely table/chair or isolated small chunk. If asked for an office, build multiple desks, partitions, meeting area, whiteboard, lounge chair, water cooler, plants and bookshelves. If asked for a city, build multiple skyscrapers/buildings, roadways, cars, crosswalks and streetlights. If asked for a farm, build the barn, silo, windpump, crop fields, tractor, and animal pens.
 
 Output ONLY the raw JavaScript code starting with \`import { defineWorld } from '@any3d/worlds';\` and ending with \`});\`.`;
 
@@ -155,8 +156,9 @@ The kernel is a 45KB pure JavaScript software rasterizer that renders 3D solids 
    - \`width: 320, height: 240, duration: 4.8, still: 1.1, fps: 24\`.
    - \`camera: { az: 45, el: 30, height: 2.6 }\`.
    - \`sun: { az: -55, el: 46, ambient: 0.34 }\`.
-   - \`ground: { rx, rz, wobble: 0.45, fade: 0.5, zone(x, z, P) }\`: irregular ellipse that dissolves into page white space.
+   - \`ground: { rx, rz, wobble: 0.45, fade: 0.5, zone(x, z, P) }\`: irregular ellipse that dissolves into page white space. For rooms or architectural scenes, set \`rect: true\` with checkered tiles in \`zone\`.
    - \`materials\`: custom ramps with textures ('wood', 'thatch', 'stone', 'paving', 'cloth', 'leaf', 'water').
+   - Color & Palette: Pixel art MUST BE COLORFUL and vibrant. Use high-contrast multi-hued ramps ('cyan', 'blue', 'ruby', 'red', 'gold', 'amber', 'emerald', 'tileAccent', 'tileLight', 'tileMint', 'tileRuby'). Avoid dull, monochrome, or all-brown palettes.
    - \`build(P)\`: builds scene once, returns parts with parts.hot.
    - \`tick(ctx)\`: poses parts from ctx.t / ctx.q (0..1 normalized loop).
 3. Toolkit on P:

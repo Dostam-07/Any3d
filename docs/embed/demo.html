@@ -10,13 +10,33 @@
   h1 { font-size: 18px; margin: 0 0 4px; }
   p  { color: #94a3b8; margin: 0 0 20px; font-size: 12px; }
   .lead { max-width: 720px; }
+  pre { background: #121422; border: 1px solid #1f2937; border-radius: 10px;
+    padding: 12px 14px; font-size: 11px; overflow: auto; }
+  code { color: #38bdf8; }
+  .tag { color: #f59e0b; }
+  .attr { color: #a78bfa; }
+  .val { color: #34d399; }
 </style>
 </head>
 <body>
-  <h1>Embedded scene</h1>
-  <p id="meta">One script tag · chrome-less · airport</p>
+  <h1>Embedded Any3d scene</h1>
+  <p id="meta">One script tag · chrome-less · works from <code>file://</code></p>
   <div class="lead">
-    <script src="embed.js" data-src="scene.html" data-ratio="4 / 3" data-title="airport"></script>
+    <script src="embed.js" data-src="scene.html" data-ratio="4 / 3"
+            data-title="Airport scene"></script>
   </div>
+
+  <h2>Copy-paste snippet</h2>
+  <pre><code>&lt;<span class="tag">script</span> <span class="attr">src</span>=<span class="val">"/path/to/embed.js"</span>
+       <span class="attr">data-src</span>=<span class="val">"https://your.site/scenes/my-scene.html"</span>
+       <span class="attr">data-ratio</span>=<span class="val">"4 / 3"</span>
+       <span class="attr">data-title</span>=<span class="val">"Corner coffee cart"</span>
+    <span class="tag">&lt;/script&gt;</span></code></pre>
+
+  <p style="color:#94a3b8;font-size:11px;margin-top:16px;">
+    Build the scene in Any3d Studio, Export HTML, host the bundle anywhere, then drop in the loader above.
+    The iframe is sandboxed (<code>allow-scripts</code>, no <code>allow-same-origin</code>) so the embedded
+    scene cannot read the host page&rsquo;s origin.
+  </p>
 </body>
 </html>

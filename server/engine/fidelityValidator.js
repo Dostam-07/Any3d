@@ -92,6 +92,9 @@ export function validatePromptFidelity(code, rawPrompt, format = 'svg') {
     case 'cat':
       primaryFound = hasInCode([/\bcat\b/, /\bkitten\b/, /\bfeline\b/, /\bwhisker\b/]);
       break;
+    case 'office':
+      primaryFound = hasInCode([/\boffice\b/, /\bdesk\b/, /\bdesktop\b/, /\bworkstation\b/, /\bcomputer\b/, /\bchair\b/]);
+      break;
     case 'dog':
       primaryFound = hasInCode([/\bdog\b/, /\bpuppy\b/, /\bhound\b/, /\bcanine\b/]);
       break;
@@ -121,6 +124,16 @@ export function validatePromptFidelity(code, rawPrompt, format = 'svg') {
       objFound = hasInCode([/\bcake\b/, /\bpastry\b/, /\bloaf\b/, /\bfrosting\b/, /\btart\b/]);
     } else if (obj === 'oven') {
       objFound = hasInCode([/\boven\b/, /\bhearth\b/, /\bcoals\b/, /\bfurnace\b/, /\bkiln\b/]);
+    } else if (obj === 'desk') {
+      objFound = hasInCode([/\bdesk\b/, /\bworkstation\b/, /\btable\b/, /\bcounter\b/]);
+    } else if (obj === 'chair') {
+      objFound = hasInCode([/\bchair\b/, /\bseat\b/, /\barmchair\b/, /\bstool\b/]);
+    } else if (obj === 'computer') {
+      objFound = hasInCode([/\bcomputer\b/, /\bdesktop\b/, /\bmonitor\b/, /\bscreen\b/, /\blaptop\b/, /\bpc\b/]);
+    } else if (obj === 'lamp') {
+      objFound = hasInCode([/\blamp\b/, /\blight\b/, /\blantern\b/]);
+    } else if (obj === 'keyboard') {
+      objFound = hasInCode([/\bkeyboard\b/, /\bkeypad\b/, /\bkeys\b/]);
     } else if (obj === 'table') {
       objFound = hasInCode([/\btable\b/, /\bbench\b/, /\bcounter\b/, /\bstand\b/]);
     } else if (obj === 'runway') {

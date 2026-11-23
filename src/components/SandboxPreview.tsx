@@ -15,8 +15,13 @@ import {
   Download,
   Camera,
   EllipsisVertical,
+  ChevronDown,
+  Layers,
+  Palette,
+  Compass,
+  Frame,
 } from 'lucide-react';
-import { RenderFormat, SVGTheme, WorldFinish } from '../types';
+import { RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { GenerationPlayground } from './GenerationPlayground';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
@@ -54,6 +59,9 @@ interface SandboxPreviewProps {
   /** Controlled atmosphere (Phase 3); omit to let the preview own it. */
   look?: SceneLook;
   onLookChange?: (look: SceneLook) => void;
+  /** Web layout presentation format: hero (webpage hero section) or card (website feature card) */
+  size?: WebPresentationSize;
+  onSizeChange?: (size: WebPresentationSize) => void;
   /** Shared/untrusted scenes run in an opaque-origin iframe. */
   untrusted?: boolean;
 }
@@ -79,9 +87,15 @@ function SandboxPreviewInner({
   hideControls = false,
   look,
   onLookChange,
+  size,
+  onSizeChange,
   untrusted = false,
 }: SandboxPreviewProps, ref: React.Ref<SandboxPreviewHandle>) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [sizeState, setSizeState] = useState<WebPresentationSize>('card');
+  const currentSize = size ?? sizeState;
+  const [sizeMenuOpen, setSizeMenuOpen] = useState<boolean>(false);
+  const sizeMenuRef = useRef<HTMLDivElement>(null);
   const [themeState, setThemeState] = useState<SVGTheme>('toy');
   const [finishState, setFinishState] = useState<WorldFinish>('miniature');
   const svgTheme = theme ?? themeState;
@@ -106,6 +120,11 @@ function SandboxPreviewInner({
   const [compact, setCompact] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [styleMenuOpen, setStyleMenuOpen] = useState<boolean>(false);
+  const [cameraMenuOpen, setCameraMenuOpen] = useState<boolean>(false);
+  const [activeCamera, setActiveCamera] = useState<'iso' | 'top' | 'front' | 'side'>('iso');
+  const styleMenuRef = useRef<HTMLDivElement>(null);
+  const cameraMenuRef = useRef<HTMLDivElement>(null);
   const pngPending = useRef(
     new Map<string, { resolve: (url: string) => void; reject: (err: Error) => void; timer: number }>()
   );
@@ -123,20 +142,23 @@ function SandboxPreviewInner({
   }, []);
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen && !styleMenuOpen && !cameraMenuOpen && !sizeMenuOpen) return;
     const onPointerDown = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+      if (styleMenuRef.current && !styleMenuRef.current.contains(e.target as Node)) setStyleMenuOpen(false);
+      if (cameraMenuRef.current && !cameraMenuRef.current.contains(e.target as Node)) setCameraMenuOpen(false);
+      if (sizeMenuRef.current && !sizeMenuRef.current.contains(e.target as Node)) setSizeMenuOpen(false);
     };
     document.addEventListener('mousedown', onPointerDown);
     return () => document.removeEventListener('mousedown', onPointerDown);
-  }, [menuOpen]);
+  }, [menuOpen, styleMenuOpen, cameraMenuOpen, sizeMenuOpen]);
 
-  // Never block the 3D view: auto-close playground when scene is ready so view shows directly
+  // Automatically launch the playable 3D tower stacking game while generating assets
   useEffect(() => {
-    if (!isGenerating && html) {
-      setShowPlayground(false);
+    if (isGenerating) {
+      setShowPlayground(true);
     }
-  }, [isGenerating, html]);
+  }, [isGenerating]);
 
   // Send message to iframe based on active format
   const sendMessage = (msg: Record<string, unknown>) => {
@@ -172,8 +194,8 @@ function SandboxPreviewInner({
       }
 
       if (d.type === 'any3d') {
-        // A freshly mounted scene knows nothing about the toolbar: hand it the look.
-        if (d.ready) sendMessage({ look: lookRef.current });
+        // A freshly mounted scene knows nothing about the toolbar: hand it the look and size.
+        if (d.ready) sendMessage({ look: lookRef.current, size: currentSize });
         if (typeof d.hover === 'string') setHoverText(d.hover);
         if (typeof d.read === 'string') setReadoutText(d.read);
         if (Array.isArray(d.hot)) setHotList(d.hot);
@@ -254,6 +276,20 @@ function SandboxPreviewInner({
     lastFinishRef.current = finish;
     sendMessage({ finish });
   }, [finish]);
+
+  // Handle Size change
+  const handleSizeChange = (s: WebPresentationSize) => {
+    setSizeState(s);
+    onSizeChange?.(s);
+    sendMessage({ size: s });
+  };
+
+  const lastSizeRef = useRef<WebPresentationSize | undefined>(size);
+  useEffect(() => {
+    if (size === undefined || lastSizeRef.current === size) return;
+    lastSizeRef.current = size;
+    sendMessage({ size });
+  }, [size]);
 
   useEffect(() => {
     if (!look) return;
@@ -380,307 +416,359 @@ function SandboxPreviewInner({
         isFullscreen ? 'p-0' : ''
       }`}
     >
-      {/* Top Floating Controls Bar — collapses to essentials on narrow panels */}
+      {/* Top Floating Controls Bar — single-row clubbed actions */}
       <div
         className={
-          'min-h-11 px-3 py-1.5 border-b border-white/[0.08] bg-[#0c0e17]/90 backdrop-blur-md flex-wrap items-center justify-between gap-x-2 gap-y-1 z-10 shrink-0 ' +
+          'min-h-11 px-2.5 py-1.5 border-b border-white/[0.08] bg-[#0c0e17]/95 backdrop-blur-md items-center justify-between gap-2 z-10 shrink-0 w-full overflow-x-auto scrollbar-none ' +
           (hideControls ? 'hidden' : 'flex')
         }
       >
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
-          <LookScrubber look={sceneLook} onChange={handleLookChange} compact={compact} />
-          {compact ? (
-            <>
-              {format === 'svg' ? (
-                <label className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Theme</span>
-                  <select
-                    value={svgTheme}
-                    onChange={(e) => handleThemeChange(e.target.value as SVGTheme)}
-                    title="Scene theme"
-                    className="text-[11px] font-mono px-1.5 py-0.5 rounded-lg bg-zinc-950/80 border border-white/[0.08] text-zinc-300 outline-none cursor-pointer capitalize"
-                  >
-                    {SVG_THEMES.map((t) => (
-                      <option key={t} value={t} className="bg-[#0c0e17] capitalize">
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ) : format === 'worlds' ? (
-                <label className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Finish</span>
-                  <select
-                    value={worldFinish}
-                    onChange={(e) => handleFinishChange(e.target.value as WorldFinish)}
-                    title="Render finish"
-                    className="text-[11px] font-mono px-1.5 py-0.5 rounded-lg bg-zinc-950/80 border border-white/[0.08] text-zinc-300 outline-none cursor-pointer capitalize"
-                  >
-                    {WORLD_FINISHES.map((f) => (
-                      <option key={f} value={f} className="bg-[#0c0e17] capitalize">
-                        {f}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ) : (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-zinc-400">
-                  {format === 'pixel' ? 'Pixel 320×240' : 'Dither 360×280'}
-                </span>
-              )}
-            </>
-          ) : format === 'svg' ? (
+        {/* If mini-game/generation playground is active: Show clean focused arcade bar */}
+        {showPlayground ? (
+          <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Theme</span>
-              <div className="flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/[0.06] text-xs">
-                {SVG_THEMES.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => handleThemeChange(t)}
-                    className={`px-2.5 py-0.5 rounded-lg font-mono text-[11px] transition cursor-pointer capitalize ${
-                      svgTheme === t
-                        ? 'bg-zinc-800 text-emerald-400 font-semibold shadow-sm border border-emerald-500/30'
-                        : 'text-zinc-400 hover:text-zinc-200'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
+              <div className="w-6 h-6 rounded-lg bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center">
+                <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
               </div>
-
-              {/* Accent Color Swatches for SVG */}
-              <div className="flex items-center gap-1.5 ml-2 border-l border-white/[0.08] pl-2.5">
-                {SWATCHES.map((hex) => (
-                  <button
-                    key={hex}
-                    onClick={() => handleAccentChange(hex)}
-                    style={{ backgroundColor: hex }}
-                    title={`Set accent to ${hex}`}
-                    className={`w-3.5 h-3.5 rounded-full transition transform hover:scale-125 cursor-pointer ${
-                      accentColor === hex ? 'ring-2 ring-white ring-offset-2 ring-offset-zinc-950 scale-110 shadow-sm' : 'opacity-80 hover:opacity-100'
-                    }`}
-                  />
-                ))}
-              </div>
+              <span className="text-xs font-bold text-white tracking-wide">AnyStack 3D Arcade</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
+                Mini-Game
+              </span>
             </div>
-          ) : format === 'worlds' ? (
+
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Finish</span>
-              <div className="flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/[0.06] text-xs">
-                {WORLD_FINISHES.map((f) => (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => handleFinishChange(f)}
-                    className={`px-2.5 py-0.5 rounded-lg text-[11px] font-medium transition cursor-pointer capitalize ${
-                      worldFinish === f
-                        ? 'bg-indigo-600 text-white shadow-sm border border-indigo-400/40'
-                        : 'text-zinc-400 hover:text-zinc-200'
-                    }`}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : format === 'pixel' ? (
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 font-mono">
-                <Grid3X3 className="w-3.5 h-3.5" />
-                <span>Pixel Engine · 320×240 Raster</span>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300 font-mono">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Dither Engine · 360×280 4×4 Bayer</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right Action Controls */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          {/* Worlds Speed Selector */}
-          {format === 'worlds' && !compact && (
-            <select
-              value={speed}
-              onChange={(e) => handleSpeedChange(Number(e.target.value))}
-              className="bg-zinc-900 border border-white/[0.08] rounded-lg px-2 py-0.5 text-xs text-zinc-300 focus:outline-none cursor-pointer"
-            >
-              <option value={0.75}>0.75×</option>
-              <option value={1}>1.0× (Normal)</option>
-              <option value={1.5}>1.5×</option>
-            </select>
-          )}
-
-          {/* Play/Pause Button */}
-          <button
-            onClick={handleTogglePlay}
-            title={isPaused ? 'Resume Animation' : 'Show Still Frame'}
-            className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] text-zinc-300 transition cursor-pointer active:scale-95"
-          >
-            {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
-            <span className="hidden sm:inline">{isPaused ? 'Still' : 'Loop'}</span>
-          </button>
-
-          {/* Mini-Game Arcade Toggle (wide only) */}
-          {!compact && (
-            <button
-              onClick={() => setShowPlayground(!showPlayground)}
-              title={showPlayground ? 'View Scene' : 'Play AnyStack 3D Arcade'}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer active:scale-95 ${
-                showPlayground
-                  ? 'bg-indigo-600 text-white border-indigo-400/50 shadow-sm'
-                  : 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 border-white/[0.08]'
-              }`}
-            >
-              <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="hidden sm:inline">{showPlayground ? 'Scene' : 'AnyStack'}</span>
-            </button>
-          )}
-
-          {/* Camera Preset Angles (wide only) */}
-          {!compact && (
-            <div className="flex items-center p-0.5 rounded-lg bg-zinc-950/80 border border-white/[0.06] text-[10px] font-mono">
-              {(['iso', 'top', 'front', 'side'] as const).map((c) => (
+              {Boolean(html) && (
                 <button
-                  key={c}
                   type="button"
-                  onClick={() => handleCameraPreset(c)}
-                  title={`Switch camera to ${c.toUpperCase()} view`}
-                  className="px-1.5 py-0.5 rounded text-zinc-400 hover:text-white uppercase transition cursor-pointer hover:bg-white/[0.06]"
+                  onClick={() => setShowPlayground(false)}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-emerald-500 text-zinc-950 hover:bg-emerald-400 transition cursor-pointer shadow-md shadow-emerald-500/20 active:scale-95"
                 >
-                  {c}
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>View 3D Scene</span>
                 </button>
-              ))}
-            </div>
-          )}
-
-          {/* Snapshot PNG Button (wide only — compact keeps it in the menu) */}
-          {!compact && (
-            <button
-              onClick={handleSnapshotPng}
-              title="Download high-resolution PNG snapshot of the 3D scene"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] text-zinc-300 hover:text-white transition cursor-pointer active:scale-95"
-            >
-              <Camera className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">PNG</span>
-            </button>
-          )}
-
-          {/* Re-render Button */}
-          <button
-            onClick={onRefresh}
-            title="Reload sandbox preview"
-            className="p-1.5 hover:text-white text-zinc-400 rounded-lg hover:bg-white/[0.06] transition cursor-pointer"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Fullscreen Button */}
-          <button
-            onClick={toggleFullscreen}
-            title="Toggle Fullscreen"
-            className="p-1.5 hover:text-white text-zinc-400 rounded-lg hover:bg-white/[0.06] transition cursor-pointer"
-          >
-            {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-          </button>
-
-          {/* Compact overflow: every secondary control stays reachable */}
-          {compact && (
-            <div className="relative" ref={menuRef}>
+              )}
               <button
-                onClick={() => setMenuOpen((v) => !v)}
-                title="More scene controls"
-                className={`p-1.5 rounded-lg border transition cursor-pointer ${
-                  menuOpen
-                    ? 'bg-zinc-800 text-white border-white/[0.16]'
-                    : 'bg-zinc-900/90 text-zinc-400 hover:text-white border-white/[0.08]'
+                onClick={toggleFullscreen}
+                title="Toggle Fullscreen"
+                className="p-1.5 hover:text-white text-zinc-400 rounded-lg hover:bg-white/[0.06] transition cursor-pointer"
+              >
+                {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Normal 3D Scene View: Clubbed controls in ONE single slender row */
+          <>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Club 1: Environment & Lighting */}
+              <LookScrubber look={sceneLook} onChange={handleLookChange} />
+
+              {/* Club 2: Material Style / Finish / Theme */}
+              <div className="relative shrink-0" ref={styleMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStyleMenuOpen(!styleMenuOpen);
+                    setCameraMenuOpen(false);
+                    setSizeMenuOpen(false);
+                  }}
+                  title={`Render style and finish (${format === 'worlds' ? worldFinish : svgTheme})`}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium border transition cursor-pointer active:scale-95 shrink-0 ${
+                    styleMenuOpen
+                      ? 'bg-zinc-800 text-indigo-300 border-indigo-500/40 shadow-sm ring-1 ring-indigo-500/20'
+                      : 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 border-white/[0.08]'
+                  }`}
+                >
+                  {format === 'worlds' ? (
+                    <>
+                      <Layers className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                      <span className="capitalize text-[11px] font-medium">{worldFinish}</span>
+                    </>
+                  ) : format === 'svg' ? (
+                    <>
+                      <Palette className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="capitalize text-[11px] font-medium">{svgTheme}</span>
+                      <span
+                        className="w-2 h-2 rounded-full inline-block border border-white/20 ml-0.5 shrink-0"
+                        style={{ backgroundColor: accentColor }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <span className="text-[11px] font-mono">{format === 'pixel' ? 'Pixel' : 'Dither'}</span>
+                    </>
+                  )}
+                  <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${styleMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {styleMenuOpen && (
+                  <div className="absolute left-0 top-full mt-2 w-64 p-3 rounded-2xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl shadow-black/80 z-50 backdrop-blur-xl animate-fade-in space-y-3">
+                    {format === 'worlds' ? (
+                      <div>
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-2 flex items-center gap-1.5">
+                          <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                          <span>3D World Finish</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {WORLD_FINISHES.map((f) => (
+                            <button
+                              key={f}
+                              type="button"
+                              onClick={() => {
+                                handleFinishChange(f);
+                                setStyleMenuOpen(false);
+                              }}
+                              className={`flex flex-col items-start p-2 rounded-xl text-left border transition cursor-pointer capitalize ${
+                                worldFinish === f
+                                  ? 'bg-indigo-600/20 border-indigo-500/50 text-indigo-200 font-semibold shadow-sm'
+                                  : 'bg-white/[0.02] border-white/[0.06] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05]'
+                              }`}
+                            >
+                              <span className="text-xs font-semibold">{f}</span>
+                              <span className="text-[9px] text-zinc-500">
+                                {f === 'miniature'
+                                  ? 'Soft shaded diorama'
+                                  : f === 'pixel'
+                                  ? 'Retro pixel raster'
+                                  : f === 'halftone'
+                                  ? 'Print halftone dots'
+                                  : 'Drafting blueprint'}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : format === 'svg' ? (
+                      <div className="space-y-3">
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-2 flex items-center gap-1.5">
+                            <Palette className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Vector Theme</span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-1">
+                            {SVG_THEMES.map((t) => (
+                              <button
+                                key={t}
+                                type="button"
+                                onClick={() => handleThemeChange(t)}
+                                className={`py-1 px-2 rounded-lg text-[11px] font-mono capitalize border transition cursor-pointer text-center ${
+                                  svgTheme === t
+                                    ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 font-semibold'
+                                    : 'bg-white/[0.02] border-white/[0.06] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05]'
+                                }`}
+                              >
+                                {t}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="pt-2 border-t border-white/[0.06]">
+                          <div className="text-[10px] text-zinc-400 mb-1.5">Accent Color</div>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {SWATCHES.map((hex) => (
+                              <button
+                                key={hex}
+                                onClick={() => handleAccentChange(hex)}
+                                style={{ backgroundColor: hex }}
+                                title={`Set accent color to ${hex}`}
+                                className={`w-5 h-5 rounded-full transition transform hover:scale-125 cursor-pointer ${
+                                  accentColor === hex
+                                    ? 'ring-2 ring-white ring-offset-2 ring-offset-zinc-950 scale-110 shadow-sm'
+                                    : 'opacity-80 hover:opacity-100'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-zinc-400">
+                        {format === 'pixel' ? 'Pixel Art engine 320×240' : 'Ordered Dither engine 360×280'}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Club 3: Camera Angles */}
+              <div className="relative shrink-0" ref={cameraMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCameraMenuOpen(!cameraMenuOpen);
+                    setStyleMenuOpen(false);
+                    setSizeMenuOpen(false);
+                  }}
+                  title={`Camera view angle (${activeCamera.toUpperCase()})`}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium border transition cursor-pointer active:scale-95 shrink-0 ${
+                    cameraMenuOpen
+                      ? 'bg-zinc-800 text-sky-300 border-sky-500/40 shadow-sm'
+                      : 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 border-white/[0.08]'
+                  }`}
+                >
+                  <Compass className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                  <span className="font-mono text-[11px] uppercase">{activeCamera}</span>
+                  <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${cameraMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {cameraMenuOpen && (
+                  <div className="absolute left-0 top-full mt-2 w-48 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1">
+                    {[
+                      { key: 'iso', label: 'Isometric View', desc: 'Standard 3D angle' },
+                      { key: 'top', label: 'Top (Plan)', desc: 'Overhead view' },
+                      { key: 'front', label: 'Front Elevation', desc: 'Face view' },
+                      { key: 'side', label: 'Side Elevation', desc: 'Profile view' },
+                    ].map((cam) => (
+                      <button
+                        key={cam.key}
+                        onClick={() => {
+                          handleCameraPreset(cam.key as any);
+                          setActiveCamera(cam.key as any);
+                          setCameraMenuOpen(false);
+                        }}
+                        className={`w-full flex flex-col items-start px-2.5 py-1.5 rounded-lg text-left transition cursor-pointer ${
+                          activeCamera === cam.key
+                            ? 'bg-sky-500/20 text-sky-200 font-semibold'
+                            : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <span className="text-xs">{cam.label}</span>
+                          <span className="text-[10px] font-mono uppercase text-zinc-500">{cam.key}</span>
+                        </div>
+                        <span className="text-[9px] text-zinc-500">{cam.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Club 4: Stage Size (Hero vs Card) */}
+              <div className="relative shrink-0" ref={sizeMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSizeMenuOpen(!sizeMenuOpen);
+                    setStyleMenuOpen(false);
+                    setCameraMenuOpen(false);
+                  }}
+                  title={`Web format: ${currentSize === 'hero' ? 'Webpage Hero Section (16:9 banner)' : 'Website Feature Card (4:3 component)'}`}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium border transition cursor-pointer active:scale-95 shrink-0 ${
+                    sizeMenuOpen
+                      ? 'bg-zinc-800 text-purple-300 border-purple-500/40 shadow-sm'
+                      : 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 border-white/[0.08]'
+                  }`}
+                >
+                  <Frame className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                  <span className="capitalize text-[11px] font-medium">{currentSize}</span>
+                  <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${sizeMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {sizeMenuOpen && (
+                  <div className="absolute left-0 top-full mt-2 w-60 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1">
+                    {[
+                      { key: 'hero', label: 'Web Hero Section', desc: 'Full-width cinematic landing page header (16:9)' },
+                      { key: 'card', label: 'Website Feature Card', desc: 'Compact interactive component card (4:3)' },
+                    ].map((sz) => (
+                      <button
+                        key={sz.key}
+                        type="button"
+                        onClick={() => {
+                          handleSizeChange(sz.key as any);
+                          setSizeMenuOpen(false);
+                        }}
+                        className={`w-full flex flex-col items-start px-2.5 py-1.5 rounded-lg text-left transition cursor-pointer ${
+                          currentSize === sz.key
+                            ? 'bg-purple-600/20 text-purple-200 font-semibold'
+                            : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <span className="text-xs font-medium">{sz.label}</span>
+                          <span className="text-[10px] font-mono uppercase text-zinc-500">{sz.key}</span>
+                        </div>
+                        <span className="text-[9px] text-zinc-500">{sz.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Group: Playback, AnyStack, Snapshot, Fullscreen */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Play / Pause Toggle & Speed */}
+              <div className="flex items-center rounded-xl bg-zinc-900/90 border border-white/[0.08] p-0.5 shrink-0">
+                <button
+                  onClick={handleTogglePlay}
+                  title={isPaused ? 'Resume Animation' : 'Show Still Frame'}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 shrink-0"
+                >
+                  {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
+                  <span className="text-[11px]">{isPaused ? 'Still' : 'Loop'}</span>
+                </button>
+
+                {/* Worlds Speed Selector */}
+                {format === 'worlds' && (
+                  <select
+                    value={speed}
+                    onChange={(e) => handleSpeedChange(Number(e.target.value))}
+                    title="Playback speed"
+                    className="bg-transparent border-l border-white/[0.08] px-1.5 py-1 text-[11px] text-zinc-400 hover:text-zinc-200 focus:outline-none cursor-pointer"
+                  >
+                    <option value={0.75} className="bg-zinc-900 text-zinc-200">0.75×</option>
+                    <option value={1} className="bg-zinc-900 text-zinc-200">1.0×</option>
+                    <option value={1.5} className="bg-zinc-900 text-zinc-200">1.5×</option>
+                  </select>
+                )}
+              </div>
+
+              {/* AnyStack 3D Arcade Button */}
+              <button
+                onClick={() => setShowPlayground(!showPlayground)}
+                title={showPlayground ? 'Back to 3D Scene' : 'Play AnyStack 3D Arcade Game'}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border transition cursor-pointer active:scale-95 shrink-0 ${
+                  showPlayground
+                    ? 'bg-indigo-600 text-white border-indigo-400/50 shadow-sm'
+                    : 'bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 border-white/[0.08]'
                 }`}
               >
-                <EllipsisVertical className="w-3.5 h-3.5" />
+                <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="text-[11px]">AnyStack</span>
               </button>
-              {menuOpen && (
-                <div className="absolute right-0 top-full mt-1.5 w-52 rounded-2xl border border-white/[0.1] bg-[#0c0e17] shadow-2xl shadow-black/60 p-1.5 z-50 space-y-1">
-                  <button
-                    onClick={() => {
-                      handleSnapshotPng();
-                      setMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition cursor-pointer"
-                  >
-                    <Camera className="w-3.5 h-3.5 text-cyan-400" /> Snapshot PNG
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowPlayground(!showPlayground);
-                      setMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-zinc-300 hover:text-white hover:bg-white/[0.06] transition cursor-pointer"
-                  >
-                    <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
-                    {showPlayground ? 'Back to scene' : 'AnyStack arcade'}
-                  </button>
-                  <div className="px-2.5 pt-1 pb-1.5">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1">Camera</p>
-                    <div className="flex items-center gap-1">
-                      {(['iso', 'top', 'front', 'side'] as const).map((c) => (
-                        <button
-                          key={c}
-                          onClick={() => {
-                            handleCameraPreset(c);
-                            setMenuOpen(false);
-                          }}
-                          className="flex-1 px-1 py-1 rounded-md bg-zinc-950/80 border border-white/[0.08] text-[10px] font-mono text-zinc-300 hover:text-white uppercase cursor-pointer"
-                        >
-                          {c}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  {format === 'svg' && (
-                    <div className="px-2.5 pt-1 pb-1.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1">Accent</p>
-                      <div className="flex items-center gap-1.5">
-                        {SWATCHES.map((hex) => (
-                          <button
-                            key={hex}
-                            onClick={() => {
-                              handleAccentChange(hex);
-                              setMenuOpen(false);
-                            }}
-                            style={{ backgroundColor: hex }}
-                            title={`Set accent to ${hex}`}
-                            className={`w-4 h-4 rounded-full transition cursor-pointer ${
-                              accentColor === hex ? 'ring-2 ring-white ring-offset-1 ring-offset-[#0c0e17]' : 'opacity-80'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {format === 'worlds' && (
-                    <div className="px-2.5 pt-1 pb-1.5">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1">Speed</p>
-                      <select
-                        value={speed}
-                        onChange={(e) => handleSpeedChange(Number(e.target.value))}
-                        className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-lg px-2 py-1 text-[11px] text-zinc-300 outline-none cursor-pointer"
-                      >
-                        <option value={0.75}>0.75×</option>
-                        <option value={1}>1.0× (Normal)</option>
-                        <option value={1.5}>1.5×</option>
-                      </select>
-                    </div>
-                  )}
-                </div>
-              )}
+
+              {/* Snapshot PNG Button */}
+              <button
+                onClick={handleSnapshotPng}
+                title="Download high-resolution PNG snapshot of the 3D scene"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-medium bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 shrink-0"
+              >
+                <Camera className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-[11px]">PNG</span>
+              </button>
+
+              {/* Reload Button */}
+              <button
+                onClick={onRefresh}
+                title="Reload sandbox preview"
+                className="p-1.5 hover:text-white text-zinc-400 rounded-lg hover:bg-white/[0.06] transition cursor-pointer shrink-0"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Fullscreen Button */}
+              <button
+                onClick={toggleFullscreen}
+                title="Toggle Fullscreen"
+                className="p-1.5 hover:text-white text-zinc-400 rounded-lg hover:bg-white/[0.06] transition cursor-pointer shrink-0"
+              >
+                {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              </button>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
 
       {/* Sandboxed Iframe Container */}
@@ -718,7 +806,15 @@ function SandboxPreviewInner({
           )
         )}
 
-        <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-[#0c0e17] border border-white/[0.08] relative flex items-center justify-center">
+        <div
+          className={`transition-all duration-300 ease-out rounded-2xl overflow-hidden shadow-2xl bg-[#0c0e17] border border-white/[0.08] relative flex items-center justify-center ${
+            isFullscreen
+              ? 'w-full h-full'
+              : currentSize === 'hero'
+              ? 'w-full max-w-5xl aspect-[16/9] min-h-[360px] max-h-[82vh]'
+              : 'w-full max-w-md aspect-[4/3] min-h-[320px] max-h-[75vh]'
+          }`}
+        >
           <iframe
             ref={iframeRef}
             srcDoc={html}
@@ -729,19 +825,16 @@ function SandboxPreviewInner({
 
           {/* Floating Read-out HUD Overlay */}
           <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-            <div className="pointer-events-auto flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-950/85 backdrop-blur-md border border-white/[0.08] text-[11px] font-mono text-zinc-200 shadow-xl">
-              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-              <Eye className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{hoverText ? `hover: ${hoverText}` : readoutText || 'scene interactive · click & drag'}</span>
-            </div>
+            {hoverText ? (
+              <div className="pointer-events-auto flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-950/90 backdrop-blur-md border border-indigo-500/30 text-[11px] font-mono text-indigo-200 shadow-xl">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                <Eye className="w-3.5 h-3.5 text-indigo-400" />
+                <span>hover: {hoverText}</span>
+              </div>
+            ) : <div />}
 
-            <div className="pointer-events-auto flex items-center gap-2">
-              {hotList.length > 0 && (
-                <div className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-zinc-950/85 backdrop-blur-md text-zinc-400 border border-white/[0.08] shadow-md hidden sm:block">
-                  pickable: {hotList.join(', ')}
-                </div>
-              )}
-              <div className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm text-zinc-500 border border-white/[0.05] shadow-sm hidden md:block">
+            <div className="pointer-events-none flex items-center gap-2">
+              <div className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm text-zinc-400 border border-white/[0.06] shadow-sm hidden sm:block">
                 Drag to rotate · Scroll to zoom
               </div>
             </div>

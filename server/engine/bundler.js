@@ -87,63 +87,56 @@ export function bundleSVG(figureCode, look = null) {
 /**
  * Assemble a standalone offline HTML file for an Any3d Pixel scene.
  */
-export function bundlePixel(pixelCode) {
+export function bundlePixel(pixelCode, look = null) {
   const benchTemplate = getPixelBenchTemplate();
   const kernel = getPixelKernel();
   const title = extractTitle(pixelCode, 'Pixel Scene') + ' · Any3d';
-
-  // Inject postMessage bridge
-  const bridge = `
-  window.addEventListener('message', function(e) {
-    if (!e.data || e.data.type !== 'any3d-pixel') return;
-    if (typeof e.data.still === 'boolean') {
-      if (window.__pixel && window.__pixel.runtime) {
-        if (e.data.still) window.__pixel.runtime.stop();
-        else window.__pixel.runtime.start();
-      }
-    }
-  });
-  `;
+  const lookPrelude = look
+    ? `window.__any3dLook = ${JSON.stringify({
+        timeOfDay: Math.min(1, Math.max(0, Number(look.timeOfDay) || 0)),
+        weather: ['clear', 'rain', 'snow'].includes(look.weather) ? look.weather : 'clear',
+      })};\n`
+    : '';
 
   return benchTemplate
     .replace('/*TITLE*/', () => title)
-    .replace('/*KERNEL*/', () => `\n${kernel}\n`)
-    .replace('/*SCENE*/', () => `\n${pixelCode.replace(/\r\n/g, '\n').trim()}\n${bridge}\n`);
+    .replace('/*KERNEL*/', () => `\n${lookPrelude}${kernel}\n`)
+    .replace('/*SCENE*/', () => `\n${pixelCode.replace(/\r\n/g, '\n').trim()}\n`);
 }
 
 /**
  * Assemble a standalone offline HTML file for an Any3d Dither scene.
  */
-export function bundleDither(ditherCode) {
+export function bundleDither(ditherCode, look = null) {
   const benchTemplate = getDitherBenchTemplate();
   const kernel = getDitherKernel();
   const title = extractTitle(ditherCode, 'Dither Scene') + ' · Any3d';
-
-  // Inject postMessage bridge
-  const bridge = `
-  window.addEventListener('message', function(e) {
-    if (!e.data || e.data.type !== 'any3d-dither') return;
-    if (typeof e.data.still === 'boolean') {
-      if (window.__dither && window.__dither.runtime) {
-        if (e.data.still) window.__dither.runtime.stop();
-        else window.__dither.runtime.start();
-      }
-    }
-  });
-  `;
+  const lookPrelude = look
+    ? `window.__any3dLook = ${JSON.stringify({
+        timeOfDay: Math.min(1, Math.max(0, Number(look.timeOfDay) || 0)),
+        weather: ['clear', 'rain', 'snow'].includes(look.weather) ? look.weather : 'clear',
+      })};\n`
+    : '';
 
   return benchTemplate
     .replace('/*TITLE*/', () => title)
-    .replace('/*KERNEL*/', () => `\n${kernel}\n`)
-    .replace('/*SCENE*/', () => `\n${ditherCode.replace(/\r\n/g, '\n').trim()}\n${bridge}\n`);
+    .replace('/*KERNEL*/', () => `\n${lookPrelude}${kernel}\n`)
+    .replace('/*SCENE*/', () => `\n${ditherCode.replace(/\r\n/g, '\n').trim()}\n`);
 }
 
 /**
  * Bundle a standalone offline HTML file for an Any3d Worlds scene using esbuild.
  */
-export async function bundleWorlds(worldCode) {
+export async function bundleWorlds(worldCode, look = null) {
   const benchTemplate = getWorldsBenchTemplate();
   const worldKitPath = path.join(rootDir, 'core', 'kernels', 'any3d-world.js');
+
+  const lookPrelude = look
+    ? `const initialLook = ${JSON.stringify({
+        timeOfDay: Math.min(1, Math.max(0, Number(look.timeOfDay) || 0)),
+        weather: ['clear', 'rain', 'snow'].includes(look.weather) ? look.weather : 'clear',
+      })};\n`
+    : 'const initialLook = null;\n';
 
   // Sanitize user code to remove unwanted imports and normalize export/define
   let cleanUserCode = worldCode
@@ -196,7 +189,12 @@ if (safeDef?.title) document.title = safeDef.title + ' · Any3d Worlds';
 
 const requested = params.get('finish');
 const finish = FINISHES.includes(requested) ? requested : 'miniature';
-const runtime = mountWorld(safeDef, { el: stage, finish, paused: params.has('still') });
+const requestedSize = params.get('size') || (['hero', 'card'].includes(safeDef?.size) ? safeDef.size : 'card');
+const runtime = mountWorld(safeDef, { el: stage, finish, size: requestedSize, paused: params.has('still') });
+${lookPrelude}
+if (runtime && initialLook) {
+  try { runtime.setLook(initialLook); } catch (e) {}
+}
 window.__world = runtime;
 window.__any3d = runtime;
 
@@ -244,8 +242,18 @@ if (runtime) {
       if (select) select.value = d.finish;
       changed = true;
     }
+    if (['hero', 'card'].includes(d.size)) {
+      if (runtime && runtime.setSize) runtime.setSize(d.size);
+      changed = true;
+    }
     if (typeof d.paused === 'boolean') {
       paused = d.paused;
+      runtime.setPaused(paused);
+      update();
+      changed = true;
+    }
+    if (typeof d.still === 'boolean') {
+      paused = d.still;
       runtime.setPaused(paused);
       update();
       changed = true;
@@ -259,6 +267,18 @@ if (runtime) {
     if (d.camera && typeof d.camera.az === 'number' && typeof d.camera.el === 'number') {
       runtime.setCamera(d.camera);
       changed = true;
+    }
+    if (d.want === 'png') {
+      try {
+        const canvas = document.querySelector('#stage canvas');
+        if (!canvas) {
+          window.parent.postMessage({ type: 'any3d-world', png: { id: d.id, error: 'No canvas in the stage' } }, '*');
+        } else {
+          window.parent.postMessage({ type: 'any3d-world', png: { id: d.id, dataUrl: canvas.toDataURL('image/png') } }, '*');
+        }
+      } catch (err) {
+        window.parent.postMessage({ type: 'any3d-world', png: { id: d.id, error: (err && err.message) || 'PNG capture failed' } }, '*');
+      }
     }
     if (changed) tell();
   });
@@ -316,27 +336,28 @@ export async function bundleScene(code, format = 'svg', look = null) {
   const hasSVG = /\bAny3d\.figure\b/.test(code);
 
   if (hasWorlds) {
-    return await bundleWorlds(code);
+    return await bundleWorlds(code, look);
   }
   if (hasPixel) {
     if (format === 'dither' || /\bbayer\s*:|\bshadow\s*:\s*['"]hard['"]/.test(code)) {
-      return bundleDither(code);
+      return bundleDither(code, look);
     }
-    return bundlePixel(code);
+    return bundlePixel(code, look);
   }
   if (hasSVG) {
     return bundleSVG(code, look);
   }
+  return bundleSVG(code, look);
 
   // Fallback by requested format
   if (format === 'worlds') {
-    return await bundleWorlds(code);
+    return await bundleWorlds(code, look);
   }
   if (format === 'pixel') {
-    return bundlePixel(code);
+    return bundlePixel(code, look);
   }
   if (format === 'dither') {
-    return bundleDither(code);
+    return bundleDither(code, look);
   }
   return bundleSVG(code, look);
 }

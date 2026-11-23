@@ -180,17 +180,50 @@ var Pixel = (function () {
   /* ---------- materials: a ramp, a texture, a grain ---------- */
   var RAMPS = {
     grass: ['#3c5530', '#4f6b36', '#65823f', '#7f984b', '#9cb062', '#bccb86'],
-    water: ['#355f7a', '#44738f', '#5a8ca6', '#78a8bd', '#a3c8d4', '#d6ebee'],
-    paving: ['#77705f', '#8f8874', '#a7a08a', '#bdb69e', '#d2cbb3', '#e6e1cf'],
+    water: ['#255877', '#367296', '#4a8fb5', '#6bb1d6', '#98d2ec', '#cbe7f7'],
+    paving: ['#64748b', '#78889e', '#94a3b8', '#b0bccd', '#cbd5e1', '#e2e8f0'],
     dirt: ['#6e5a43', '#86704f', '#a08861', '#b89f77', '#cdb791'],
     sand: ['#a08c68', '#b9a47b', '#cdb98e', '#ddcba2', '#ebdcb9'],
-    wood: ['#4a3423', '#64472d', '#80603b', '#9c7a4c', '#b8965f', '#d0b07a'],
+    wood: ['#5c4028', '#785334', '#996d43', '#ba8955', '#d4a86f', '#e8c991'],
     darkwood: ['#2f2420', '#423128', '#574133', '#6e5440', '#86684f'],
     thatch: ['#6b5532', '#88703f', '#a58b4f', '#bfa462', '#d6bd7b', '#e8d59c'],
-    stone: ['#5f5c58', '#77736c', '#8f8a80', '#a8a296', '#c1bbad'],
-    leaf: ['#2c4126', '#3d5730', '#52703a', '#6b8a45', '#89a556', '#aac173'],
-    cloth: ['#7a3b30', '#99503c', '#b5664a', '#cc8160', '#dfa07c'],
-    canvas: ['#8b8572', '#a8a28c', '#c3bea6', '#d9d4bd', '#ebe7d4']
+    stone: ['#475569', '#64748b', '#7f8ea3', '#94a3b8', '#b3bfce', '#cbd5e1'],
+    leaf: ['#14532d', '#15803d', '#16a34a', '#22c55e', '#4ade80', '#86efac'],
+    cloth: ['#881337', '#be123c', '#e11d48', '#f43f5e', '#fb7185', '#fda4af'],
+    canvas: ['#8b8572', '#a8a28c', '#c3bea6', '#d9d4bd', '#ebe7d4'],
+
+    // Vibrant pixel palettes
+    red: ['#7f1d1d', '#991b1b', '#dc2626', '#ef4444', '#f87171', '#fca5a5'],
+    crimson: ['#881337', '#be123c', '#e11d48', '#f43f5e', '#fb7185', '#fda4af'],
+    ruby: ['#7f1d1d', '#b91c1c', '#dc2626', '#ef4444', '#f87171', '#fecdd3'],
+    coral: ['#9c2a1e', '#c43e2f', '#e25c4a', '#f87d69', '#ffa18f', '#ffc4b8'],
+    blue: ['#1e3a8a', '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd'],
+    cobalt: ['#1e1b4b', '#312e81', '#3730a3', '#4338ca', '#6366f1', '#818cf8'],
+    cyan: ['#164e63', '#0e7490', '#0891b2', '#06b6d4', '#22d3ee', '#67e8f9'],
+    teal: ['#134e4a', '#0f766e', '#0d9488', '#14b8a6', '#2dd4bf', '#5eead4'],
+    mint: ['#064e3b', '#0d9488', '#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4'],
+    green: ['#14532d', '#15803d', '#16a34a', '#22c55e', '#4ade80', '#86efac'],
+    emerald: ['#064e3b', '#047857', '#059669', '#10b981', '#34d399', '#6ee7b7'],
+    lime: ['#365314', '#4d7c0f', '#65a30d', '#84cc16', '#a3e635', '#bef264'],
+    amber: ['#78350f', '#b45309', '#d97706', '#f59e0b', '#fbbf24', '#fde68a'],
+    gold: ['#713f12', '#a16207', '#ca8a04', '#eab308', '#facc15', '#fef08a'],
+    yellow: ['#854d0e', '#ca8a04', '#eab308', '#facc15', '#fde047', '#fef9c3'],
+    orange: ['#7c2d12', '#c2410c', '#ea580c', '#f97316', '#fb923c', '#fdba74'],
+    purple: ['#4c1d95', '#6d28d9', '#7c3aed', '#8b5cf6', '#a78bfa', '#c4b5fd'],
+    violet: ['#581c87', '#7e22ce', '#9333ea', '#a855f7', '#c084fc', '#e9d5ff'],
+    magenta: ['#701a75', '#a21caf', '#c026d3', '#d946ef', '#e879f9', '#f0abfc'],
+    pink: ['#831843', '#be185d', '#db2777', '#ec4899', '#f472b6', '#fbcfe8'],
+    steel: ['#0f172a', '#1e293b', '#334155', '#475569', '#64748b', '#94a3b8'],
+    slate: ['#0f172a', '#1e293b', '#334155', '#475569', '#64748b', '#94a3b8'],
+    paper: ['#94a3b8', '#cbd5e1', '#e2e8f0', '#f1f5f9', '#f8fafc', '#ffffff'],
+    white: ['#cbd5e1', '#e2e8f0', '#f1f5f9', '#f8fafc', '#ffffff', '#ffffff'],
+    accent: ['#881337', '#be123c', '#e11d48', '#f43f5e', '#fb7185', '#fda4af'],
+    mustard: ['#78350f', '#b45309', '#d97706', '#f59e0b', '#fbbf24', '#fde68a'],
+    tarmac: ['#090d16', '#111827', '#1f2937', '#374151', '#4b5563', '#6b7280'],
+    tileLight: ['#cbd5e1', '#e2e8f0', '#f1f5f9', '#f8fafc', '#ffffff', '#ffffff'],
+    tileAccent: ['#1e1b4b', '#312e81', '#3730a3', '#4338ca', '#6366f1', '#818cf8'],
+    tileMint: ['#0f766e', '#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4', '#ccfbf1'],
+    tileRuby: ['#881337', '#be123c', '#e11d48', '#f43f5e', '#fb7185', '#fda4af']
   };
   var TEX = {
     plain: function (m, x, y, z) { return (noise(x * 9 + y * 7, z * 9 - y * 5) - .5) * .08 * m.rough; },
@@ -231,17 +264,39 @@ var Pixel = (function () {
     sand: { ramp: 'sand', tex: 'sand', ground: true },
     wood: { ramp: 'wood', tex: 'wood', plank: .14, grain: 'x' }, darkwood: { ramp: 'darkwood', tex: 'wood', plank: .12, grain: 'x' },
     thatch: { ramp: 'thatch', tex: 'thatch', grain: 'x' }, stone: { ramp: 'stone', tex: 'stone', size: .3, grain: 'x' },
-    leaf: { ramp: 'leaf', tex: 'leaf' }, leafLight: { ramp: ['#3d5a2e', '#557638', '#6f9243', '#8cab52', '#aac46a', '#c8d98f'], tex: 'leaf' }, cloth: { ramp: 'cloth', tex: 'cloth' }, canvas: { ramp: 'canvas', tex: 'cloth' }
+    leaf: { ramp: 'leaf', tex: 'leaf' }, leafLight: { ramp: ['#3d5a2e', '#557638', '#6f9243', '#8cab52', '#aac46a', '#c8d98f'], tex: 'leaf' }, cloth: { ramp: 'cloth', tex: 'cloth' }, canvas: { ramp: 'canvas', tex: 'cloth' },
+    red: { ramp: 'red' }, crimson: { ramp: 'crimson' }, ruby: { ramp: 'ruby' }, coral: { ramp: 'coral' },
+    blue: { ramp: 'blue' }, cobalt: { ramp: 'cobalt' }, cyan: { ramp: 'cyan' }, teal: { ramp: 'teal' }, mint: { ramp: 'mint' },
+    green: { ramp: 'green' }, emerald: { ramp: 'emerald' }, lime: { ramp: 'lime' },
+    amber: { ramp: 'amber' }, gold: { ramp: 'gold' }, yellow: { ramp: 'yellow' }, orange: { ramp: 'orange' },
+    purple: { ramp: 'purple' }, violet: { ramp: 'violet' }, magenta: { ramp: 'magenta' }, pink: { ramp: 'pink' },
+    steel: { ramp: 'steel' }, slate: { ramp: 'slate' }, paper: { ramp: 'paper' }, white: { ramp: 'white' },
+    accent: { ramp: 'accent' }, mustard: { ramp: 'mustard' }, tarmac: { ramp: 'tarmac' },
+    tileLight: { ramp: 'tileLight' }, tileAccent: { ramp: 'tileAccent' }, tileMint: { ramp: 'tileMint' }, tileRuby: { ramp: 'tileRuby' }
   };
   function makeMaterial(spec, registry) {
     if (spec && spec.isMaterial) return spec;
     var key = typeof spec === 'string' ? spec : JSON.stringify(spec);
     if (registry.cache[key]) return registry.cache[key];
     var o = typeof spec === 'string' ? (registry.named[spec] || DEFAULTS[spec] || { color: spec }) : spec;
-    if (o.isMaterial) return o;
-    var m = { isMaterial: true, id: registry.list.length, tex: TEX[o.tex || 'plain'], grain: o.grain || 'x', plank: o.plank || .14, size: o.size || .4,
+    if (o && o.isMaterial) return o;
+    if (typeof o === 'string') {
+      if (registry.named[o]) o = registry.named[o];
+      else if (DEFAULTS[o]) o = DEFAULTS[o];
+      else if (RAMPS[o]) o = { ramp: o };
+      else o = { color: o };
+    } else if (Array.isArray(o)) {
+      o = { ramp: o };
+    }
+    if (!o) o = { color: '#999999' };
+    var m = { isMaterial: true, id: registry.list.length, tex: TEX[o.tex || 'plain'] || TEX.plain, grain: o.grain || 'x', plank: o.plank || .14, size: o.size || .4,
       rough: o.rough == null ? 1 : o.rough, blades: !!o.blades, dither: o.dither != null ? o.dither : (o.tex && o.tex !== 'plain' ? 1 : .55), stripe: o.stripe || 0, ground: !!o.ground, water: !!o.water, flat: !!o.flat, figure: !!o.figure, glow: o.glow || 0, round: o.round != null ? !!o.round : o.tex === 'leaf' };
-    var r = o.ramp ? (typeof o.ramp === 'string' ? RAMPS[o.ramp] : o.ramp) : autoRamp(o.color || '#999999');
+    var r;
+    if (o.ramp) {
+      r = typeof o.ramp === 'string' ? (RAMPS[o.ramp] || autoRamp(o.ramp)) : o.ramp;
+    } else {
+      r = autoRamp(o.color || '#999999');
+    }
     m.ramp = packRamp(r); m.n = m.ramp.length;
     if (o.alt) { var ra = typeof o.alt === 'string' && RAMPS[o.alt] ? RAMPS[o.alt] : (Array.isArray(o.alt) ? o.alt : autoRamp(o.alt)); m.alt = packRamp(ra); }
     registry.list.push(m); registry.cache[key] = m;

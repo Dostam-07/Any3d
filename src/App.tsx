@@ -26,6 +26,8 @@ import {
   OllamaModelInfo,
   ChatMessage,
   SlashCommandType,
+  VisualReference,
+  WebPresentationSize,
 } from './types';
 import {
   fetchPresets,
@@ -37,7 +39,10 @@ import {
   mutateSceneApi,
   askSceneApi,
 } from './lib/api';
+import { editSceneOffline } from '../server/llm/offline-editor.js';
+import { validateScene } from '../server/engine/validator.js';
 import { VersionDiff } from './components/VersionDiff';
+import { FirstRunPanel } from './components/FirstRunPanel';
 
 /**
  * A chat is a chat: a message inside a conversation EDITS the scene that is
@@ -52,10 +57,18 @@ function isExplicitNewScene(text: string): boolean {
   const t = text.trim().toLowerCase();
   if (!t) return false;
 
+  // Obvious incremental edit keywords with short length — these are edits, NOT new scenes
+  const IS_EDIT_MUTATION = /^(?:add|remove|delete|insert|change|turn|make\s+it|move|rotate|scale|hide|color|paint)\b/i.test(t);
+  if (IS_EDIT_MUTATION && t.split(/\s+/).length < 7) {
+    return false;
+  }
+
   const NEW_SCENE_PATTERNS: RegExp[] = [
     /\b(new|another|different|fresh|separate)\s+(scene|project|world)\b/i,
     /\b(start\s+over|start\s+again|from\s+scratch|reset\s+(the\s+)?scene|scrap\s+(this|it)|forget\s+(this|it))\b/i,
-    /^(?:create|build|generate|design|draw|paint|make|show)\s+(?:me\s+)?(?:a|an)\s+(?:brand\s+new|completely\s+new|entirely\s+new|whole\s+new)\b/i,
+    /^(?:create|build|generate|design|draw|paint|make|show)\s+(?:me\s+)?(?:a|an)\b/i,
+    /^(?:a|an)\s+[\w\s-]{8,}/i,
+    /\b(bus|passengers|conductor|cityscape|diorama|street\s+corner|landscape|island|castle|stadium|subway|harbor|airport|classroom|bakery|office|forest|mountain|full\s+of|filled\s+with)\b/i,
   ];
   return NEW_SCENE_PATTERNS.some((re) => re.test(t));
 }
@@ -80,7 +93,7 @@ export function App() {
   const [apiKey, setApiKey] = useState<string>(
     () => localStorage.getItem('any3d_gemini_key') || ''
   );
-  const [size, setSize] = useState<'hero' | 'card' | 'mini'>('card');
+  const [size, setSize] = useState<WebPresentationSize>('card');
   const [prompt, setPrompt] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -492,6 +505,13 @@ export function App() {
     }
   };
 
+  const handleRenameSession = (id: string, newTitle: string) => {
+    if (!id || !newTitle.trim()) return;
+    setSessions((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, title: newTitle.trim(), updatedAt: Date.now() } : s))
+    );
+  };
+
   // "New project" entry point (sidebar CTA / Ctrl+N): opens the blank project page.
   const handleNewScene = () => {
     startNewProject();
@@ -500,7 +520,8 @@ export function App() {
   const handleStartSceneFromHome = async (
     promptText: string,
     targetFormat: RenderFormat,
-    targetSize: 'hero' | 'card' | 'mini'
+    targetSize: WebPresentationSize,
+    webImages?: VisualReference[]
   ) => {
     const newSessId = `sess-${Date.now()}`;
     const startedAt = Date.now();
@@ -518,6 +539,7 @@ export function App() {
       content: promptText,
       timestamp: startedAt,
       format: targetFormat,
+      visualReferences: webImages?.length ? webImages : undefined,
     };
     setCurrentSessionId(newSessId);
     setMessages([userMsg]);
@@ -551,6 +573,7 @@ export function App() {
         size: targetSize,
         prompt: promptText,
         seed: seedLocked ? seed : undefined,
+        visualReferences: webImages,
       });
 
       setCode(res.code);
@@ -575,6 +598,7 @@ export function App() {
           codeSnapshot: res.code,
           format: targetFormat,
           version: 1,
+          visualReferences: res.visualResearch?.references,
           summary: `Created ${targetFormat} scene: ${promptText.slice(0, 45)}`,
         },
       ];
@@ -620,7 +644,9 @@ export function App() {
     setFormat(preset.format);
     setCurrentPresetId(preset.id);
     setCode(preset.code);
-    goStudio();
+    const sessId = currentSessionId || `sess-${Date.now()}`;
+    setCurrentSessionId(sessId);
+    openProject(sessId);
     setStageView('preview');
     bundleCode(preset.code, preset.format)
       .then((b) => setCurrentBundledHtml(b.html))
@@ -1002,46 +1028,81 @@ export function App() {
         isExplicitNewScene(instruction);
 
       if (isNewGen) {
+        setIsGenerating(true);
         setPrompt(instruction);
-        const res = await generateAny3d({
-          provider,
-          geminiModel,
-          ollamaModel,
-          ollamaHost,
-          apiKey,
-          format: targetFormat,
-          size,
-          prompt: instruction,
-          seed: seedLocked ? seed : undefined,
-        });
-
-        setCode(res.code);
-        setValidation(res.validation);
-        setCurrentPresetId('');
-        setStageView('preview');
-        countSceneCreated();
         try {
-          const bundled = await bundleCode(res.code, targetFormat);
-          setCurrentBundledHtml(bundled.html);
-        } catch (bundleErr) {
-          console.warn('Bundle error', bundleErr);
-        }
+          const res = await generateAny3d({
+            provider,
+            geminiModel,
+            ollamaModel,
+            ollamaHost,
+            apiKey,
+            format: targetFormat,
+            size,
+            prompt: instruction,
+            seed: seedLocked ? seed : undefined,
+          });
 
-        const assistantMsg: ChatMessage = {
-          id: `msg-${Date.now()}-a`,
-          role: 'assistant',
-          content: `Generated ${targetFormat.toUpperCase()} scene for "${instruction}" (v${nextVer})`,
-          timestamp: Date.now(),
-          codeSnapshot: res.code,
-          format: targetFormat,
-          version: nextVer,
-          seed: seedLocked ? seed : undefined,
-          summary: `Created ${targetFormat} scene: ${instruction.slice(0, 45)}`,
-        };
-        setMessages((prev) => [...prev, assistantMsg]);
+          setCode(res.code);
+          setValidation(res.validation);
+          setCurrentPresetId('');
+          setStageView('preview');
+          countSceneCreated();
+          try {
+            const bundled = await bundleCode(res.code, targetFormat);
+            setCurrentBundledHtml(bundled.html);
+          } catch (bundleErr) {
+            console.warn('Bundle error', bundleErr);
+          }
+
+          const assistantMsg: ChatMessage = {
+            id: `msg-${Date.now()}-a`,
+            role: 'assistant',
+            content: `Generated ${targetFormat.toUpperCase()} scene for "${instruction}" (v${nextVer})`,
+            timestamp: Date.now(),
+            codeSnapshot: res.code,
+            format: targetFormat,
+            version: nextVer,
+            seed: seedLocked ? seed : undefined,
+            visualReferences: res.visualResearch?.references,
+            summary: `Created ${targetFormat} scene: ${instruction.slice(0, 45)}`,
+          };
+          setMessages((prev) => [...prev, assistantMsg]);
+        } finally {
+          setIsGenerating(false);
+        }
       } else {
         // Conversational Mutation of current scene — stays in this same conversation.
-        const res = await mutateSceneApi({
+        // Try the deterministic offline editor first (zero model calls), then fall
+        // back to the coding model for structural edits it cannot handle.
+        const offline = editSceneOffline(code, instruction, targetFormat);
+        if (offline.changed) {
+          setCode(offline.code);
+          setValidation(validateScene(offline.code, targetFormat, instruction) as ValidationReport);
+          setCurrentPresetId('');
+          setStageView('preview');
+          countEdit(currentSessionId || 'unknown');
+          try {
+            const bundled = await bundleCode(offline.code, targetFormat);
+            setCurrentBundledHtml(bundled.html);
+          } catch (bundleErr) {
+            console.warn('Bundle error', bundleErr);
+          }
+          const assistantMsg: ChatMessage = {
+            id: `msg-${Date.now()}-a`,
+            role: 'assistant',
+            content: offline.summary,
+            timestamp: Date.now(),
+            format: targetFormat,
+            codeSnapshot: offline.code,
+            version: nextVer,
+            seed: seedLocked ? seed : undefined,
+            summary: offline.summary,
+          };
+          setMessages((prev) => [...prev, assistantMsg]);
+        } else {
+          // Offline editor could not handle it — fall back to the coding model.
+          const res = await mutateSceneApi({
           code,
           format: targetFormat,
           instruction,
@@ -1085,6 +1146,7 @@ export function App() {
           summary: didChange ? res.summary || instruction : 'No change applied',
         };
         setMessages((prev) => [...prev, assistantMsg]);
+        }
       }
     } catch (err: any) {
       const errMsg: ChatMessage = {
@@ -1362,27 +1424,50 @@ export function App() {
 
         {/* Home View vs Studio View */}
         {activeView === 'home' ? (
-          <Homepage
-            onStartScene={handleStartSceneFromHome}
-            format={format}
-            setFormat={handleFormatChange}
-            size={size}
-            setSize={setSize}
-            provider={provider}
-            setProvider={setProvider}
-            ollamaModel={ollamaModel}
-            setOllamaModel={setOllamaModel}
-            ollamaModels={ollamaModels}
-            geminiModel={geminiModel}
-            setGeminiModel={setGeminiModel}
-            hasApiKey={Boolean(apiKey)}
-            onOpenApiKey={() => setIsApiKeyOpen(true)}
-            onOpenGallery={() => setIsGalleryOpen(true)}
-            isGenerating={isGenerating}
-            onEnhancePrompt={handleEnhancePromptText}
-            presets={presets}
-            onSelectPreset={handleSelectPreset}
-          />
+          // First-run panel: show when there are no saved sessions and no model
+          // is configured yet. It gives the new user one clear next action.
+          (sessions.length === 0 &&
+            ((provider === 'ollama' && ollamaModels.length === 0) ||
+              (provider === 'gemini' && !apiKey))) ? (
+            <FirstRunPanel
+              provider={provider}
+              setProvider={setProvider}
+              ollamaModel={ollamaModel}
+              setOllamaModel={setOllamaModel}
+              ollamaModels={ollamaModels}
+              geminiModel={geminiModel}
+              setGeminiModel={setGeminiModel}
+              hasApiKey={Boolean(apiKey)}
+              onOpenApiKey={() => setIsApiKeyOpen(true)}
+              onStartScene={handleStartSceneFromHome}
+              setFormat={handleFormatChange}
+              format={format}
+            />
+          ) : (
+            <Homepage
+              onStartScene={handleStartSceneFromHome}
+              format={format}
+              setFormat={handleFormatChange}
+              size={size}
+              setSize={setSize}
+              provider={provider}
+              setProvider={setProvider}
+              ollamaModel={ollamaModel}
+              setOllamaModel={setOllamaModel}
+              ollamaModels={ollamaModels}
+              geminiModel={geminiModel}
+              setGeminiModel={setGeminiModel}
+              hasApiKey={Boolean(apiKey)}
+              onOpenApiKey={() => setIsApiKeyOpen(true)}
+              onOpenGallery={() => setIsGalleryOpen(true)}
+              isGenerating={isGenerating}
+              onEnhancePrompt={handleEnhancePromptText}
+              presets={presets}
+              onSelectPreset={handleSelectPreset}
+              sessions={sessions}
+              onSelectSession={handleSelectSession}
+            />
+          )
         ) : activeView === 'studio' ? (
           <div className="flex-1 flex flex-col h-full overflow-hidden">
             {/* Main Studio Workspace (Agent Studio Panel + Switched Stage) */}
@@ -1653,10 +1738,12 @@ export function App() {
             onExportHtml={handleExportHtml}
             onExportGlb={handleExportGlb}
             onBackHome={goHome}
-            onOpenStudio={goStudio}
+            onRenameProject={(newTitle) => handleRenameSession(currentSessionId, newTitle)}
             onRefreshPreview={refreshSandbox}
             onResetCode={handleResetCode}
             previewRef={previewRef}
+            size={size}
+            onSizeChange={setSize}
             colorMode={theme}
             onToggleTheme={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
             isSidebarOpen={isSidebarOpen}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, Loader2, Shapes, Cuboid, Grid3X3, Layers, Wand2, Undo2, X, Compass, Terminal } from 'lucide-react';
-import { RenderFormat, LLMProvider, OllamaModelInfo } from '../types';
+import { RenderFormat, LLMProvider, OllamaModelInfo, WebPresentationSize } from '../types';
 
 interface PromptBarProps {
   prompt: string;
@@ -18,8 +18,8 @@ interface PromptBarProps {
   ollamaModel: string;
   setOllamaModel: (m: string) => void;
   ollamaModels: OllamaModelInfo[];
-  size: 'hero' | 'card' | 'mini';
-  setSize: (s: 'hero' | 'card' | 'mini') => void;
+  size: WebPresentationSize;
+  setSize: (s: WebPresentationSize) => void;
 }
 
 const SVG_SUGGESTIONS = [
@@ -219,19 +219,20 @@ export const PromptBar: React.FC<PromptBarProps> = ({
             )}
           </div>
 
-          {/* Format Metadata Badges / Size Selectors */}
-          {format === 'svg' ? (
+          {/* Format Metadata Badges / Web Layout Size Selectors */}
+          {(format === 'svg' || format === 'worlds') ? (
             <div className="flex items-center p-0.5 rounded-xl bg-[#11131f]/90 border border-white/[0.08] text-xs">
-              {(['hero', 'card', 'mini'] as const).map((s) => (
+              {(['hero', 'card'] as const).map((s) => (
                 <button
                   key={s}
                   type="button"
                   onClick={() => setSize(s)}
-                  className={`px-2.5 py-1.5 rounded-lg font-medium transition cursor-pointer capitalize ${
+                  title={s === 'hero' ? 'Webpage Hero Section (Wide 16:9 banner)' : 'Website Feature Card (Compact 4:3 component)'}
+                  className={`px-3 py-1.5 rounded-lg font-medium transition cursor-pointer capitalize ${
                     size === s ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'
                   }`}
                 >
-                  {s}
+                  {s === 'hero' ? 'Hero' : 'Card'}
                 </button>
               ))}
             </div>

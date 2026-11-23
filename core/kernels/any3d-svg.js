@@ -141,7 +141,7 @@ var Any3d = (function () {
     wood: '#c89a64', cardboard: '#dcb782', skin: '#f1c7a0', leaf: '#6fc38a', leafDark: '#4f9f6b', leafLight: '#9ad9a6', trunk: '#a07c5b',
     tyre: '#2b2f3a', hub: '#cfd4dc', lampGlow: '#ffe3a0'
   };
-  var SIZES = { hero: { aspect: 3 / 2 }, card: { aspect: 4 / 3 }, mini: { aspect: 1 } };
+  var SIZES = { hero: { aspect: 16 / 9 }, card: { aspect: 4 / 3 } };
   var THEMES = {
     toy: { bg: '#eceef2', shadows: true, shadow: .18, tint: 1, glow: 1, strokeWidth: 1.1, halo: .3, wobble: 0,
       lights: { hemi: ['#fff8ee', '#9fb0cc', .5], sun: ['#fff3dc', .62], fill: ['#c8dbff', .26], ambient: ['#e0e7f5', .1] } },
@@ -1198,11 +1198,11 @@ var Any3d = (function () {
     var theme = resolveTheme(opts.theme, fig);
     var pal = Object.assign({}, PAL, theme.palette);
     pal.accent = theme.accent || pal.accent || pal.coral;
-    var camSpec = Object.assign({ az: 45, el: 35.264, pad: fig.size === 'mini' ? 1.04 : 1.08 }, fig.camera || {});
+    var camSpec = Object.assign({ az: 45, el: 35.264, pad: fig.size === 'hero' ? 1.15 : 1.08 }, fig.camera || {});
     var tilt = fig.tilt == null ? 4 : fig.tilt;
     var themeBg = (typeof opts.theme === 'object' && opts.theme.bg) || (typeof fig.theme === 'object' && fig.theme.bg) || null;
-    var bg = fig.background || themeBg || (fig.size === 'mini' ? 'transparent' : theme.bg || pal.bg);
-    if (bg === 'auto') bg = fig.size === 'mini' ? 'transparent' : theme.bg || pal.bg;
+    var bg = fig.background || themeBg || (theme.bg || pal.bg);
+    if (bg === 'auto') bg = theme.bg || pal.bg;
     var reduced = opts.reduced != null ? !!opts.reduced : (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches);
     var stillAt = opts.still != null ? opts.still : (fig.still == null ? 2 : fig.still);
     var ctx = { id: ++mountId, fig: fig, pal: pal, theme: theme, t: 0, dt: 0, pointer: { x: 0, y: 0, inside: false, down: false, world: null }, hover: null, pressed: null, pressedAt: -1, active: null, read: '', reduced: reduced, parts: null, halo: null, px: 1 };

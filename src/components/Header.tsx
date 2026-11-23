@@ -12,7 +12,6 @@ import {
   Sparkles,
   MessageSquare,
   PanelLeft,
-  Home,
   EllipsisVertical,
   ShieldCheck,
   Settings2,
@@ -74,7 +73,7 @@ const ENGINE_CONFIG: Record<
   },
   worlds: {
     name: 'Three.js 3D',
-    label: 'Worlds',
+    label: 'Worlds 3D',
     badge: 'WebGL Ortho',
     icon: Cuboid,
     activeBg: 'bg-indigo-500/15',
@@ -170,65 +169,8 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
 
-        {/* Brand Logo */}
-        <button
-          type="button"
-          className="flex items-center gap-2.5 group cursor-pointer shrink-0 text-left"
-          onClick={onNavigateHome || onOpenGallery}
-          title="Return to Home (Ctrl+N for new project)"
-        >
-          <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition">
-            <div className="w-full h-full rounded-[11px] bg-[#0c0e17] flex items-center justify-center">
-              <Box className="w-4 h-4 text-indigo-400 group-hover:text-cyan-300 transition stroke-[2.2]" />
-            </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0c0e17]" />
-          </div>
-          <div className="hidden sm:block">
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm tracking-tight text-white flex items-center font-sans">
-                Any<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-cyan-400">3d</span>
-              </span>
-              <span className="hidden xl:inline text-[10px] font-mono tracking-wider px-1.5 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
-                v2.0
-              </span>
-            </div>
-          </div>
-        </button>
-
-        {/* Navigation Tabs: Home vs Studio */}
-        <div className="flex items-center p-0.5 rounded-xl bg-zinc-950/80 border border-white/[0.08] text-xs shrink-0">
-          <button
-            type="button"
-            onClick={onNavigateHome}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg font-semibold transition cursor-pointer ${
-              activeView === 'home'
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
-            }`}
-            title="Homepage & Inspirations"
-          >
-            <Home className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Home</span>
-          </button>
-          <button
-            type="button"
-            onClick={onNavigateStudio}
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg font-semibold transition cursor-pointer ${
-              activeView === 'studio'
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
-            }`}
-            title="Studio workspace"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Studio</span>
-          </button>
-        </div>
-
-        <div className="hidden md:block h-4 w-[1px] bg-white/[0.08] shrink-0" />
-
-        {/* Engine Switcher — icons always, labels from xl up */}
-        <div className="hidden md:flex items-center p-1 rounded-xl bg-zinc-950/70 border border-white/[0.08] shadow-inner shrink-0">
+        {/* Engine Switcher — full label with icon matching capsule style */}
+        <div className="flex items-center p-1 rounded-xl bg-zinc-950/80 border border-white/[0.08] shadow-inner shrink-0">
           {(Object.keys(ENGINE_CONFIG) as RenderFormat[]).map((key) => {
             const cfg = ENGINE_CONFIG[key];
             const Icon = cfg.icon;
@@ -239,16 +181,16 @@ export const Header: React.FC<HeaderProps> = ({
                 type="button"
                 onClick={() => setFormat(key)}
                 title={`${cfg.name} — ${cfg.badge}`}
-                className={`relative flex items-center gap-1.5 px-2 xl:px-3 py-1 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                className={`relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer ${
                   isActive
                     ? `${cfg.activeBg} ${cfg.activeText} border ${cfg.activeBorder} shadow-sm ${cfg.glow}`
                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border border-transparent'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? cfg.activeText : 'text-zinc-500'}`} />
-                <span className="hidden xl:inline">{cfg.label}</span>
+                <Icon className={`w-3.5 h-3.5 ${isActive ? cfg.activeText : 'text-zinc-400'}`} />
+                <span>{cfg.label}</span>
                 {isActive && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-0.5 rounded-full bg-current opacity-80" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3.5 h-0.5 rounded-full bg-current opacity-90" />
                 )}
               </button>
             );
@@ -270,31 +212,33 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
 
         {/* Validation Status Pill (Clickable -> toggles Inspector drawer!) */}
-        <button
-          type="button"
-          onClick={onToggleInspector}
-          title="Inspect validation checks & prompt fidelity (Ctrl+I)"
-          className={`flex items-center gap-1.5 px-2 xl:px-2.5 py-1 rounded-lg text-xs font-mono font-medium transition cursor-pointer border ${
-            isValid
-              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
-              : 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20'
-          }`}
-        >
-          {isValid ? (
-            <>
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="hidden xl:inline">Valid (12)</span>
-            </>
-          ) : (
-            <>
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden xl:inline">Issues</span>
-            </>
-          )}
-        </button>
+        {activeView !== 'home' && (
+          <button
+            type="button"
+            onClick={onToggleInspector}
+            title="Inspect validation checks & prompt fidelity (Ctrl+I)"
+            className={`flex items-center gap-1.5 px-2 xl:px-2.5 py-1 rounded-lg text-xs font-mono font-medium transition cursor-pointer border ${
+              isValid
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                : 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20'
+            }`}
+          >
+            {isValid ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden xl:inline">Valid (12)</span>
+              </>
+            ) : (
+              <>
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden xl:inline">Issues</span>
+              </>
+            )}
+          </button>
+        )}
 
-        {/* Wide screens: show everything inline */}
-        {onToggleChat && (
+        {/* Wide screens: show chat toggle only when in workspace (not on home) */}
+        {activeView !== 'home' && onToggleChat && (
           <button
             onClick={onToggleChat}
             title={isChatOpen ? 'Close Agent Studio (Ctrl+J)' : 'Open Agent Studio (Ctrl+J)'}
@@ -362,7 +306,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Key className="w-3.5 h-3.5" />
         </button>
 
-        {onExportGlb && (
+        {activeView !== 'home' && onExportGlb && (
           <button
             onClick={onExportGlb}
             disabled={isExportingGlb}
@@ -374,16 +318,18 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
 
-        {/* Export Standalone HTML — always visible, it is the primary action */}
-        <button
-          onClick={onExportHtml}
-          disabled={isExporting}
-          title="Download self-contained single file zero-dependency HTML bundle"
-          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 disabled:opacity-50 transition shadow-md shadow-emerald-900/40 border border-emerald-400/20 cursor-pointer"
-        >
-          <Download className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">{isExporting ? 'Exporting…' : 'HTML'}</span>
-        </button>
+        {/* Export Standalone HTML — only when viewing an active scene, NOT on home screen */}
+        {activeView !== 'home' && (
+          <button
+            onClick={onExportHtml}
+            disabled={isExporting}
+            title="Download self-contained single file zero-dependency HTML bundle"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 disabled:opacity-50 transition shadow-md shadow-emerald-900/40 border border-emerald-400/20 cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{isExporting ? 'Exporting…' : 'HTML'}</span>
+          </button>
+        )}
 
         {/* Everything else lives here below 2xl so nothing is ever clipped */}
         <div className="2xl:hidden relative" ref={menuRef}>
@@ -442,24 +388,26 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="text-[10px] font-mono text-zinc-500">{presetsCount}</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  onToggleInspector?.();
-                  closeMenu();
-                }}
-                className={menuItemClass}
-              >
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  Validation checks
-                </span>
-                <span className={`text-[10px] font-mono ${isValid ? 'text-emerald-400' : 'text-amber-400'}`}>
-                  {isValid ? 'pass' : 'issues'}
-                </span>
-              </button>
+              {activeView !== 'home' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onToggleInspector?.();
+                    closeMenu();
+                  }}
+                  className={menuItemClass}
+                >
+                  <span className="flex items-center gap-2">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    Validation checks
+                  </span>
+                  <span className={`text-[10px] font-mono ${isValid ? 'text-emerald-400' : 'text-amber-400'}`}>
+                    {isValid ? 'pass' : 'issues'}
+                  </span>
+                </button>
+              )}
 
-              {onExportGlb && (
+              {activeView !== 'home' && onExportGlb && (
                 <button
                   type="button"
                   onClick={() => {

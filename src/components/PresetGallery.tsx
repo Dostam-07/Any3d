@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { X, Check, Shapes, Cuboid, Grid3X3, Sparkles, Search } from 'lucide-react';
 import { PresetScene, RenderFormat } from '../types';
 
@@ -48,8 +48,8 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
 }) => {
   const [filter, setFilter] = useState<RenderFormat | 'all'>('all');
   const [search, setSearch] = useState('');
-
-  if (!isOpen) return null;
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const filtered = presets.filter((p) => {
     const matchesFormat = filter === 'all' || p.format === filter;
@@ -59,6 +59,176 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
       p.name.toLowerCase().includes(search.toLowerCase());
     return matchesFormat && matchesSearch;
   });
+
+  const selectFocused = useCallback(() => {
+    if (focusedIndex != null && filtered[focusedIndex]) {
+      onSelectPreset(filtered[focusedIndex]);
+      onClose();
+    }
+  }, [filtered, focusedIndex, onSelectPreset, onClose]);
+
+  // Keyboard navigation: arrow keys move focus, Enter selects, Escape closes.
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        selectFocused();
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        setFocusedIndex((i) => {
+          const next = (i == null ? -1 : i) + 1;
+          return next < filtered.length ? next : filtered.length - 1;
+        });
+        return;
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setFocusedIndex((i) => {
+          const prev = (i == null ? filtered.length : i) - 1;
+          return prev >= 0 ? prev : 0;
+        });
+        return;
+      }
+      if (e.key === 'Home') {
+        e.preventDefault();
+        setFocusedIndex(filtered.length > 0 ? 0 : null);
+        return;
+      }
+      if (e.key === 'End') {
+        e.preventDefault();
+        setFocusedIndex(filtered.length > 0 ? filtered.length - 1 : null);
+        return;
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, filtered.length, selectFocused, onClose]);
+
+  // Reset focus when the filtered list changes.
+  useEffect(() => {
+    setFocusedIndex(filtered.length > 0 ? 0 : null);
+  }, [filtered]);
+
+  // Scroll the focused card into view.
+  useEffect(() => {
+    if (focusedIndex != null) {
+      cardRefs.current[focusedIndex]?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [focusedIndex]);
+
+  if (!isOpen) return null;
+
+  const emptyState = (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <Search className="w-8 h-8 text-zinc-600 mb-3" />
+      <p className="text-zinc-500 text-sm mb-1">No presets match your filter.</p>
+      <p className="text-xs text-zinc-500 max-w-xs mb-4">
+        Try clearing the search or choosing a different engine filter.
+      </p>
+      <button
+        onClick={() => {
+          setSearch('');
+          setFilter('all');
+        }}
+        className="px-4 py-2 rounded-lg text-xs font-medium text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 transition cursor-pointer"
+      >
+        Clear filters
+      </button>
+    </div>
+  );
+
+  const gridContent =
+    filtered.length === 0
+      ? emptyState
+      : filtered.map((preset, index) => {
+          const isSelected = preset.id === currentId;
+          const cfg = ENGINE_LABELS[preset.format];
+          const Icon = cfg?.icon || Shapes;
+          const isFocused = focusedIndex === index;
+
+          return (
+            <div
+              key={preset.id}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
+              tabIndex={isFocused ? 0 : -1}
+              onClick={() => {
+                setFocusedIndex(index);
+                onSelectPreset(preset);
+                onClose();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  onSelectPreset(preset);
+                  onClose();
+                }
+              }}
+              className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group active:scale-[0.99] ${
+                isSelected
+                  ? 'border-indigo-500 bg-indigo-950/25 shadow-lg shadow-indigo-950/50 ring-1 ring-indigo-500/40'
+                  : 'border-white/[0.06] hover:border-indigo-500/40 bg-white/[0.02] hover:bg-white/[0.05] shadow-sm'
+              } ${isFocused ? 'ring-2 ring-indigo-500 bg-zinc-900/30' : ''}`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-zinc-100 group-hover:text-white transition">
+                    {preset.title}
+                  </span>
+                  <span
+                    className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                      cfg?.badgeStyle || 'bg-zinc-800 text-zinc-300'
+                    }`}
+                  >
+                    <Icon className="w-3 h-3" />
+                    <span>{preset.format}</span>
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-400 font-mono">
+                  presets/{preset.format}/{preset.name}.js
+                </p>
+              </div>
+
+              <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-2 text-xs text-zinc-500">
+                <span className="font-mono text-[11px]">{preset.code.split('\n').length} lines of code</span>
+                <div className="flex items-center gap-2">
+                  {onRemixPreset && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemixPreset(preset);
+                        onClose();
+                      }}
+                      title="Start a new project from this preset"
+                      className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-white/[0.05] hover:bg-white/[0.1] text-zinc-300 border border-white/[0.08] transition cursor-pointer"
+                    >
+                      Remix
+                    </button>
+                  )}
+                  <span className="text-indigo-400 font-medium group-hover:text-indigo-300 transition flex items-center gap-1">
+                    {isSelected ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-emerald-400 font-semibold">Active Scene</span>
+                      </>
+                    ) : (
+                      'Load Scene →'
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-fade-in">
@@ -143,75 +313,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
         </div>
 
         {/* Presets Grid */}
-        <div className="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          {filtered.map((preset) => {
-            const isSelected = preset.id === currentId;
-            const cfg = ENGINE_LABELS[preset.format];
-            const Icon = cfg?.icon || Shapes;
-
-            return (
-              <div
-                key={preset.id}
-                onClick={() => {
-                  onSelectPreset(preset);
-                  onClose();
-                }}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group active:scale-[0.99] ${
-                  isSelected
-                    ? 'border-indigo-500 bg-indigo-950/25 shadow-lg shadow-indigo-950/50 ring-1 ring-indigo-500/40'
-                    : 'border-white/[0.06] hover:border-indigo-500/40 bg-white/[0.02] hover:bg-white/[0.05] shadow-sm'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-zinc-100 group-hover:text-white transition">
-                      {preset.title}
-                    </span>
-                    <span
-                      className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                        cfg?.badgeStyle || 'bg-zinc-800 text-zinc-300'
-                      }`}
-                    >
-                      <Icon className="w-3 h-3" />
-                      <span>{preset.format}</span>
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-400 font-mono">presets/{preset.format}/{preset.name}.js</p>
-                </div>
-
-                <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-2 text-xs text-zinc-500">
-                  <span className="font-mono text-[11px]">{preset.code.split('\n').length} lines of code</span>
-                  <div className="flex items-center gap-2">
-                    {onRemixPreset && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onRemixPreset(preset);
-                          onClose();
-                        }}
-                        title="Start a new project from this preset"
-                        className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-white/[0.05] hover:bg-white/[0.1] text-zinc-300 border border-white/[0.08] transition cursor-pointer"
-                      >
-                        Remix
-                      </button>
-                    )}
-                    <span className="text-indigo-400 font-medium group-hover:text-indigo-300 transition flex items-center gap-1">
-                      {isSelected ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="text-emerald-400 font-semibold">Active Scene</span>
-                        </>
-                      ) : (
-                        'Load Scene →'
-                      )}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <div className="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3.5">{gridContent}</div>
       </div>
     </div>
   );
