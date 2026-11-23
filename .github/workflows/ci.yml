@@ -78,6 +78,16 @@ jobs:
       - name: Verify documented pixel toolkit
         if: always()
         run: npm run verify:pixel-api
+
+      # Re-shoot every README still through the studio and compare it with the
+      # committed one on a coarse luminance grid: a scene that still draws but
+      # stopped looking like itself fails here.
+      - name: Verify the committed stills still match
+        if: always()
+        run: npm run verify:fidelity
+        env:
+          A3D_URL: http://localhost:5174
+          A3D_API: http://localhost:3001
       - name: Server logs
         if: failure()
         run: tail -n 80 .tmp-api.log .tmp-vite.log

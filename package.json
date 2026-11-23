@@ -21,6 +21,7 @@
     "verify:worlds-api": "node scripts/verify-worlds-api.mjs",
     "verify:svg-api": "node scripts/verify-svg-api.mjs",
     "verify:pixel-api": "node scripts/verify-pixel-api.mjs",
+    "verify:fidelity": "node scripts/verify-still-fidelity.mjs",
     "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {

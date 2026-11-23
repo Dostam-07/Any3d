@@ -9,7 +9,9 @@ import { execFileSync } from 'node:child_process';
 import { buildPromptScenes } from './showcase-prompts.mjs';
 
 const BASE = process.env.A3D_URL || 'http://localhost:5174';
-const OUT = 'docs/assets/showcase';
+// A3D_OUT lets a check (or a preview run) capture somewhere other than the
+// committed set without touching it.
+const OUT = process.env.A3D_OUT || 'docs/assets/showcase';
 // GIFs are opt-in: they are large, and only the two animated heroes need them.
 const RECORD_GIFS = process.env.A3D_GIFS === '1' || process.argv.includes('--gifs');
 const FRAMES = '.tmp/showcase-frames';
