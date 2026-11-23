@@ -17,6 +17,7 @@
     "showcase": "node scripts/showcase.mjs",
     "showcase:gifs": "node scripts/showcase.mjs --gifs",
     "verify:showcase": "node scripts/verify-showcase.mjs",
+    "verify:pixel-finish": "node scripts/verify-pixel-finish.mjs",
     "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {

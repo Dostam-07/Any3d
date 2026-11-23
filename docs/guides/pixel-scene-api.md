@@ -17,6 +17,13 @@ A scene is one call, `Pixel.scene({ … })`, in a plain script (no module, no im
 | `camera` | `{ az: 45, el: 30, height, scale, target }`: az/el in degrees (30 is the 2:1 pixel isometric), `height` the tallest thing so the fit leaves it room, `scale` pixels per unit if you want to fix it |
 | `sun` | `{ az: -40, el: 48, ambient: .34 }`: where the light comes from, and how light the shade is |
 | `outline` | default true: a solid pixel against something far behind it steps one shade darker |
+| `bayer` | ordered matrix for the shade dither: `8` (default) or `4`, a smaller, coarser cell. Any other value throws instead of quietly picking one |
+| `shadow` | `'soft'` (default) supersamples the shade 2 x 2 and still dithers it; `'hard'` takes one sample, so a surface under shadow keeps its texture and only darkens |
+| `rim` | default false: a warm tint on the top-left edge of solids where the light rims them. It never touches the ground |
+| `wind` | default 0, or a step rate in frames per second. `P.wind` then steps its time at that rate so leaves move in pixel-art steps rather than smoothly |
+| `contact` | default .32: how hard the ground darkens under a foot |
+
+These five options change the render, and `scripts/verify-pixel-finish.mjs` (part of CI) proves it: it bundles the pier with and without them and fails if the pixels match.
 | `ground` | `{ rx, rz, wobble: .3, fade: .45, zone(x, z, P) }`: an ellipse of radii rx, rz, its edge warped by noise (`wobble`) and dissolved over `fade` units; `zone` returns the material key of the ground at x, z |
 | `materials` | `{ key: material }` named materials for this scene |
 | `build(P)` | builds the scene once; returns `parts` (anything tick needs) with `parts.hot`, the groups the pointer may pick, each with a `.name` |
@@ -40,7 +47,7 @@ Primitives are convex solids centred on x, y, z unless noted, added to `parent` 
 - `P.pose(person, name, amount = 1)`: sets every joint for `stand`, `work` (forearms forward at a bench), `hold` (something held in front of the chest), `carry` (one forearm up), `sit` (on an edge; hips lower, thighs forward, shins down) or `wave`. Call it first in tick, then add the motion on top.
 - `P.tree(x, z, parent, { r, h, clusters, mat, trunk, yaw, seed })`: a trunk and a crown of round-shaded leaf clumps.
 - `P.bush(x, z, parent, { r, clusters, mat, flowers })`: a low clump; `flowers` is a hex for small blossoms.
-- Motion: `P.phase(t, period, offset)` 0..1 sawtooth, `P.wave(t, period, offset)` −1..1, `P.pulse(t, period, width)` a bump, `P.smooth`, `P.lerp`, `P.clamp`, `P.TAU`.
+- Motion: `P.phase(t, period, offset)` 0..1 sawtooth, `P.wave(t, period, offset)` −1..1, `P.pulse(t, period, width)` a bump, `P.smooth`, `P.lerp`, `P.clamp`, `P.TAU`. `P.wind(t, period, offset)` is `P.wave` on time stepped by the scene's `wind` rate, so foliage snaps between pixel-art poses.
 - Noise: `P.noise(x, y)`, `P.fbm(x, y)`, `P.hash(x, y)`, the same functions the textures use (for ground zones and stable variety).
 
 ## Materials

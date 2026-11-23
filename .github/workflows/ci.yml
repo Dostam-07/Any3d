@@ -59,6 +59,13 @@ jobs:
           A3D_URL: http://localhost:5174
           A3D_API: http://localhost:3001
           A3D_TIMEOUT_MS: 120000
+
+      # The documented pixel finish options (bayer / shadow / rim / wind /
+      # contact) have no preset coverage, so probe them directly: the same scene
+      # is bundled with and without them and the pixels must differ.
+      - name: Verify documented pixel finish options
+        if: always()
+        run: npm run verify:pixel-finish
       - name: Server logs
         if: failure()
         run: tail -n 80 .tmp-api.log .tmp-vite.log
