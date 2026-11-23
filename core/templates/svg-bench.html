@@ -65,7 +65,8 @@
   var still = document.createElement('button'); still.type = 'button'; still.textContent = 'Still frame'; still.setAttribute('aria-pressed', 'false');
   var note = document.createElement('span'); note.className = 'read'; note.setAttribute('aria-live', 'polite'); note.textContent = 'Move the pointer over the scene.';
   foot.appendChild(still); foot.appendChild(note); wrap.appendChild(foot);
-  var lookPick = null;
+  var lookPick = null, camPick = null;
+  if (q.get('camera')) { try { camPick = JSON.parse(q.get('camera')); } catch (e) { camPick = null; } }
   if (q.get('look')) { try { lookPick = JSON.parse(q.get('look')); } catch (e) { lookPick = null; } }
   if (!lookPick && window.__any3dLook) lookPick = window.__any3dLook;
   var ctx, figAccent = fig.theme && typeof fig.theme === 'object' ? fig.theme.accent : null;
@@ -80,6 +81,7 @@
     if (ctx) ctx.destroy();
     try {
       ctx = Api.mount(fig, { el: stage, reduced: reduced, still: q.has('t') ? +q.get('t') : undefined, theme: picked(), look: lookPick });
+      if (camPick && ctx && ctx.setCamera) { try { ctx.setCamera(camPick); } catch (e) {} }
       window.__any3d = ctx;
       /* what the embed honoured: reduced motion, a still frame, or full motion */
       window.__any3dMotion = reduced ? 'reduced' : 'full';
@@ -150,6 +152,8 @@
       }
       /* a look is a live change: no re-mount, no re-bundle */
       if (d.look !== undefined && ctx && ctx.setLook) { lookPick = d.look; try { ctx.setLook(d.look); } catch (err) { console.error(err); } }
+      /* camera presets (iso, top, front, side) refit the frustum, no re-mount */
+      if (d.camera !== undefined) { camPick = d.camera; if (ctx && ctx.setCamera) { try { ctx.setCamera(d.camera); } catch (err) { console.error(err); } } }
       /* capture happens here, inside the frame, so an opaque sandbox can still export */
       if (d.want === 'png') {
         (function () {

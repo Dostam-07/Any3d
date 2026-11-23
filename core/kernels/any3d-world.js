@@ -416,6 +416,7 @@ export function mountWorld(def, { el, finish = 'miniature', size = 'card', pause
   const camera = new THREE.OrthographicCamera(-12, 12, 9, -9, .1, 100);
   // Camera orbit state (degrees + distance) for drag-to-rotate / scroll-to-zoom.
   let camAz = 38, camEl = 34, camDist = 42;
+  const camBase = { az: camAz, el: camEl, dist: camDist };
   function applyCam() {
     const r = camEl * Math.PI / 180, a = camAz * Math.PI / 180;
     camera.position.set(
@@ -530,14 +531,17 @@ export function mountWorld(def, { el, finish = 'miniature', size = 'card', pause
     setSpeed(value) { if (!Number.isFinite(value) || value < .25 || value > 3) throw new Error('Speed must be between 0.25 and 3.'); anchor = time; epoch = performance.now(); speed = value; },
     seek(value) { if (!Number.isFinite(value)) throw new Error('Time must be finite.'); render(phase(value, def.duration) * def.duration); anchor = time; epoch = performance.now(); },
     setCamera(cam) {
-      if (typeof cam.az === 'number') camAz = cam.az;
-      if (typeof cam.el === 'number') camEl = Math.max(-85, Math.min(85, cam.el));
-      if (typeof cam.dist === 'number') camDist = Math.max(8, Math.min(120, cam.dist));
+      if (!cam || typeof cam !== 'object') return;
+      if (cam.reset) { camAz = camBase.az; camEl = camBase.el; camDist = camBase.dist; }
+      if (typeof cam.az === 'number' && Number.isFinite(cam.az)) camAz = cam.az;
+      if (typeof cam.el === 'number' && Number.isFinite(cam.el)) camEl = Math.max(-85, Math.min(85, cam.el));
+      if (typeof cam.dist === 'number' && Number.isFinite(cam.dist)) camDist = Math.max(8, Math.min(120, cam.dist));
       applyCam();
+      resize();
       render(time);
     },
     contacts() { return def.contacts ? def.contacts({ t: time, parts, W }) : []; },
-    stats() { return { time, duration: def.duration, finish, speed, paused, reduced: media.matches, running: looping, frames, draws, triangles, width, height, buffer: [canvas.width, canvas.height], geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures }; },
+    stats() { return { time, duration: def.duration, finish, speed, paused, reduced: media.matches, running: looping, frames, draws, triangles, width, height, buffer: [canvas.width, canvas.height], geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, camera: { az: camAz, el: camEl, dist: camDist } }; },
     snapshot() { const a = []; content.updateMatrixWorld(true); content.traverse(o => { if (o.isMesh || o.isGroup) a.push(...o.matrixWorld.elements); }); return a; },
     dispose() {
       if (disposed) return; disposed = true; looping = false; renderer.setAnimationLoop(null); ro.disconnect(); io.disconnect();

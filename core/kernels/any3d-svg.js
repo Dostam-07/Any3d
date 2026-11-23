@@ -1302,6 +1302,21 @@ var Any3d = (function () {
       var cw = elHost.clientWidth || 300; ctx.px = frustum.w / cw; painter.setWobble(ctx.px);
     }
     ctx.fit = fit;
+    /* A camera preset is a new rest angle plus a refit: the frustum was framed for
+       the old silhouette, so an oblique view of a tall building would clip. */
+    var camBase = { az: camSpec.az, el: camSpec.el, pad: camSpec.pad };
+    ctx.setCamera = function (spec) {
+      if (!spec) return { az: azRest, el: elRest };
+      /* "iso" means the angle the figure was authored for, which differs per scene */
+      if (spec.reset) { azRest = camBase.az; elRest = camBase.el; camSpec.pad = camBase.pad; }
+      if (typeof spec.az === 'number' && isFinite(spec.az)) azRest = spec.az;
+      if (typeof spec.el === 'number' && isFinite(spec.el)) elRest = Math.max(-89, Math.min(89, spec.el));
+      if (typeof spec.pad === 'number' && isFinite(spec.pad) && spec.pad > 0) camSpec.pad = spec.pad;
+      fit();
+      render();
+      return { az: azRest, el: elRest, pad: camSpec.pad };
+    };
+    ctx.camera = function () { return { az: azRest, el: elRest, pad: camSpec.pad }; };
     function resize() {
       var w = elHost.clientWidth || 300, h = Math.round(w / size.aspect);
       svg.style.height = h + 'px';
