@@ -69,7 +69,7 @@ The studio does not reload the frame to change how a world looks — it posts me
 | `{ look: { timeOfDay, weather } }` | Repaints sky, sun colour/intensity and fog through the look profile. Applied automatically at mount, so a scene never sits on the placeholder backdrop while its lights are already at noon. |
 | `{ size: 'hero' \| 'card' }` | Reframes the frustum (1.08× for hero, 1.02× for card). |
 | `{ finish }` | Switches `miniature` / `pixel` / `print` grading. |
-| `{ paused }`, `{ speed }`, `{ camera: { az, el, dist } }` | Playback and orbit control. |
+| `{ paused }`, `{ speed }`, `{ camera }` | Playback and orbit control. `camera` takes `{ az, el, dist }` in degrees; `{ reset: true }` returns to the angle the scene mounted with (what the studio's *Isometric View* sends). The frustum refits on every change so a plan view never clips a tall prop. |
 | `{ want: 'png', id }` | Replies with `{ png: { id, dataUrl } }` captured inside the frame. |
 
 Message `type` is always `any3d-world`. Exported HTML bakes the look in as `initialLook`, so a file opened from disk starts at the look the studio showed.

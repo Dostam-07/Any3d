@@ -65,6 +65,22 @@ const openPreset = async (formatRe, nameRe) => {
   await page.waitForTimeout(1200);
 };
 
+const cameraButton = () => page.locator('button:visible').filter({ hasText: /^(iso|top|front|side)$/i }).first();
+const pickCamera = async (label) => {
+  await cameraButton().click();
+  await page.waitForTimeout(300);
+  await page.locator('button:visible').filter({ hasText: label }).first().click();
+  await page.waitForTimeout(1400);
+};
+const worldCamera = () => page.evaluate(() => {
+  const frame = document.querySelector('iframe');
+  return frame?.contentWindow?.__world?.stats?.().camera ?? null;
+});
+const svgCamera = () => page.evaluate(() => {
+  const frame = document.querySelector('iframe');
+  return frame?.contentWindow?.__any3d?.camera?.() ?? null;
+});
+
 const switchSize = async (label) => {
   await page.locator('button[title^="Web presentation:"]').first().click();
   await page.getByRole('button', { name: label }).first().click();
@@ -218,6 +234,34 @@ try {
   });
   if (pixel && pixel.ratio > 0.9 && pixel.height > 0.9) pass('pixel art fills its card', JSON.stringify(pixel));
   else fail('pixel art fills its card', JSON.stringify(pixel));
+
+  // --- camera presets: 3D engines take the angle, 2D engines have none ------
+  await openPreset(/Three\.js/i, /florist|bakery/i);
+  const isoWorld = await worldCamera();
+  await pickCamera('Top (Plan)');
+  const topWorld = await worldCamera();
+  await pickCamera('Side Elevation');
+  const sideWorld = await worldCamera();
+  await pickCamera('Isometric View');
+  const backWorld = await worldCamera();
+  const worldMoved = topWorld?.el === 85 && sideWorld?.az === 85 && backWorld?.az === isoWorld?.az && backWorld?.el === isoWorld?.el;
+  if (isoWorld && worldMoved) pass('world camera presets apply', `${isoWorld.az}/${isoWorld.el} -> ${topWorld.az}/${topWorld.el} -> back ${backWorld.az}/${backWorld.el}`);
+  else fail('world camera presets apply', JSON.stringify({ isoWorld, topWorld, sideWorld, backWorld }));
+
+  await openPreset(/SVG Vector/i, /harbour|airport/i);
+  const isoSvg = await svgCamera();
+  await pickCamera('Top (Plan)');
+  const topSvg = await svgCamera();
+  await pickCamera('Isometric View');
+  const backSvg = await svgCamera();
+  const svgMoved = topSvg?.el === 85 && Math.abs((backSvg?.az ?? 0) - (isoSvg?.az ?? -1)) < 0.01;
+  if (isoSvg && svgMoved) pass('svg camera presets apply', `${isoSvg.az}/${isoSvg.el} -> ${topSvg.az}/${topSvg.el} -> back ${backSvg.az}/${backSvg.el}`);
+  else fail('svg camera presets apply', JSON.stringify({ isoSvg, topSvg, backSvg }));
+
+  await openPreset(/Pixel Art/i, /flower/i);
+  const cameraOffered = await cameraButton().count();
+  if (!cameraOffered) pass('camera hidden for the 2D engines');
+  else fail('camera hidden for the 2D engines', 'camera control shown for pixel art');
 } catch (error) {
   fail('run', String(error).slice(0, 300));
 }
