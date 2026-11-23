@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { GenerationPlayground } from './GenerationPlayground';
+import { CardSectionHeader, HeroSiteChrome, LiveCardBody, LookCard, SceneSpecStrip, ShipCard } from './PresentationViews';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
@@ -64,6 +65,12 @@ interface SandboxPreviewProps {
   onSizeChange?: (size: WebPresentationSize) => void;
   /** Shared/untrusted scenes run in an opaque-origin iframe. */
   untrusted?: boolean;
+  /** Generated scene source, shown (abridged) in the card section's CTA. */
+  code?: string;
+  /** Export the standalone HTML file; the CTA in the card section calls this. */
+  onExportHtml?: () => void;
+  /** Open the stage in code mode, from the card's "Editable source" link. */
+  onOpenCode?: () => void;
 }
 
 const SVG_THEMES: SVGTheme[] = ['toy', 'soft', 'mono', 'line', 'night', 'print'];
@@ -90,6 +97,9 @@ function SandboxPreviewInner({
   size,
   onSizeChange,
   untrusted = false,
+  code = '',
+  onExportHtml,
+  onOpenCode,
 }: SandboxPreviewProps, ref: React.Ref<SandboxPreviewHandle>) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [sizeState, setSizeState] = useState<WebPresentationSize>('card');
@@ -115,9 +125,12 @@ function SandboxPreviewInner({
   const [showPlayground, setShowPlayground] = useState<boolean>(false);
   const [isExportingGlb, setIsExportingGlb] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   // The toolbar must adapt to the panel it lives in (not the viewport), otherwise
   // controls spill past the edge in a narrow split pane.
   const [compact, setCompact] = useState<boolean>(false);
+  const [stageWidth, setStageWidth] = useState<number>(0);
+  const [stageHeight, setStageHeight] = useState<number>(0);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [styleMenuOpen, setStyleMenuOpen] = useState<boolean>(false);
@@ -135,9 +148,29 @@ function SandboxPreviewInner({
     const observer = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect?.width ?? el.clientWidth;
       setCompact(width < 620);
+      setStageWidth(width);
     });
     observer.observe(el);
     setCompact(el.clientWidth < 620);
+    setStageWidth(el.clientWidth);
+    return () => observer.disconnect();
+  }, []);
+
+  // The stage's own box decides the card grid and how much chrome fits. Height
+  // matters as much as width: a short stage has to drop the section blurb so the
+  // cards still fit without scrolling.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver((entries) => {
+      const box = entries[0]?.contentRect;
+      if (!box) return;
+      setStageWidth(box.width);
+      setStageHeight(box.height);
+    });
+    observer.observe(el);
+    setStageWidth(el.clientWidth);
+    setStageHeight(el.clientHeight);
     return () => observer.disconnect();
   }, []);
 
@@ -399,6 +432,11 @@ function SandboxPreviewInner({
     },
   }));
 
+  // Two presentations, one live iframe: only the surrounding CSS changes when
+  // the size is switched, so the scene never reloads and keeps its pose.
+  const stageColumns = stageWidth >= 1024 ? 3 : stageWidth >= 768 ? 2 : 1;
+  const motionLabel = isPaused ? 'Paused still' : 'Live loop';
+
   // Engine accent badge config
   const engineColorClass =
     format === 'svg'
@@ -654,7 +692,7 @@ function SandboxPreviewInner({
                     setStyleMenuOpen(false);
                     setCameraMenuOpen(false);
                   }}
-                  title={`Web format: ${currentSize === 'hero' ? 'Webpage Hero Section (16:9 banner)' : 'Website Feature Card (4:3 component)'}`}
+                  title={`Web presentation: ${currentSize === 'hero' ? 'full-bleed hero banner with page chrome' : 'compact card inside a responsive cards section'}`}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium border transition cursor-pointer active:scale-95 shrink-0 ${
                     sizeMenuOpen
                       ? 'bg-zinc-800 text-purple-300 border-purple-500/40 shadow-sm'
@@ -669,8 +707,8 @@ function SandboxPreviewInner({
                 {sizeMenuOpen && (
                   <div className="absolute left-0 top-full mt-2 w-60 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1">
                     {[
-                      { key: 'hero', label: 'Web Hero Section', desc: 'Full-width cinematic landing page header (16:9)' },
-                      { key: 'card', label: 'Website Feature Card', desc: 'Compact interactive component card (4:3)' },
+                      { key: 'hero', label: 'Hero Section', desc: 'Full-bleed banner: nav, headline, one CTA' },
+                      { key: 'card', label: 'Cards Section', desc: 'Compact 4:3 card in a responsive grid' },
                     ].map((sz) => (
                       <button
                         key={sz.key}
@@ -771,8 +809,18 @@ function SandboxPreviewInner({
         )}
       </div>
 
-      {/* Sandboxed Iframe Container */}
-      <div className="relative flex-1 w-full h-full flex items-center justify-center p-3 sm:p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/20 via-[#0a0c13] to-[#0a0c13]">
+      {/* Presentation stage. Hero is a full-bleed banner; Card is a scrollable
+          section of compact cards. Same iframe node in both, different page. */}
+      <div
+        ref={stageRef}
+        className={
+          '@container relative w-full flex-1 min-h-0 ' +
+          (currentSize === 'hero'
+            ? 'overflow-hidden bg-[#05070d]'
+            : 'no-scrollbar overflow-y-auto bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/25 via-[#0a0c13] to-[#0a0c13] px-3 ' +
+            (stageHeight > 0 && stageHeight < 820 ? 'py-3 sm:py-3' : 'py-4 sm:py-5'))
+        }
+      >
         {/* Playable Mini-Game Overlay (Only if user manually toggles it) */}
         {showPlayground && (
           <GenerationPlayground
@@ -806,38 +854,117 @@ function SandboxPreviewInner({
           )
         )}
 
-        <div
-          className={`transition-all duration-300 ease-out rounded-2xl overflow-hidden shadow-2xl bg-[#0c0e17] border border-white/[0.08] relative flex items-center justify-center ${
-            isFullscreen
-              ? 'w-full h-full'
-              : currentSize === 'hero'
-              ? 'w-full max-w-5xl aspect-[16/9] min-h-[360px] max-h-[82vh]'
-              : 'w-full max-w-md aspect-[4/3] min-h-[320px] max-h-[75vh]'
-          }`}
-        >
-          <iframe
-            ref={iframeRef}
-            srcDoc={html}
-            title="Any3d Sandbox"
-            sandbox={untrusted ? 'allow-scripts' : undefined}
-            className="w-full h-full border-none block"
-          />
-
-          {/* Floating Read-out HUD Overlay */}
-          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-            {hoverText ? (
-              <div className="pointer-events-auto flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-950/90 backdrop-blur-md border border-indigo-500/30 text-[11px] font-mono text-indigo-200 shadow-xl">
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                <Eye className="w-3.5 h-3.5 text-indigo-400" />
-                <span>hover: {hoverText}</span>
-              </div>
-            ) : <div />}
-
-            <div className="pointer-events-none flex items-center gap-2">
-              <div className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm text-zinc-400 border border-white/[0.06] shadow-sm hidden sm:block">
-                Drag to rotate · Scroll to zoom
-              </div>
+        <div className={currentSize === 'hero'
+            ? 'absolute inset-0'
+            : 'mx-auto flex w-full max-w-6xl flex-col ' +
+              (stageHeight > 0 && stageHeight < 820 ? 'gap-2.5' : 'gap-3')}>
+          {currentSize === 'hero' ? (
+            <HeroSiteChrome
+              sceneName={sceneName}
+              format={format}
+              motion={motionLabel}
+              onFullscreen={toggleFullscreen}
+              onSnapshot={handleSnapshotPng}
+            />
+          ) : (
+            <div className="flex flex-col gap-2">
+              <CardSectionHeader
+                format={format}
+                columns={stageColumns}
+                compact={stageHeight > 0 && stageHeight < 820}
+              />
+              <SceneSpecStrip
+                format={format}
+                size={currentSize}
+                motion={motionLabel}
+                finish={worldFinish}
+                theme={svgTheme}
+                look={sceneLook}
+              />
             </div>
+          )}
+
+          <div
+            className={
+              currentSize === 'hero'
+                ? 'absolute inset-0 z-0'
+                : 'grid grid-cols-1 gap-3 @md:grid-cols-2 @4xl:grid-cols-3'
+            }
+          >
+            <article
+              className={
+                currentSize === 'hero'
+                  ? 'absolute inset-0 overflow-hidden'
+                  : 'group flex flex-col overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0b0d16] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:border-[rgba(255,255,255,0.16)]'
+              }
+            >
+              <div
+                className={
+                  currentSize === 'hero'
+                    ? 'relative h-full w-full overflow-hidden'
+                    : 'relative aspect-[4/3] w-full overflow-hidden bg-[#080a11]'
+                }
+              >
+                <iframe
+                  ref={iframeRef}
+                  srcDoc={html}
+                  title="Any3d Sandbox"
+                  sandbox={untrusted ? 'allow-scripts' : undefined}
+                  className="absolute inset-0 h-full w-full border-none block"
+                />
+
+                {currentSize === 'hero' ? (
+                  <div className="pointer-events-none absolute bottom-4 right-4 z-20 flex flex-col items-end gap-1.5">
+                    {hoverText && (
+                      <div className="flex items-center gap-1.5 rounded-full border border-indigo-400/30 bg-zinc-950/80 px-2.5 py-1 text-[10px] font-mono text-indigo-200 backdrop-blur-md">
+                        <Eye className="h-3 w-3 text-indigo-400" />
+                        {hoverText}
+                      </div>
+                    )}
+                    <span className="rounded-full border border-white/10 bg-black/40 px-2.5 py-1 text-[10px] font-mono text-white/45 backdrop-blur-sm [@media(max-height:420px)]:hidden">
+                      Drag to orbit · scroll to zoom
+                    </span>
+                  </div>
+                ) : (
+                  <span className="pointer-events-none absolute left-2.5 top-2.5 z-10 rounded-md border border-white/10 bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/70 backdrop-blur-sm">
+                    Live embed
+                  </span>
+                )}
+              </div>
+
+              {currentSize === 'card' && (
+                <LiveCardBody
+                  sceneName={sceneName}
+                  format={format}
+                  motion={motionLabel}
+                  hoverText={hoverText}
+                  onSnapshot={handleSnapshotPng}
+                  onFullscreen={toggleFullscreen}
+                />
+              )}
+            </article>
+
+            {currentSize === 'card' && (
+              <ShipCard
+                code={code}
+                format={format}
+                sceneName={sceneName}
+                compact={stageHeight > 0 && stageHeight < 820}
+                onExportHtml={onExportHtml}
+                onOpenCode={onOpenCode}
+              />
+            )}
+            {currentSize === 'card' && (
+              <LookCard
+                accent={accentColor}
+                look={sceneLook}
+                isPaused={isPaused}
+                compact={stageHeight > 0 && stageHeight < 820}
+                onAccentChange={handleAccentChange}
+                onLookChange={handleLookChange}
+                onTogglePlay={handleTogglePlay}
+              />
+            )}
           </div>
         </div>
       </div>

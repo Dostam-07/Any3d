@@ -18,6 +18,8 @@ import { ConversationPanel } from './components/ConversationPanel';
 import { ProjectPage } from './components/ProjectPage';
 import { Route, readRoute, routeToHash, NEW_PROJECT_ID, isNewProject } from './lib/router';
 import { decodeScene } from './lib/scene-payload';
+import { sceneTitle } from './lib/scene-title';
+import { withPresentationSize } from './lib/presentation-size';
 import {
   RenderFormat,
   LLMProvider,
@@ -1297,7 +1299,7 @@ export function App() {
     try {
       // The exported file carries the atmosphere the user is looking at, so it
       // reopens at dusk even when opened straight from disk.
-      const res = await bundleCode(code, format, format === 'svg' ? stageLook : null);
+      const res = await bundleCode(withPresentationSize(code, size), format, format === 'svg' ? stageLook : null);
       const blob = new Blob([res.html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1577,13 +1579,13 @@ export function App() {
                     <div className="hidden 2xl:flex items-center gap-2">
                     <ClipControl
                       previewRef={previewRef}
-                      sceneName={validation?.name || currentPresetId || 'scene'}
+                      sceneName={sceneTitle(code, validation?.name || 'Live scene')}
                       disabled={!currentBundledHtml || stageView === 'code'}
                       compact
                     />
                     <StoryboardControl
                       previewRef={previewRef}
-                      sceneName={validation?.name || currentPresetId || 'scene'}
+                      sceneName={sceneTitle(code, validation?.name || 'Live scene')}
                       format={format}
                       disabled={!currentBundledHtml || stageView === 'code'}
                     />
@@ -1656,13 +1658,16 @@ export function App() {
                         ref={previewRef}
                         html={currentBundledHtml}
                         format={format}
-                        sceneName={validation?.name || 'scene'}
+                        sceneName={sceneTitle(code, 'Live scene')}
                         isLoading={isBundling}
                         isGenerating={isGenerating || isProcessingChat}
                         generatingPrompt={prompt}
                         onRefresh={refreshSandbox}
                         look={stageLook}
                         onLookChange={setStageLook}
+                        code={code}
+                        onExportHtml={handleExportHtml}
+                        onOpenCode={() => setStageView('code')}
                       />
                     </div>
                   )}
@@ -1730,7 +1735,7 @@ export function App() {
             onSelectModel={setOllamaModel}
             code={code}
             setCode={setCode}
-            sceneName={validation?.name || ''}
+            sceneName={sceneTitle(code, '')}
             look={stageLook}
             onLookChange={setStageLook}
             html={currentBundledHtml}

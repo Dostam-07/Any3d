@@ -216,15 +216,8 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
   const handleSizeChange = (s: WebPresentationSize) => {
     setSizeState(s);
     onSizeChange?.(s);
-    if (code) {
-      if (/\bsize\s*:\s*['"][^'"]+['"]/.test(code)) {
-        setCode(code.replace(/\bsize\s*:\s*['"][^'"]+['"]/, `size: '${s}'`));
-      } else if (/\bdefineWorld\s*\(\s*\{/.test(code)) {
-        setCode(code.replace(/\bdefineWorld\s*\(\s*\{/, `defineWorld({\n  size: '${s}',`));
-      } else if (/\bAny3d\.figure\s*\(\s*\{/.test(code)) {
-        setCode(code.replace(/\bAny3d\.figure\s*\(\s*\{/, `Any3d.figure({\n  size: '${s}',`));
-      }
-    }
+    // The sandbox receives a `size` message, so the live scene reframes without
+    // a reload and keeps its pose. The exported file is stamped separately.
   };
 
   const [draft, setDraft] = useState('');
@@ -493,7 +486,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               key={s}
               type="button"
               onClick={() => handleSizeChange(s)}
-              title={`${s.toUpperCase()}: ${s === 'hero' ? 'Webpage Hero Section (Wide 16:9 banner)' : 'Website Feature Card (Compact 4:3 component)'}`}
+              title={`${s.toUpperCase()}: ${s === 'hero' ? 'Full-bleed hero banner with page chrome' : 'Compact card in a responsive cards section'}`}
               className={`px-2.5 py-1 rounded-lg capitalize text-[11px] transition cursor-pointer ${
                 currentSize === s
                   ? 'bg-purple-600/30 text-purple-200 border border-purple-500/40 font-semibold shadow-sm'
@@ -1013,6 +1006,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                 onLookChange={changeLook}
                 size={currentSize}
                 onSizeChange={handleSizeChange}
+                code={code}
+                onExportHtml={onExportHtml}
+                onOpenCode={() => setStage('code')}
               />
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-3 text-center px-8">
