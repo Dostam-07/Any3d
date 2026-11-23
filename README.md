@@ -9,6 +9,8 @@
 [![Three.js](https://img.shields.io/badge/Three.js-r172-black?style=flat-square&logo=three.js)](https://threejs.org/)
 [![Local-First](https://img.shields.io/badge/Privacy-Local--First-10b981?style=flat-square)](https://ollama.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+[![CI](https://github.com/Dostam-07/Any3d/actions/workflows/ci.yml/badge.svg)](https://github.com/Dostam-07/Any3d/actions/workflows/ci.yml)
+[![Showcase](https://github.com/Dostam-07/Any3d/actions/workflows/showcase.yml/badge.svg)](https://github.com/Dostam-07/Any3d/actions/workflows/showcase.yml)
 
 [Quick Start](#quick-start) • [Complex Scene Gallery](#complex-scene-gallery--prompt-cookbook) • [Three Render Engines](#three-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Inside-Out Showcase](#inside-out-showcase-hero-and-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
 
