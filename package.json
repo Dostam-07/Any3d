@@ -25,6 +25,7 @@
     "verify:fidelity": "node scripts/verify-still-fidelity.mjs",
     "verify:camera": "node scripts/verify-export-camera.mjs",
     "verify:storyboard": "node scripts/verify-storyboard.mjs",
+    "verify:reload": "node scripts/verify-reload.mjs",
     "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {

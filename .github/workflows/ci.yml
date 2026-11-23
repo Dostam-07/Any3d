@@ -81,6 +81,11 @@ jobs:
       - name: Verify the storyboard follows the framing
         run: npm run verify:storyboard
 
+      # The bundle lives in memory only: opening a project cold has to rebuild it,
+      # or the preview says "your scene will appear here" above a valid scene.
+      - name: Verify a cold reload restores the preview
+        run: npm run verify:reload
+
       - name: Verify documented pixel toolkit
         if: always()
         run: npm run verify:pixel-api
