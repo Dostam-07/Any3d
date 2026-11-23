@@ -20,11 +20,11 @@ fs.mkdirSync('browser-results/showcase', { recursive: true });
 
 const SCENES = [
   // Hero: four presets plus two prompts with no preset behind them.
-  { key: 'harbour-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'harbour', title: 'Deep-water harbour' },
+  { key: 'harbour-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'harbour', title: 'Deep-water harbour', motion: true },
   { key: 'florist-hero', size: 'hero', kind: 'preset', format: 'worlds', name: 'florist', title: 'Florist shop front' },
   { key: 'windmill-hero', size: 'hero', kind: 'preset', format: 'dither', name: 'windmill', title: 'Dither windmill' },
   { key: 'airport-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'airport', title: 'Terminal runway' },
-  { key: 'market-hero', size: 'hero', kind: 'prompt', file: 'market', title: 'Night market (prompt only)' },
+  { key: 'market-hero', size: 'hero', kind: 'prompt', file: 'market', title: 'Night market (prompt only)', motion: true },
   { key: 'glacier-hero', size: 'hero', kind: 'prompt', file: 'glacier', title: 'Glacier lighthouse (prompt only)' },
 
   // Card: four presets plus two prompts with no preset behind them.
@@ -36,7 +36,9 @@ const SCENES = [
   { key: 'coral-card', size: 'card', kind: 'prompt', file: 'coral', title: 'Coral nursery (prompt only)' },
 ];
 
-const only = process.argv.slice(2);
+// Scene keys as positional args; --gifs only toggles recording and must not
+// be mistaken for a scene filter (a bare filter matches nothing and exits silently).
+const only = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const scenes = only.length ? SCENES.filter((s) => only.some((k) => s.key.includes(k))) : SCENES;
 
 // --- prompt scenes: rebuild the sources, then seed the sessions the studio
@@ -150,6 +152,17 @@ const stageMetrics = () => page.evaluate(() => {
 
 const stageLocator = () => page.locator('div[class*="@container"]').first();
 
+// Captures are taken at deviceScaleFactor 2 for crisp edges; README images are
+// normalised to one width so GitHub renders every tile at the same scale instead
+// of mixing 1240- and 2480-pixel files side by side.
+const STILL_WIDTH = 1240;
+const GIF_WIDTH = 640;
+const normalizeStill = (file) => {
+  const tmp = `${file}.tmp.png`;
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', file, '-vf', `scale=${STILL_WIDTH}:-1:flags=lanczos`, '-frames:v', '1', tmp]);
+  fs.renameSync(tmp, file);
+};
+
 const shootGif = async (name, clip) => {
   const dir = `${FRAMES}/${name}`;
   fs.rmSync(dir, { recursive: true, force: true });
@@ -162,7 +175,7 @@ const shootGif = async (name, clip) => {
   execFileSync('ffmpeg', [
     '-y', '-loglevel', 'error',
     '-framerate', '9', '-i', `${dir}/%03d.png`,
-    '-vf', 'scale=820:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=160[p];[b][p]paletteuse=dither=bayer:bayer_scale=3',
+    '-vf', `scale=${GIF_WIDTH}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=160[p];[b][p]paletteuse=dither=bayer:bayer_scale=3`,
     '-loop', '0', gif,
   ]);
   return gif;
@@ -208,7 +221,10 @@ for (const scene of scenes) {
   const clip = { x: box.x, y: box.y, width: box.width, height: clipHeight };
   const still = `${OUT}/${scene.key}.png`;
   await page.screenshot({ path: still, clip });
-  const gif = RECORD_GIFS ? await shootGif(scene.key, clip) : null;
+  normalizeStill(still);
+  // Only scenes whose motion is the point get a GIF; the rest animate by a few
+  // pixels per frame and would just triple the repository size.
+  const gif = RECORD_GIFS && scene.motion ? await shootGif(scene.key, clip) : null;
 
   const entry = { ...scene, loaded, ...metrics, still, gif, bytes: [fs.statSync(still).size, gif ? fs.statSync(gif).size : 0] };
   report.push(entry);

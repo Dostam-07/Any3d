@@ -169,6 +169,42 @@ try {
   if (editor.textarea && editor.codeTab) pass('editable source opens the editor');
   else fail('editable source opens the editor', JSON.stringify(editor));
 
+  // --- a world takes its look from the studio instead of a fixed dark sky --
+  // Regression guard: worlds used to ignore the look entirely and sit on the dark
+  // placeholder backdrop under noon lighting, which read as a black banner.
+  await openPreset(/Three\.js/i, /florist|bakery/i);
+  await switchSize(/^Hero Section/);
+  await page.waitForTimeout(2600);
+  const worldFrame = page.frames().find((f) => f !== page.mainFrame());
+  const skyAt = async (look) => {
+    if (look) {
+      await page.evaluate((value) => {
+        const frame = document.querySelector('iframe');
+        frame?.contentWindow?.postMessage({ type: 'any3d-world', look: value }, '*');
+      }, look);
+      await page.waitForTimeout(1000);
+    }
+    return worldFrame.evaluate(async () => {
+      const canvas = document.querySelector('#stage canvas');
+      if (!canvas) return null;
+      const img = new Image();
+      img.src = canvas.toDataURL('image/png');
+      await img.decode();
+      const off = document.createElement('canvas');
+      off.width = img.width;
+      off.height = img.height;
+      off.getContext('2d').drawImage(img, 0, 0);
+      // Right side, just above the bottom scrim: sky in every look, unmasked by copy.
+      const { data } = off.getContext('2d').getImageData(img.width - 8, Math.round(img.height * 0.42), 1, 1);
+      return Math.round((data[0] + data[1] + data[2]) / 3);
+    });
+  };
+  const noonSky = await skyAt({ timeOfDay: 1 / 3, weather: 'clear' });
+  const nightSky = await skyAt({ timeOfDay: 1, weather: 'clear' });
+  if (noonSky > 120 && nightSky < 80) pass('world look reaches the runtime', `noon ${noonSky} -> night ${nightSky}`);
+  else fail('world look reaches the runtime', `noon ${noonSky}, night ${nightSky}`);
+  await skyAt({ timeOfDay: 1 / 3, weather: 'clear' });
+
   // --- pixel art must fill its frame, not sit in the middle ----------------
   await openPreset(/Pixel Art/i, /flower/i);
   await switchSize(/^Cards Section/);

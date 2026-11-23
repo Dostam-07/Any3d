@@ -59,3 +59,17 @@ The standard person now has a ~seven-head adult silhouette, tapered torso/limbs 
 
 ## Four live finishes
 `FINISHES` exports the supported identifiers. Finish switches preserve scene objects, time and pose; only the post-process and render-buffer size change. Miniature/halftone/blueprint use the full stage resolution (DPR capped at 1.5); pixel uses the lower logical grid. Halftone uses deterministic diagonal dots and warm/cool ink selection. Blueprint combines tonal blue with screen-space colour/depth edges and a faint grid. Both new finishes sample the scene depth texture to keep white negative space pristine, including around pale geometry. No extra geometry or GPU resources are allocated per frame or finish switch. All four work through standalone `?finish=...`, the selector and the validated same-origin iframe bridge.
+
+## Runtime messages
+
+The studio does not reload the frame to change how a world looks — it posts messages to the mounted runtime:
+
+| Message | Effect |
+|---|---|
+| `{ look: { timeOfDay, weather } }` | Repaints sky, sun colour/intensity and fog through the look profile. Applied automatically at mount, so a scene never sits on the placeholder backdrop while its lights are already at noon. |
+| `{ size: 'hero' \| 'card' }` | Reframes the frustum (1.08× for hero, 1.02× for card). |
+| `{ finish }` | Switches `miniature` / `pixel` / `print` grading. |
+| `{ paused }`, `{ speed }`, `{ camera: { az, el, dist } }` | Playback and orbit control. |
+| `{ want: 'png', id }` | Replies with `{ png: { id, dataUrl } }` captured inside the frame. |
+
+Message `type` is always `any3d-world`. Exported HTML bakes the look in as `initialLook`, so a file opened from disk starts at the look the studio showed.

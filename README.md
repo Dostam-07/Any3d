@@ -242,7 +242,7 @@ Twelve captures taken straight from the running studio with `node scripts/showca
 <table>
   <tr>
     <td width="50%" align="center">
-      <img src="docs/assets/showcase/harbour-hero.gif" alt="SVG harbour scene as a full-bleed hero banner with nav and headline" /><br />
+      <a href="docs/assets/showcase/harbour-hero.png" title="Open the full-resolution still"><img src="docs/assets/showcase/harbour-hero.gif" alt="SVG harbour scene as a full-bleed hero banner with nav and headline" /></a><br />
       <sub><b>harbour</b> · SVG Vector · preset — blueprint gantry cranes over water</sub>
     </td>
     <td width="50%" align="center">
@@ -262,7 +262,7 @@ Twelve captures taken straight from the running studio with `node scripts/showca
   </tr>
   <tr>
     <td align="center">
-      <img src="docs/assets/showcase/market-hero.gif" alt="Night market with lanterns and stalls as a hero banner" /><br />
+      <a href="docs/assets/showcase/market-hero.png" title="Open the full-resolution still"><img src="docs/assets/showcase/market-hero.gif" alt="Night market with lanterns and stalls as a hero banner" /></a><br />
       <sub><b>night market</b> · Three.js · <i>prompt only</i> — “a bustling night market with noodle stalls and paper lanterns”</sub>
     </td>
     <td align="center">
@@ -315,12 +315,16 @@ The two prompt-only worlds per presentation were sent through the same `POST /ap
 | Worlds written with the SVG API passed validation, then failed bundling with `Could not resolve "@any3d/figure"` → HTTP 500. | `validateWorlds()` rejects `D.*`, `pal.*`, `Any3d.*`, `Pixel.*`, `Dither.*` and any import other than `@any3d/worlds`. |
 | The four dither presets were unreachable: the gallery filtered `format !== 'dither'`. | Dither is a first-class filter tab, and its four presets open, bundle and render. |
 | Pixel and dither scenes appeared as a postage stamp in the middle of the stage, because the canvas kept its native 320×240 box. | `fit()` scales to the largest whole-number multiple of both stage axes — in the studio and in exported files. |
-| The default (noon) look painted the stage pure white behind every scene. | Noon background is a soft studio tone (`#e6ebf3`), and the first paint before the look applies is dark. |
+| The default (noon) look painted the stage pure white behind every scene. | Noon background is a soft studio tone (`#e6ebf3`). |
+| Every Three.js scene sat on a near-black backdrop under bright noon lighting, so a hero banner read as a black rectangle on any light page: `world-bench.html` ignored the studio's `look` message and the runtime never applied a profile at mount. | The world runtime applies the default look on mount and honours `look` / `size` / `finish` / `paused` / `camera` messages; exports carry the look for every format, not just SVG. Guarded by a *world look reaches the runtime* check (noon sky 236 → night 47). |
+| Hero framing zoomed out 1.35×, leaving a wide dead margin around the scene. | 1.08× — the scene reaches the banner edges and tall props still clear the top. |
 | Generated scenes showed a slug in the headline and exports: “a-bustling-night-market-with-n”. | `src/lib/scene-title.ts` prefers the scene description, drops a truncated tail, and trims dangling connectors. |
 | A 4:3 card section left a tall empty tail in a squarish stage. | The card section measures its content and compacts itself; the showcase crops stills to the content box. |
 | Switching Hero ↔ Card rewrote the scene source, re-bundled it and reloaded the frame — the camera pose was lost and the code editor quietly changed. | The size is a runtime message to the live frame; only the exported file is stamped (`src/lib/presentation-size.ts`). Verified: the iframe document survives every switch. |
 
 To regenerate everything: start the API (`node server/index.js`) and the app (`npm run dev`), then run `npm run showcase` (pass scene keys to re-shoot a subset, and `npm run showcase:gifs` to record the two animated banners). The four prompt-only scenes are rebuilt deterministically by the script itself, so a clean checkout can reproduce every image.
+
+Stills are normalised to 1240 px wide and GIFs to 640 px, so GitHub renders every tile at the same scale.
 
 Before pushing, `npm run check` runs the test suite, the typechecker and the production build. `npm run verify:showcase` covers the live presentation invariants and needs the API and app running.
 
