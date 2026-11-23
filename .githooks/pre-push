@@ -1,0 +1,18 @@
+#!/bin/sh
+# Run the gate before every push: tests, typechecker, production build.
+# Skip with SKIP_CHECK=1 git push when you know what you are pushing.
+[ "$SKIP_CHECK" = "1" ] && exit 0
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# esbuild cleans its temp files on exit; on Windows an antivirus scan of those
+# files makes that cleanup fail with "Access is denied" and the build dies after
+# it already succeeded. Keep the temp dir inside the repo for the same reason.
+mkdir -p .tmp/esbuild-tmp
+TMPDIR="$(pwd)/.tmp/esbuild-tmp"
+
+echo "pre-push: npm run check (SKIP_CHECK=1 to bypass)"
+if ! TMPDIR="$TMPDIR" npm run check --silent; then
+  echo "pre-push: check failed — push aborted"
+  exit 1
+fi

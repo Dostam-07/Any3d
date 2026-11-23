@@ -345,7 +345,7 @@ To regenerate everything: start the API (`node server/index.js`) and the app (`n
 
 Stills are normalised to 1240 px wide and GIFs to 640 px, so GitHub renders every tile at the same scale.
 
-Before pushing, `npm run check` runs the test suite, the typechecker and the production build. `npm run verify:showcase` covers the live presentation invariants and needs the API and app running. Point the checks at the address the dev server actually bound (`A3D_URL=http://127.0.0.1:5174` if Vite bound IPv4 only): `localhost` can resolve to the other family and a stale server then answers, which makes an edit look like it had no effect.
+Before pushing, `npm run check` runs the test suite, the typechecker and the production build — it is also wired to `.githooks/pre-push` (`git config core.hooksPath .githooks` once per clone), so a red build cannot be pushed; `SKIP_CHECK=1 git push` bypasses it. `npm run verify:showcase` covers the live presentation invariants and needs the API and app running. Point the checks at the address the dev server actually bound (`A3D_URL=http://127.0.0.1:5174` if Vite bound IPv4 only): `localhost` can resolve to the other family and a stale server then answers, which makes an edit look like it had no effect.
 
 CI keeps this honest:
 
