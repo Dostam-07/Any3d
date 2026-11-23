@@ -20,6 +20,7 @@
     "verify:pixel-finish": "node scripts/verify-pixel-finish.mjs",
     "verify:worlds-api": "node scripts/verify-worlds-api.mjs",
     "verify:svg-api": "node scripts/verify-svg-api.mjs",
+    "verify:pixel-api": "node scripts/verify-pixel-api.mjs",
     "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {

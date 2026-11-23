@@ -50,6 +50,13 @@ Primitives are convex solids centred on x, y, z unless noted, added to `parent` 
 - Motion: `P.phase(t, period, offset)` 0..1 sawtooth, `P.wave(t, period, offset)` −1..1, `P.pulse(t, period, width)` a bump, `P.smooth`, `P.lerp`, `P.clamp`, `P.TAU`. `P.wind(t, period, offset)` is `P.wave` on time stepped by the scene's `wind` rate, so foliage snaps between pixel-art poses.
 - Noise: `P.noise(x, y)`, `P.fbm(x, y)`, `P.hash(x, y)`, the same functions the textures use (for ground zones and stable variety).
 
+`P.snap` and `P.wind` are installed by the first render, because both depend on the fitted scale and the scene's `wind`
+rate: call them from `tick`, not from `build`, where `P.snap` is a no-op (0) and `P.wind` is plain `P.wave`.
+
+`scripts/verify-pixel-api.mjs` (wired into the presentation job) walks this list: it calls every `P` entry once with
+sane arguments and once with non-finite ones, rasterises both scenes and fails if a documented call is missing, throws,
+paints nothing, or reports non-finite stats.
+
 ## Materials
 
 `mat` is one of:

@@ -72,6 +72,12 @@ jobs:
       - name: Verify documented SVG toolkit
         if: always()
         run: npm run verify:svg-api
+
+      # Same walk for the pixel kernel: every documented P call, rasterised and
+      # inspected, with a second pass handed non-finite arguments.
+      - name: Verify documented pixel toolkit
+        if: always()
+        run: npm run verify:pixel-api
       - name: Server logs
         if: failure()
         run: tail -n 80 .tmp-api.log .tmp-vite.log
