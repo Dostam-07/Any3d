@@ -18,6 +18,38 @@ Dawn (0), Noon (1/3), Dusk (2/3), Night (1). `LOOK_CHIPS` adds "Golden hour" (0.
 
 `bundleCode(code, format, look)` bakes the look into the exported HTML via `bundleSVG(code, look)` so a scene shared at dusk reopens at dusk. The look also rides in the scene payload (`ScenePayload.look`).
 
+## Camera
+
+The camera the user frames in the stage travels with an export the same way the
+look does, and through the same call: `bundleCode(code, format, look, camera)`
+→ `POST /api/bundle { code, format, look, camera }` → `bundleScene(code, format,
+look, camera)`.
+
+`CameraPick` (`src/lib/camera.ts`) is one of two shapes:
+
+| Pick | Meaning |
+| --- | --- |
+| `{ reset: true }` | the angle the scene was authored for — an SVG figure's camera is part of its art, so this is what `Isometric View` sends |
+| `{ az, el }` | an explicit orbit in degrees; `az` is wrapped into `0–359.9`, `el` clamped to `-90–90` |
+
+`CAMERA_PRESETS` holds the four toolbar angles (`iso`, `top` 0/85, `front`
+0/15, `side` 85/20). `sanitizeCamera` keeps a stored or shared pick usable: a
+non-finite angle becomes `null`, so a bad payload reaches neither `setCamera`
+nor the export.
+
+Baking: `bundleSVG` writes `window.__any3dCamera = {...}` (the bench reads it
+before the kernel, and `?camera=` still wins), `bundleWorlds` writes
+`const initialCamera = {...}` and applies it right after `initialLook`. A pixel
+export has no camera, so the bundle is byte-identical whether or not one is
+given. `ScenePayload.camera` carries the pick in a share link, so a link made
+from a top-down view opens top-down.
+
+`scripts/verify-export-camera.mjs` (11 checks, in CI) proves it: the same
+preset exported at `top` differs from the authored angle by a mean pixel delta
+of 27 (SVG) and 30 (worlds), `reset` matches an un-cameraed export to within
+0.2, an unusable pick is dropped and still exports a file that renders, and the
+pixel bundle is identical either way.
+
 ## Cache key
 
 `LOOK_KEYS` is part of the painter cache key, so changing the look repaints correctly. `ctx.setLook` applies a live change without a re-mount.

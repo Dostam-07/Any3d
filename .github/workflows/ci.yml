@@ -75,6 +75,9 @@ jobs:
 
       # Same walk for the pixel kernel: every documented P call, rasterised and
       # inspected, with a second pass handed non-finite arguments.
+      - name: Verify the camera an export carries
+        run: npm run verify:camera
+
       - name: Verify documented pixel toolkit
         if: always()
         run: npm run verify:pixel-api

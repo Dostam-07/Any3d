@@ -16,6 +16,7 @@
  */
 
 import type { RenderFormat, SVGTheme, WorldFinish } from '../types';
+import { sanitizeCamera, type CameraPick } from './camera';
 
 /** v2 adds `look` (time of day + weather) as a first-class part of the scene. */
 export const SCENE_PAYLOAD_VERSION = 2;
@@ -46,6 +47,8 @@ export interface ScenePayload {
   theme?: SVGTheme;
   finish?: WorldFinish;
   look?: SceneLook;
+  /** The angle the user framed, so a shared link reopens where they left it. */
+  camera?: CameraPick;
   seed?: number;
 }
 
@@ -193,6 +196,10 @@ function normalize(payload: ScenePayload, strip: boolean, compact = false): Scen
         : 'clear',
     };
   }
+  if (payload.camera) {
+    const camera = sanitizeCamera(payload.camera);
+    if (camera) out.camera = camera;
+  }
   return out;
 }
 
@@ -235,6 +242,10 @@ function validate(value: unknown): ScenePayload {
         ? (raw.look as SceneLook).weather
         : 'clear',
     };
+  }
+  if (raw.camera !== undefined) {
+    const camera = sanitizeCamera(raw.camera);
+    if (camera) out.camera = camera;
   }
   return out;
 }

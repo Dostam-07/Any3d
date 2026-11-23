@@ -67,6 +67,8 @@
   foot.appendChild(still); foot.appendChild(note); wrap.appendChild(foot);
   var lookPick = null, camPick = null;
   if (q.get('camera')) { try { camPick = JSON.parse(q.get('camera')); } catch (e) { camPick = null; } }
+  /* an export bakes the camera the user framed, the way it bakes the look */
+  if (!camPick && window.__any3dCamera) camPick = window.__any3dCamera;
   if (q.get('look')) { try { lookPick = JSON.parse(q.get('look')); } catch (e) { lookPick = null; } }
   if (!lookPick && window.__any3dLook) lookPick = window.__any3dLook;
   var ctx, figAccent = fig.theme && typeof fig.theme === 'object' ? fig.theme.accent : null;

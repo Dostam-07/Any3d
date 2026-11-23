@@ -20,6 +20,7 @@ import { Route, readRoute, routeToHash, NEW_PROJECT_ID, isNewProject } from './l
 import { decodeScene } from './lib/scene-payload';
 import { sceneTitle } from './lib/scene-title';
 import { withPresentationSize } from './lib/presentation-size';
+import { sanitizeCamera, type CameraPick } from './lib/camera';
 import {
   RenderFormat,
   LLMProvider,
@@ -118,6 +119,9 @@ export function App() {
   const [ollamaModels, setOllamaModels] = useState<OllamaModelInfo[]>([]);
   const [stageView, setStageView] = useState<'preview' | 'code' | 'split'>('preview');
   const [stageLook, setStageLook] = useState<SceneLook>(DEFAULT_LOOK);
+  // The camera the user framed in the stage, so an export reopens at that angle
+  // the way it reopens at the atmosphere they were looking at.
+  const [stageCamera, setStageCamera] = useState<CameraPick | null>(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -311,7 +315,10 @@ export function App() {
         // A link shared at dusk opens at dusk: the look rides with the payload.
         const sharedLook = normalizeLook(payload.look);
         setStageLook(sharedLook);
-        const bundled = await bundleCode(payload.code, payload.format, sharedLook);
+        // ...and a link shared from a top-down view opens top-down.
+        const sharedCamera = sanitizeCamera(payload.camera);
+        setStageCamera(sharedCamera);
+        const bundled = await bundleCode(payload.code, payload.format, sharedLook, sharedCamera);
         if (cancelled) return;
         setCurrentBundledHtml(bundled.html);
         validateCode(payload.code, payload.format, payload.prompt)
@@ -1300,7 +1307,7 @@ export function App() {
       // reopens at dusk even when opened straight from disk.
       // Every format carries the look into the exported file, not just SVG: the
       // worlds runtime used to open at its default sky while the studio showed dusk.
-      const res = await bundleCode(withPresentationSize(code, size), format, stageLook);
+      const res = await bundleCode(withPresentationSize(code, size), format, stageLook, stageCamera);
       const blob = new Blob([res.html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1666,6 +1673,8 @@ export function App() {
                         onRefresh={refreshSandbox}
                         look={stageLook}
                         onLookChange={setStageLook}
+                        camera={stageCamera}
+                        onCameraChange={setStageCamera}
                         code={code}
                         onExportHtml={handleExportHtml}
                         onOpenCode={() => setStageView('code')}
@@ -1739,6 +1748,8 @@ export function App() {
             sceneName={sceneTitle(code, '')}
             look={stageLook}
             onLookChange={setStageLook}
+            camera={stageCamera}
+            onCameraChange={setStageCamera}
             html={currentBundledHtml}
             untrusted={route.view === 'shared'}
             isBundling={isBundling}

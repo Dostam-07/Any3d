@@ -19,6 +19,28 @@ function extractTitle(code, fallback = 'Any3d Scene') {
   return match ? match[1] : fallback;
 }
 
+/**
+ * The camera the user picked in the studio, in the shape the runtimes accept.
+ * Anything unusable becomes null so the export keeps the scene's own angle
+ * instead of handing `setCamera` a NaN.
+ */
+function normalizeCamera(camera) {
+  if (!camera || typeof camera !== 'object') return null;
+  if (camera.reset === true) return { reset: true };
+  const az = Number(camera.az);
+  const el = Number(camera.el);
+  if (!Number.isFinite(az) || !Number.isFinite(el)) return null;
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+  const round = (v) => Math.round(v * 10) / 10;
+  return { az: round(clamp(((az % 360) + 360) % 360, 0, 359.9)), el: round(clamp(el, -90, 90)) };
+}
+
+/** `window.__any3dCamera = ...` for the SVG bench, which reads it before the kernel. */
+function cameraPrelude(camera) {
+  const pick = normalizeCamera(camera);
+  return pick ? `window.__any3dCamera = ${JSON.stringify(pick)};\n` : '';
+}
+
 export function balanceBraces(code) {
   let stripped = code
     .replace(/\/\*[\s\S]*?\*\//g, '')
@@ -44,7 +66,7 @@ export function balanceBraces(code) {
 /**
  * Assemble a standalone offline HTML file for an Any3d SVG figure.
  */
-export function bundleSVG(figureCode, look = null) {
+export function bundleSVG(figureCode, look = null, camera = null) {
   const benchTemplate = getSVGBenchTemplate();
   const kernel = getSVGKernel();
   // Bake the look as the scene's initial state, so an export opened at dusk
@@ -55,6 +77,9 @@ export function bundleSVG(figureCode, look = null) {
         weather: ['clear', 'rain', 'snow'].includes(look.weather) ? look.weather : 'clear',
       })};\n`
     : '';
+
+  // The picked camera travels with the file the same way the look does.
+  const cameraScript = cameraPrelude(camera);
 
   let sanitized = figureCode.replace(/\r\n/g, '\n').trim();
 
@@ -78,14 +103,15 @@ export function bundleSVG(figureCode, look = null) {
   sanitized = balanceBraces(sanitized);
 
   return benchTemplate
-    .replace('/*KERNEL*/', () => `\n${lookPrelude}${kernel}\n`)
+    .replace('/*KERNEL*/', () => `\n${lookPrelude}${cameraScript}${kernel}\n`)
     .replace('/*FIGURE*/', () => `\n${sanitized}\n`);
 }
 
 /**
  * Assemble a standalone offline HTML file for an Any3d Pixel scene.
  */
-export function bundlePixel(pixelCode, look = null) {
+// A 2D engine has no camera, so `camera` is accepted and ignored.
+export function bundlePixel(pixelCode, look = null, camera = null) {
   const benchTemplate = getPixelBenchTemplate();
   const kernel = getPixelKernel();
   const title = extractTitle(pixelCode, 'Pixel Scene') + ' · Any3d';
@@ -105,7 +131,7 @@ export function bundlePixel(pixelCode, look = null) {
 /**
  * Bundle a standalone offline HTML file for an Any3d Worlds scene using esbuild.
  */
-export async function bundleWorlds(worldCode, look = null) {
+export async function bundleWorlds(worldCode, look = null, camera = null) {
   const benchTemplate = getWorldsBenchTemplate();
   const worldKitPath = path.join(rootDir, 'core', 'kernels', 'any3d-world.js');
 
@@ -115,6 +141,11 @@ export async function bundleWorlds(worldCode, look = null) {
         weather: ['clear', 'rain', 'snow'].includes(look.weather) ? look.weather : 'clear',
       })};\n`
     : 'const initialLook = null;\n';
+
+  const cameraPick = normalizeCamera(camera);
+  const cameraInit = cameraPick
+    ? `const initialCamera = ${JSON.stringify(cameraPick)};\n`
+    : 'const initialCamera = null;\n';
 
   // Sanitize user code to remove unwanted imports and normalize export/define
   let cleanUserCode = worldCode
@@ -169,9 +200,13 @@ const requested = params.get('finish');
 const finish = FINISHES.includes(requested) ? requested : 'miniature';
 const requestedSize = params.get('size') || (['hero', 'card'].includes(safeDef?.size) ? safeDef.size : 'card');
 const runtime = mountWorld(safeDef, { el: stage, finish, size: requestedSize, paused: params.has('still') });
-${lookPrelude}
+${lookPrelude}${cameraInit}
 if (runtime && initialLook) {
   try { runtime.setLook(initialLook); } catch (e) {}
+}
+// The exported file opens at the angle the user framed, not the authored one.
+if (runtime && initialCamera) {
+  try { runtime.setCamera(initialCamera); } catch (e) {}
 }
 window.__world = runtime;
 window.__any3d = runtime;
@@ -303,7 +338,7 @@ if (runtime) {
 /**
  * Unified bundler supporting every engine with smart auto-detection.
  */
-export async function bundleScene(code, format = 'svg', look = null) {
+export async function bundleScene(code, format = 'svg', look = null, camera = null) {
   // The ordered-dither engine was removed; its scenes were Pixel.scene documents
   // with `bayer`/`shadow` flags, so old shares still open through the pixel kernel.
   if (format === 'dither') format = 'pixel';
@@ -317,15 +352,15 @@ export async function bundleScene(code, format = 'svg', look = null) {
   const hasSVG = /\bAny3d\.figure\b/.test(code);
 
   if (hasWorlds) {
-    return await bundleWorlds(code, look);
+    return await bundleWorlds(code, look, camera);
   }
   if (hasPixel) {
-    return bundlePixel(code, look);
+    return bundlePixel(code, look, camera);
   }
   if (hasSVG) {
-    return bundleSVG(code, look);
+    return bundleSVG(code, look, camera);
   }
-  return bundleSVG(code, look);
+  return bundleSVG(code, look, camera);
 
   // Fallback by requested format
   if (format === 'worlds') {

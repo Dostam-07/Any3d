@@ -46,6 +46,7 @@ import {
 import { CodeEditor } from './CodeEditor';
 import { VersionDiff } from './VersionDiff';
 import { DEFAULT_LOOK, type SceneLook } from '../lib/look';
+import type { CameraPick } from '../lib/camera';
 
 /**
  * Dedicated project page.
@@ -85,6 +86,9 @@ interface ProjectPageProps {
   /** Controlled atmosphere, shared with the Studio so chat look edits apply here. */
   look?: SceneLook;
   onLookChange?: (look: SceneLook) => void;
+  /** Camera the user framed; an export reopens at that angle. */
+  camera?: CameraPick | null;
+  onCameraChange?: (camera: CameraPick | null) => void;
   presets?: PresetScene[];
   onRemixPreset?: (preset: PresetScene) => void;
   onSendMessage: (text: string) => Promise<void>;
@@ -177,6 +181,8 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
   untrusted = false,
   look: controlledLook,
   onLookChange,
+  camera,
+  onCameraChange,
   presets = [],
   onRemixPreset,
   onSendMessage,
@@ -276,6 +282,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
           theme: format === 'svg' ? theme : undefined,
           finish: format === 'worlds' ? finish : undefined,
           look,
+          camera: camera ?? undefined,
         },
         { compact: true }
       );
@@ -998,6 +1005,8 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                 onFinishChange={setFinish}
                 look={look}
                 onLookChange={changeLook}
+                camera={camera}
+                onCameraChange={onCameraChange}
                 size={currentSize}
                 onSizeChange={handleSizeChange}
                 code={code}

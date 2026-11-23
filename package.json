@@ -22,6 +22,7 @@
     "verify:svg-api": "node scripts/verify-svg-api.mjs",
     "verify:pixel-api": "node scripts/verify-pixel-api.mjs",
     "verify:fidelity": "node scripts/verify-still-fidelity.mjs",
+    "verify:camera": "node scripts/verify-export-camera.mjs",
     "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {

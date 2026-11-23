@@ -112,6 +112,37 @@ async function main() {
     check(`look round-trip weather ${preset.file}`, lookedDecoded.look?.weather === 'rain', `${lookedDecoded.look?.weather}`);
     check(`seed round-trip ${preset.file}`, lookedDecoded.seed === 4242, `${lookedDecoded.seed}`);
 
+    // The framed camera rides with the link too, so a share made from a top-down
+    // view opens top-down. A pick that cannot be applied is dropped, never NaN.
+    const framed = await encodeScene({
+      v: SCENE_PAYLOAD_VERSION,
+      format: preset.format,
+      code: preset.code,
+      camera: { az: 0, el: 85 },
+    });
+    const framedDecoded = await decodeScene(framed);
+    check(
+      `camera round-trip ${preset.file}`,
+      framedDecoded.camera && 'az' in framedDecoded.camera && framedDecoded.camera.az === 0 && framedDecoded.camera.el === 85,
+      JSON.stringify(framedDecoded.camera)
+    );
+
+    const reset = await decodeScene(await encodeScene({
+      v: SCENE_PAYLOAD_VERSION,
+      format: preset.format,
+      code: preset.code,
+      camera: { reset: true },
+    }));
+    check(`authored-angle round-trip ${preset.file}`, reset.camera?.reset === true, JSON.stringify(reset.camera));
+
+    const broken = await decodeScene(await encodeScene({
+      v: SCENE_PAYLOAD_VERSION,
+      format: preset.format,
+      code: preset.code,
+      camera: { az: NaN, el: Infinity } as unknown as { az: number; el: number },
+    }));
+    check(`unusable camera dropped ${preset.file}`, broken.camera === undefined, JSON.stringify(broken.camera));
+
     check(`no padding ${preset.file}`, !/[=+/]/.test(encoded), 'base64url must be padding-free');
     if (/[^A-Za-z0-9_-]/.test(encoded)) {
       check(`url-safe ${preset.file}`, false, 'encoded payload contains non-url characters');

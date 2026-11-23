@@ -28,6 +28,7 @@ import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/g
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
 import { DEFAULT_LOOK, type SceneLook } from '../lib/look';
+import { CAMERA_PRESETS, cameraLabel, type CameraPick } from '../lib/camera';
 import { renderStoryboard } from '../lib/storyboard';
 
 export interface SandboxPreviewHandle {
@@ -71,6 +72,9 @@ interface SandboxPreviewProps {
   onExportHtml?: () => void;
   /** Open the stage in code mode, from the card's "Editable source" link. */
   onOpenCode?: () => void;
+  /** Camera the user framed; exports bake it the way they bake the look. */
+  camera?: CameraPick | null;
+  onCameraChange?: (camera: CameraPick | null) => void;
 }
 
 const SVG_THEMES: SVGTheme[] = ['toy', 'soft', 'mono', 'line', 'night', 'print'];
@@ -100,6 +104,8 @@ function SandboxPreviewInner({
   code = '',
   onExportHtml,
   onOpenCode,
+  camera,
+  onCameraChange,
 }: SandboxPreviewProps, ref: React.Ref<SandboxPreviewHandle>) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [sizeState, setSizeState] = useState<WebPresentationSize>('card');
@@ -120,6 +126,10 @@ function SandboxPreviewInner({
   const sceneLook = look ?? lookState;
   const lookRef = useRef(sceneLook);
   lookRef.current = sceneLook;
+  // The ready handshake has to replay the picked camera too, or a scene that
+  // mounts after the pick reopens at its authored angle.
+  const cameraRef = useRef<CameraPick | null>(camera ?? null);
+  cameraRef.current = camera ?? null;
   const accentColor = accent ?? accentState;
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showPlayground, setShowPlayground] = useState<boolean>(false);
@@ -136,6 +146,9 @@ function SandboxPreviewInner({
   const [styleMenuOpen, setStyleMenuOpen] = useState<boolean>(false);
   const [cameraMenuOpen, setCameraMenuOpen] = useState<boolean>(false);
   const [activeCamera, setActiveCamera] = useState<'iso' | 'top' | 'front' | 'side'>('iso');
+  // A camera can also arrive from outside (a shared link): the toolbar shows what
+  // the stage is actually looking at, not the last button pressed here.
+  const shownCamera = camera ? cameraLabel(camera) : activeCamera;
   const styleMenuRef = useRef<HTMLDivElement>(null);
   const cameraMenuRef = useRef<HTMLDivElement>(null);
   const pngPending = useRef(
@@ -226,13 +239,19 @@ function SandboxPreviewInner({
 
       if (d.type === 'any3d') {
         // A freshly mounted scene knows nothing about the toolbar: hand it the look and size.
-        if (d.ready) sendMessage({ look: lookRef.current, size: currentSize });
+        if (d.ready) {
+          sendMessage({ look: lookRef.current, size: currentSize });
+          if (cameraRef.current) sendMessage({ camera: cameraRef.current });
+        }
         if (typeof d.hover === 'string') setHoverText(d.hover);
         if (typeof d.read === 'string') setReadoutText(d.read);
         if (Array.isArray(d.hot)) setHotList(d.hot);
       } else if (d.type === 'any3d-world') {
         if (typeof d.finish === 'string') setFinishState(d.finish as WorldFinish);
-        if (d.state === 'ready') sendMessage({ look: lookRef.current });
+        if (d.state === 'ready') {
+          sendMessage({ look: lookRef.current });
+          if (cameraRef.current) sendMessage({ camera: cameraRef.current });
+        }
       } else if (d.type === 'any3d-pixel') {
         if (typeof d.read === 'string') setReadoutText(d.read);
         if (d.ready) sendMessage({ look: lookRef.current });
@@ -324,6 +343,12 @@ function SandboxPreviewInner({
     sendMessage({ look });
   }, [look?.timeOfDay, look?.weather]);
 
+  // A camera picked elsewhere (a stored session, a share link) is applied here.
+  useEffect(() => {
+    if (!camera) return;
+    sendMessage({ camera });
+  }, [camera && JSON.stringify(camera)]);
+
   // Handle Speed (Worlds)
   const handleSpeedChange = (val: number) => {
     setSpeed(val);
@@ -344,13 +369,10 @@ function SandboxPreviewInner({
   const handleCameraPreset = (cam: 'iso' | 'top' | 'front' | 'side') => {
     // `reset` restores the angle the scene was authored for: an SVG figure's own
     // camera is part of its art, so a fixed 38/34 would override it.
-    const angles = {
-      iso: { reset: true },
-      top: { az: 0, el: 85 },
-      front: { az: 0, el: 15 },
-      side: { az: 85, el: 20 },
-    };
-    sendMessage({ camera: angles[cam] });
+    const pick = CAMERA_PRESETS[cam];
+    sendMessage({ camera: pick });
+    // Lift the pick so an export reopens at the angle the user framed.
+    onCameraChange?.(pick);
   };
 
   const requestPng = (scale = 2) =>
@@ -637,7 +659,7 @@ function SandboxPreviewInner({
                       setStyleMenuOpen(false);
                       setSizeMenuOpen(false);
                     }}
-                    title={`Camera view angle (${activeCamera.toUpperCase()})`}
+                    title={`Camera view angle (${shownCamera.toUpperCase()})`}
                     className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-medium border transition cursor-pointer active:scale-95 shrink-0 ${
                       cameraMenuOpen
                         ? 'bg-zinc-800 text-sky-300 border-sky-500/40 shadow-sm'
@@ -645,7 +667,7 @@ function SandboxPreviewInner({
                     }`}
                   >
                     <Compass className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                    <span className="font-mono text-[11px] uppercase hidden sm:inline">{activeCamera}</span>
+                    <span className="font-mono text-[11px] uppercase hidden sm:inline">{shownCamera}</span>
                     <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${cameraMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
 
@@ -665,7 +687,7 @@ function SandboxPreviewInner({
                             setCameraMenuOpen(false);
                           }}
                           className={`w-full flex flex-col items-start px-2.5 py-1.5 rounded-lg text-left transition cursor-pointer ${
-                            activeCamera === cam.key
+                            shownCamera === cam.key
                               ? 'bg-sky-500/20 text-sky-200 font-semibold'
                               : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
                           }`}

@@ -1,4 +1,5 @@
 import { PresetScene, ValidationReport, OllamaModelInfo, GeneratorConfig, RenderFormat, LLMProvider, VisualReference } from '../types';
+import type { CameraPick } from './camera';
 
 export async function fetchPresets(): Promise<PresetScene[]> {
   const res = await fetch('/api/presets');
@@ -19,12 +20,13 @@ export async function validateCode(code: string, format: RenderFormat, prompt?: 
 export async function bundleCode(
   code: string,
   format: RenderFormat,
-  look?: { timeOfDay: number; weather: 'clear' | 'rain' | 'snow' } | null
+  look?: { timeOfDay: number; weather: 'clear' | 'rain' | 'snow' } | null,
+  camera?: CameraPick | null
 ): Promise<{ html: string; sizeBytes: number }> {
   const res = await fetch('/api/bundle', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code, format, look }),
+    body: JSON.stringify({ code, format, look, camera }),
   });
   if (!res.ok) throw new Error('Bundle request failed');
   return res.json();

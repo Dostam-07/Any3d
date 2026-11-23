@@ -75,9 +75,10 @@ app.post('/api/validate', (req, res) => {
 // Bundle Scene to Standalone HTML
 app.post('/api/bundle', async (req, res) => {
   try {
-    const { code, format, look } = req.body;
+    const { code, format, look, camera } = req.body;
     if (!code) return res.status(400).json({ error: 'Code is required' });
-    const html = await bundleScene(code, format, look || null);
+    // The camera the user framed travels with the file, like the look does.
+    const html = await bundleScene(code, format, look || null, camera || null);
     res.json({ html, sizeBytes: Buffer.byteLength(html, 'utf8') });
   } catch (err) {
     res.status(500).json({ error: err.message });
