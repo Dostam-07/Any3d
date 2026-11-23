@@ -144,6 +144,18 @@ export function validateWorlds(code) {
   const hasBounds = /\bbounds\s*:\s*\[/.test(strip);
   addCheck(4, 'bounds', hasBounds, !hasBounds ? 'Scene should specify bounds: [[minX, minY, minZ], [maxX, maxY, maxZ]]' : '');
 
+  // 5. Worlds API only. Models sometimes answer a worlds prompt with the SVG
+  // figure API (D.slab / pal.* / Any3d.figure). That passes every structural
+  // check here but cannot bundle (the import does not exist for world-entry),
+  // so without this the safety net never runs and the preview 500s.
+  const foreignApi = /\bD\s*\.\s*(slab|box|cylinder|wedge|cone|props|person|group|smooth|phase|wave)\b|\bpal\s*\.|\bAny3d\.figure\b|\bPixel\.scene\b|\bDither\.scene\b/.exec(strip);
+  addCheck(5, 'api', !foreignApi, foreignApi ? `World scene used the wrong API (${foreignApi[0].trim()}). Use the worlds helpers (W.box, W.cylinder, W.ball, W.group, W.terrain) only.` : '');
+
+  // 6. Imports resolve for world-entry (only @any3d/worlds exists there).
+  const badImport = /import\s+[^;]*?from\s*['"]([^'"]+)['"]/.exec(strip);
+  const importOk = !badImport || badImport[1] === '@any3d/worlds';
+  addCheck(6, 'imports', importOk, importOk ? '' : `Unsupported import "${badImport[1]}". A world may only import { defineWorld } from '@any3d/worlds'.`);
+
   return {
     valid: checks.every(c => c.ok),
     format: 'worlds',

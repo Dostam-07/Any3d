@@ -9,6 +9,14 @@ export function convertAny3dToThree(any3dGroup: any): THREE.Group {
   const root = new THREE.Group();
   root.name = 'Any3dScene';
 
+  // `NaN ?? fallback` keeps the NaN, which then bakes NaN vertices into the
+  // geometry and trips computeBoundingSphere(). Coerce every number instead.
+  const num = (value: any, fallback: number) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
+  const segments = (value: any, fallback: number) => {
+    const count = Math.floor(num(value, fallback));
+    return count >= 3 ? Math.min(count, 96) : fallback;
+  };
+
   function walk(node: any, parentThree: THREE.Object3D) {
     if (!node) return;
 
@@ -17,20 +25,20 @@ export function convertAny3dToThree(any3dGroup: any): THREE.Group {
       const g = node.geometry;
 
       if (g.type === 'box') {
-        geo = new THREE.BoxGeometry(g.w || 1, g.h || 1, g.d || 1);
+        geo = new THREE.BoxGeometry(num(g.w, 1), num(g.h, 1), num(g.d, 1));
       } else if (g.type === 'cyl') {
-        const rt = g.rt ?? 0.5;
-        const rb = g.rb ?? 0.5;
-        const h = g.h ?? 1;
-        const n = g.n || 16;
+        const rt = Math.max(0, num(g.rt, 0.5));
+        const rb = Math.max(0, num(g.rb, 0.5));
+        const h = num(g.h, 1);
+        const n = segments(g.n, 16);
         geo = new THREE.CylinderGeometry(rt, rb, h, n);
       } else if (g.type === 'ball') {
-        geo = new THREE.SphereGeometry(g.r || 0.5, 20, 16);
+        geo = new THREE.SphereGeometry(Math.max(0, num(g.r, 0.5)), 20, 16);
       } else if (g.type === 'slab') {
-        const w2 = (g.w || 4) / 2;
-        const d2 = (g.d || 4) / 2;
-        const h = g.h || 0.6;
-        const r = Math.min(g.r || 0.5, Math.min(w2, d2) * 0.8);
+        const w2 = num(g.w, 4) / 2;
+        const d2 = num(g.d, 4) / 2;
+        const h = num(g.h, 0.6);
+        const r = Math.min(num(g.r, 0.5), Math.min(w2, d2) * 0.8);
 
         const shape = new THREE.Shape();
         shape.moveTo(-w2 + r, -d2);
@@ -50,9 +58,9 @@ export function convertAny3dToThree(any3dGroup: any): THREE.Group {
         geo.rotateX(Math.PI / 2);
         geo.translate(0, h / 2, 0);
       } else if (g.type === 'wedge') {
-        const w = g.w || 1;
-        const h = g.h || 1;
-        const d = g.d || 1;
+        const w = num(g.w, 1);
+        const h = num(g.h, 1);
+        const d = num(g.d, 1);
         const w2 = w / 2;
         const d2 = d / 2;
 
@@ -67,7 +75,7 @@ export function convertAny3dToThree(any3dGroup: any): THREE.Group {
           bevelEnabled: false,
         });
       } else {
-        geo = new THREE.BoxGeometry(g.w || 1, g.h || 1, g.d || 1);
+        geo = new THREE.BoxGeometry(num(g.w, 1), num(g.h, 1), num(g.d, 1));
       }
 
       // Material conversion
@@ -102,13 +110,13 @@ export function convertAny3dToThree(any3dGroup: any): THREE.Group {
       const mesh = new THREE.Mesh(geo, mat);
       mesh.name = node.name || '';
       if (node.position) {
-        mesh.position.set(node.position.x || 0, node.position.y || 0, node.position.z || 0);
+        mesh.position.set(num(node.position.x, 0), num(node.position.y, 0), num(node.position.z, 0));
       }
       if (node.rotation) {
-        mesh.rotation.set(node.rotation.x || 0, node.rotation.y || 0, node.rotation.z || 0);
+        mesh.rotation.set(num(node.rotation.x, 0), num(node.rotation.y, 0), num(node.rotation.z, 0));
       }
       if (node.scale) {
-        mesh.scale.set(node.scale.x || 1, node.scale.y || 1, node.scale.z || 1);
+        mesh.scale.set(num(node.scale.x, 1), num(node.scale.y, 1), num(node.scale.z, 1));
       }
 
       parentThree.add(mesh);
@@ -119,13 +127,13 @@ export function convertAny3dToThree(any3dGroup: any): THREE.Group {
       const subGroup = new THREE.Group();
       subGroup.name = node.name || '';
       if (node.position) {
-        subGroup.position.set(node.position.x || 0, node.position.y || 0, node.position.z || 0);
+        subGroup.position.set(num(node.position.x, 0), num(node.position.y, 0), num(node.position.z, 0));
       }
       if (node.rotation) {
-        subGroup.rotation.set(node.rotation.x || 0, node.rotation.y || 0, node.rotation.z || 0);
+        subGroup.rotation.set(num(node.rotation.x, 0), num(node.rotation.y, 0), num(node.rotation.z, 0));
       }
       if (node.scale) {
-        subGroup.scale.set(node.scale.x || 1, node.scale.y || 1, node.scale.z || 1);
+        subGroup.scale.set(num(node.scale.x, 1), num(node.scale.y, 1), num(node.scale.z, 1));
       }
 
       if (node.children) {

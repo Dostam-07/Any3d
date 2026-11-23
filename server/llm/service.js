@@ -72,7 +72,10 @@ async function callOllamaWithFallback({ host = 'http://localhost:11434', model, 
       const res = await fetch(`${host}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(90000), // 90s per model; allows cold-start model weight loading
+        // Local 7B code models need well over 90s for a full world on a CPU-only
+        // machine; the old 90s cap made every real generation time out and land on
+        // the procedural fallback. Override with OLLAMA_TIMEOUT_MS when needed.
+        signal: AbortSignal.timeout(Number(process.env.OLLAMA_TIMEOUT_MS) || 240000),
         body: JSON.stringify({
           model: candidate,
           messages: [
@@ -375,7 +378,18 @@ ${constructionRules}`;
       }
 
       const failedLabels = lastValidation.checks.filter(c => !c.ok).map(c => c.label);
-      currentPrompt = `Your previous output was too simple — it produced only basic primitives instead of a detailed scene.
+      currentPrompt = format === 'worlds'
+        ? `Your previous output was rejected: ${failedLabels.join(', ')}.
+
+Fix the API and the scene, then return ONLY a worlds scene:
+1. import { defineWorld } from '@any3d/worlds'; — the ONLY allowed import. Never use D.*, pal.*, Any3d.figure, Pixel.scene or Dither.scene.
+2. export default defineWorld({ name, title, duration, still, bounds, build(W) { ... }, tick({ t, parts, W }) { ... } });
+3. build(W) starts with W.terrain(...) and a ground slab, then 25-50 modular parts using W.box / W.cylinder / W.ball / W.group.
+4. Primary subject "${semantics.primarySubject}" must be modelled as the focus, with ${semantics.secondaryObjects.length ? semantics.secondaryObjects.join(', ') : 'at least 5 supporting props'} around it.
+5. Animate something in tick({ t }) so the scene is alive.
+
+Output ONLY raw JavaScript starting with "import { defineWorld } from '@any3d/worlds';" and ending with "});".`
+        : `Your previous output was too simple — it produced only basic primitives instead of a detailed scene.
 
 You MUST build a multi-part scene with these requirements:
 1. Ground slab: D.slab(11, 9, pal.ground, 0, 0, 0, null, { h: 0.6, r: 1.2, side: pal.base })

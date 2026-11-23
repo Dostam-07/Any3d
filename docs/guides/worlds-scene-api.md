@@ -23,7 +23,7 @@ Units: x/z form ground plane, y points up. Person faces local +z. Object primiti
 - `group(x=0,y=0,z=0,parent?)` returns a Three.js Group.
 - `box(width,height,depth,color,x=0,y=0,z=0,parent?)`.
 - `ball(radius,color,x=0,y=0,z=0,parent?)` uses a faceted sphere. Its scale stores radius; put accessories under a separate unscaled group rather than under the ball mesh.
-- `cylinder(radius,height,color,x=0,y=0,z=0,parent?,segments=8)`.
+- `cylinder(radius,height,color,x=0,y=0,z=0,parent?,segments=8)`. A tapered form is accepted too: `cylinder(topRadius,bottomRadius,height,color,x=0,y=0,z=0,parent?,segments=8)`. Segment counts below 3, non-finite sizes and non-finite coordinates are coerced, so a bad number never becomes NaN geometry.
 - `line([[x,y,z],...],color,radius=.035,parent?)` makes thin cylindrical segments.
 - `ring(radius,color,x,y,z,parent?,tube=.028,arc=2π)` lies flat on ground by default; adjust rotation for vertical rings.
 - `surface(width,depth,color,x=0,y=.03,z=0,seed=12,variation=.13)` makes a textured matte ground patch with deterministic fine wear, not a new texture per frame.

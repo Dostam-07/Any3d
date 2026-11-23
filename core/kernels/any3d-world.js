@@ -5,7 +5,7 @@ export const phase = (t, period) => ((t % period) + period) % period / period;
 export const smooth = x => (x = Math.max(0, Math.min(1, x))) * x * (3 - 2 * x);
 const LOOK_PROFILES = [
   { at: 0, sky: '#d8dced', ground: '#727b8f', hemi: 1.05, sun: '#ffd29e', sunPower: 1.9, sunPosition: [-8, 5, 8], background: '#dfe5f1' },
-  { at: 1 / 3, sky: '#f5f4df', ground: '#8b9476', hemi: 2.2, sun: '#fff1d5', sunPower: 3, sunPosition: [-7, 13, 8], background: '#ffffff' },
+  { at: 1 / 3, sky: '#f5f4df', ground: '#8b9476', hemi: 2.2, sun: '#fff1d5', sunPower: 3, sunPosition: [-7, 13, 8], background: '#e6ebf3' },
   { at: 2 / 3, sky: '#e8a77d', ground: '#635064', hemi: 1.35, sun: '#ff995c', sunPower: 2.1, sunPosition: [7, 5, -4], background: '#e7c2ac' },
   { at: 1, sky: '#8393c5', ground: '#303b62', hemi: .62, sun: '#a8bdff', sunPower: .72, sunPosition: [-7, 4, 8], background: '#1d2947' },
 ];
@@ -66,39 +66,64 @@ export function toolkit(parent) {
     resolveParent(container).add(g);
     return g;
   }
+  // A single bad number in scene code must never reach the GPU: a NaN
+  // silently blanks the mesh and makes BufferGeometry.computeBoundingSphere()
+  // log "Computed radius is NaN". Coerce instead of trusting callers.
+  const finite = (value, fallback) => (Number.isFinite(value) ? value : fallback);
+  const segmentCount = (value, fallback = 8) => {
+    const count = Math.floor(finite(value, fallback));
+    return count >= 3 ? Math.min(count, 96) : fallback;
+  };
   function mesh(geo, color, x, y, z, container = parent) {
     const m = new THREE.Mesh(geo, material(color));
-    m.position.set(x, y, z);
+    m.position.set(finite(x, 0), finite(y, 0), finite(z, 0));
     m.castShadow = m.receiveShadow = true;
     resolveParent(container).add(m);
     return m;
   }
   function box(w, h, d, color, x = 0, y = 0, z = 0, container = parent) {
     const m = mesh(geometry('box', () => new THREE.BoxGeometry(1, 1, 1)), color, x, y, z, container);
-    m.scale.set(w, h, d);
+    m.scale.set(finite(w, 1), finite(h, 1), finite(d, 1));
     return m;
   }
   function ball(r, color, x = 0, y = 0, z = 0, container = parent) {
     const m = mesh(geometry('ball', () => new THREE.IcosahedronGeometry(1, 1)), color, x, y, z, container);
-    m.scale.setScalar(r);
+    m.scale.setScalar(Math.max(0, finite(r, .5)));
     return m;
   }
-  function cylinder(r, h, color, x = 0, y = 0, z = 0, container = parent, segments = 8) {
-    if (typeof container === 'number') {
-      segments = container;
-      container = parent;
+  // Two call shapes are accepted, because scene authors mix the SVG API in:
+  //   cylinder(radius, height, color, x, y, z, parent, segments)
+  //   cylinder(topRadius, bottomRadius, height, color, x, y, z, parent, segments)
+  // Without the tapered form the second shape shifts every argument and a
+  // non-numeric segments count produces NaN vertices.
+  function cylinder(a, b, c, d, e, f, g, h) {
+    let top, bottom, height, color, x, y, z, container, segments;
+    if (typeof c === 'number' && typeof d === 'string') {
+      [top, bottom, height, color, x, y, z, container, segments] = [a, b, c, d, e, f, g, h];
+    } else {
+      [top, bottom, height, color, x, y, z, container, segments] = [a, a, b, c, d, e, f, g];
     }
-    const safeSegments = typeof segments === 'number' ? segments : 8;
-    const m = mesh(geometry(`cyl${safeSegments}`, () => new THREE.CylinderGeometry(1, 1, 1, safeSegments)), color, x, y, z, container);
-    m.scale.set(r, h, r);
+    if (typeof container === 'number') { segments = container; container = parent; }
+    top = Math.max(0, finite(top, 1));
+    bottom = Math.max(0, finite(bottom, 1));
+    height = finite(height, 1);
+    const count = segmentCount(segments);
+    // Cache by taper ratio so a scene keeps one geometry per shape, not per size.
+    const base = Math.max(top, bottom);
+    const shape = base > 0 ? `cyl${count}:${(top / base).toFixed(3)}:${(bottom / base).toFixed(3)}` : `cyl${count}:0`;
+    const geo = geometry(shape, () => new THREE.CylinderGeometry(base > 0 ? top / base : 0, base > 0 ? bottom / base : 0, 1, count));
+    const m = mesh(geo, color, x, y, z, container);
+    m.scale.set(base || 1, height, base || 1);
     return m;
   }
   function line(points, color, width = .035, container = parent) {
     const g = group(0, 0, 0, container);
-    for (let i = 1; i < points.length; i++) {
-      const a = new THREE.Vector3(...points[i - 1]), b = new THREE.Vector3(...points[i]);
+    const safe = (Array.isArray(points) ? points : []).map(p => Array.isArray(p) ? p.slice(0, 3).map(n => finite(n, 0)) : [0, 0, 0]);
+    for (let i = 1; i < safe.length; i++) {
+      const a = new THREE.Vector3(...safe[i - 1]), b = new THREE.Vector3(...safe[i]);
       const v = b.clone().sub(a), midpoint = a.clone().add(b).multiplyScalar(.5);
-      const m = cylinder(width, v.length(), color, ...midpoint.toArray(), g, 6);
+      if (v.lengthSq() === 0) continue;
+      const m = cylinder(Math.max(0, finite(width, .035)), v.length(), color, ...midpoint.toArray(), g, 6);
       m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), v.normalize());
     }
     return g;
@@ -108,12 +133,14 @@ export function toolkit(parent) {
       tube = container;
       container = parent;
     }
-    const key = `ring:${radius}:${tube}:${arc}`;
-    const m = mesh(geometry(key, () => new THREE.TorusGeometry(radius, tube, 4, 64, arc)), color, x, y, z, container);
+    const r = Math.max(0, finite(radius, .5)), t = Math.max(0, finite(tube, .028)), sweep = Math.max(0, finite(arc, Math.PI * 2));
+    const key = `ring:${r}:${t}:${sweep}`;
+    const m = mesh(geometry(key, () => new THREE.TorusGeometry(r, t, 4, 64, sweep)), color, x, y, z, container);
     m.rotation.x = -Math.PI / 2;
     return m;
   }
   function surface(width, depth, color, x = 0, y = .03, z = 0, seed = 12, variation = .13) {
+    const w = Math.max(.001, finite(width, 1)), d = Math.max(.001, finite(depth, 1));
     const rng = seeded(seed), canvas = document.createElement('canvas'); canvas.width = canvas.height = 256;
     const ctx = canvas.getContext('2d'), base = new THREE.Color(color), c = new THREE.Color();
     ctx.fillStyle = color; ctx.fillRect(0, 0, 256, 256);
@@ -124,10 +151,12 @@ export function toolkit(parent) {
     const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; textures.add(texture);
     const mat = new THREE.MeshStandardMaterial({ map: texture, roughness: 1 }); materials.set(`surface:${materials.size}`, mat);
     const m = new THREE.Mesh(geometry('surface', () => new THREE.PlaneGeometry(1, 1)), mat);
-    m.rotation.x = -Math.PI/2; m.scale.set(width,depth,1); m.position.set(x,y,z); m.receiveShadow = true; parent.add(m); return m;
+    m.rotation.x = -Math.PI/2; m.scale.set(w, d, 1); m.position.set(finite(x, 0), finite(y, .03), finite(z, 0)); m.receiveShadow = true; parent.add(m); return m;
   }
   function terrain(width, depth, color = '#718c42', seed = 42, { base = 'none' } = {}) {
     if (!['none', 'slab'].includes(base)) throw new Error('Terrain base must be none or slab.');
+    width = Math.max(.001, finite(width, 12)); depth = Math.max(.001, finite(depth, 9));
+    seed = finite(seed, 42);
     const rng = seeded(seed), points = [];
     for (let side = 0; side < 4; side++) for (let i = 0; i <= 18; i++) {
       const f = i / 18, notch = rng() * Math.min(width, depth) * .025;
@@ -174,6 +203,8 @@ export function toolkit(parent) {
     return grass;
   }
   function grass(width, depth, count = 1400, seed = 7) {
+    width = Math.max(.001, finite(width, 12)); depth = Math.max(.001, finite(depth, 9));
+    count = Math.max(0, Math.min(20000, Math.floor(finite(count, 1400)))); seed = finite(seed, 7);
     const rng = seeded(seed), geo = geometry('blade', () => new THREE.PlaneGeometry(1, 1));
     const mat = new THREE.MeshStandardMaterial({ color: '#8b9b4d', side: THREE.DoubleSide, roughness: 1 }); materials.set(`grass:${materials.size}`, mat);
     const inst = new THREE.InstancedMesh(geo, mat, count), dummy = new THREE.Object3D(), tint = new THREE.Color();
@@ -374,7 +405,7 @@ export function mountWorld(def, { el, finish = 'miniature', size = 'card', pause
   canvas.style.cssText = 'display:block;width:100%;height:100%';
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.setPixelRatio(1); renderer.setClearColor('#ffffff'); renderer.outputColorSpace = THREE.SRGBColorSpace;
-  const scene = new THREE.Scene(); scene.background = new THREE.Color('#ffffff');
+  const scene = new THREE.Scene(); scene.background = new THREE.Color('#10131c');
   const content = new THREE.Group(); scene.add(content);
   const hemisphere = new THREE.HemisphereLight('#f5f4df', '#8b9476', 2.2);
   scene.add(hemisphere);

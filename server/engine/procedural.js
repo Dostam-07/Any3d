@@ -9,6 +9,7 @@
  * - Supports all 4 engines: Three.js Worlds, SVG, Pixel, and Dither
  */
 
+import { composeCustomWorld } from './custom-world.js';
 import { extractPromptSemantics, unwrapCorePrompt } from './semantics.js';
 
 export function synthesizeProceduralScene(prompt, format = 'svg', visualResearch = null, size = 'card') {
@@ -63,7 +64,7 @@ export function synthesizeProceduralScene(prompt, format = 'svg', visualResearch
    ========================================================================= */
 
 function generateWorldsProcedural(opts) {
-  const { slug, cleanTitle, cleanMeans, semantics, prompt, size = 'card' } = opts;
+  const { slug, cleanTitle, cleanMeans, semantics, prompt, size = 'card', isNight = false } = opts;
   const { category, primarySubject } = semantics;
   const isHero = size === 'hero';
 
@@ -2465,78 +2466,21 @@ export default defineWorld({
 });`;
   }
 
-  // --- K. DYNAMIC ARBITRARY SUBJECT (Clean composition without fake trees or dustbins) ---
-  return `import { defineWorld } from '@any3d/worlds';
-
-export default defineWorld({
-  name: '${slug}',
-  title: '${cleanTitle}',
-  duration: 4.0,
-  still: 1.0,
-  description: '${cleanMeans}',
-  bounds: [[-3.5, -0.6, -3.5], [3.5, 3.2, 3.5]],
-  build(W) {
-    const { box, ball, cylinder, group } = W;
-
-    // Expansive Landscaped Courtyard & Architectural Terrace
-    W.terrain(12.0, 9.0, '#1e293b', 36);
-    box(11.4, 0.14, 8.4, '#e2e8f0', 0, 0.07, 0);
-    box(9.2, 0.04, 6.4, '#f1f5f9', 0, 0.15, 0);
-
-    // Architectural Garden Pergola with Slender Timber Pillars
-    const pavilion = group(0, 0.16, -1.2);
-    for (const px of [-2.4, 2.4]) {
-      for (const pz of [-1.5, 1.5]) {
-        cylinder(0.08, 2.8, '#78350f', px, 1.4, pz, pavilion, 8);
-      }
-    }
-    box(5.2, 0.12, 3.4, '#9a3412', 0, 2.86, 0, pavilion);
-    // Timber Rafter Grid
-    for (let rx = -2.2; rx <= 2.2; rx += 0.8) {
-      box(0.08, 0.18, 3.6, '#78350f', rx, 2.96, 0, pavilion);
-    }
-
-    // Courtyard Seating & Stone Table with Props
-    const table = group(0, 0.16, -1.2);
-    cylinder(0.7, 0.08, '#f8fafc', 0, 0.72, 0, table, 16);
-    cylinder(0.12, 0.7, '#475569', 0, 0.35, 0, table, 8);
-    box(0.35, 0.06, 0.28, '#0284c7', 0, 0.78, 0.1, table); // Journal
-    cylinder(0.06, 0.1, '#f59e0b', 0.25, 0.8, -0.1, table, 8); // Cup
-
-    // Perimeter Garden Planters with Shrubbery & Flowering Blooms
-    for (const side of [-3.8, 3.8]) {
-      box(0.8, 0.4, 2.8, '#475569', side, 0.35, 0);
-      ball(0.45, '#15803d', side, 0.75, -0.7);
-      ball(0.5, '#16a34a', side, 0.8, 0.3);
-      ball(0.42, '#f43f5e', side, 0.75, 1.0);
-    }
-
-    // Stone Garden Lanterns at Perimeter Corners
-    for (const lx of [-4.8, 4.8]) {
-      for (const lz of [-3.4, 3.4]) {
-        cylinder(0.06, 1.6, '#334155', lx, 0.8, lz, undefined, 8);
-        box(0.3, 0.3, 0.3, '#fef08a', lx, 1.6, lz);
-      }
-    }
-
-    // Resident Person Figure
-    const person = group(0, 0.16, 0.8);
-    cylinder(0.16, 0.55, '#3b82f6', 0, 0.55, 0, person, 12); // Torso
-    ball(0.16, '#fed7aa', 0, 0.98, 0, person); // Head
-    cylinder(0.06, 0.5, '#1e293b', -0.1, 0.25, 0, person, 8); // Leg L
-    cylinder(0.06, 0.5, '#1e293b', 0.1, 0.25, 0, person, 8);  // Leg R
-
-    return { pavilion, table, person };
-  },
-  tick({ t, parts: p }) {
-    const a = (t / 4.0) * Math.PI * 2;
-    if (p.person) {
-      p.person.position.x = Math.sin(a * 0.5) * 0.6;
-      p.person.rotation.y = Math.sin(a * 0.5) * 0.3;
-    }
-  },
-  contacts() { return []; }
-});`;
+  // --- K. DYNAMIC PROMPT-DRIVEN COMPOSITION ---
+  // Anything that missed the hand-built branches above is composed from the
+  // prompt's own nouns (environment palette + set pieces + animation) instead of
+  // a fixed courtyard, so unseen prompts still produce an on-topic scene.
+  return composeCustomWorld({
+    slug,
+    cleanTitle,
+    cleanMeans,
+    prompt,
+    size,
+    isNight,
+    semantics,
+    primarySubject,
+    category,
+  });
 }
 
 /* =========================================================================
