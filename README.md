@@ -1,200 +1,353 @@
-# Any3d
+<div align="center">
 
-**Local-first, chat-first creative studio for animated isometric 3D scenes.** Describe a place; your agent builds an animated scene and hands you one self-contained HTML file. Four engines — SVG vector, Three.js miniature worlds, pixel-art rasterizer, and ordered-dither yards — share one chat interface, one look system, and one offline export.
+# Any3d — AI 3D Scene Studio on Your Machine
 
-Any3d ports all four engines (SVG figures in six themes, Three.js worlds in four finishes, pixel miniatures without WebGL, dithered yards on the pixel kernel) and wraps them in a fullstack creative studio with dual-provider LLM generation, deterministic offline editing, and one-file HTML export.
+**Describe a place in natural language. Watch it build itself. Keep editing it conversationally. Export one self-contained HTML file that runs anywhere offline.**
+
+[![React 19](https://img.shields.io/badge/React-19.0-61dafb?style=flat-square&logo=react)](https://react.dev/)
+[![Vite 6](https://img.shields.io/badge/Vite-6.0-646cff?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![Three.js](https://img.shields.io/badge/Three.js-r172-black?style=flat-square&logo=three.js)](https://threejs.org/)
+[![Local-First](https://img.shields.io/badge/Privacy-Local--First-10b981?style=flat-square)](https://ollama.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+
+[Quick Start](#quick-start) • [Four Render Engines](#four-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
+
+</div>
+
+<br />
+
+<p align="center">
+  <img src="docs/assets/home.png" alt="Any3d home screen with prompt composer, engine selectors, size switchers and curated 3D scene gallery" width="100%" />
+</p>
+
+Any3d is an open-source, local-first **text-to-3D scene creative studio**. It transforms descriptive prompts into interactive, animated, miniature 3D worlds. Every scene is fully editable in real-time chat, responsive across desktops and phones, grounded in real-world visual references, and exports into a single standalone HTML file with zero runtime dependencies.
 
 ---
 
-## What it makes
+## Highlights
 
-Any3d scenes are small, animated, interactive isometric worlds. Every export is a single self-contained HTML file with no network dependency at runtime.
-
-| Engine | Renderer | Look | Output size | Best for |
-|---|---|---|---|---|
-| **SVG** | Dependency-free SVG, no WebGL | 6 themes: toy, soft, mono, line, night, print | ~30–35 KB gzip | UI, docs, empty states, interactive illustrations |
-| **Worlds** | Three.js / WebGL 2 | 4 finishes: miniature, pixel, halftone, blueprint | ~0.77 MB | Detailed miniature stories with articulated people |
-| **Pixel** | 2D canvas software rasterizer | 320×240, 8×8 Bayer dither, dissolving ground | ~50 KB | Cozy pixel-art vignettes, no WebGL |
-| **Dither** | Pixel kernel | 360×280, 4×4 ordered dither, hard shadow | ≤70 KB | Yards/shores that fill the frame, one tap toggles state |
-
-Every scene answers the pointer (hover to name/lift, tap to switch), carries a read-out saying what it's doing, honors `prefers-reduced-motion`, and sleeps when offscreen.
+| Feature | Description |
+|---|---|
+| **Prompt to 3D Scene** | A single sentence generates a complete animated 3D scene — geometry, palette, lighting, camera frustum, and `tick()` animation loops. |
+| **Conversational Editing** | Follow-up prompts refine *the current live scene*: add props, recolor, rotate, animate, or reframe without losing scene history. |
+| **Four Render Engines** | Choose from **SVG Vector**, **Three.js Worlds**, **Pixel Art (320×240)**, and **4×4 Ordered Dither**. |
+| **Web Presentation Modes** | Calibrated output formats: **Hero (16:9)** for wide landing page banners, and **Card (4:3)** for compact website UI components. |
+| **Authentic Visual Grounding** | Automatic real-photo research using Wikipedia Commons to extract authentic real-world materials, vehicle shapes, and architectural cues — never mock or fake data. |
+| **Live Atmosphere Scrubber** | Real-time lighting control (Dawn, Noon, Dusk, Night, Golden Hour, Blue Hour) and dynamic weather (Clear, Rain, Snow). |
+| **AnyStack 3D Arcade** | Integrated 3D tower-stacking physics minigame built directly into the studio to enjoy while scenes build. |
+| **Offline-First & Privacy** | Run 100% locally with **Ollama** on your GPU/CPU, or connect **Google Gemini** for high-speed cloud generation. |
+| **Deterministic Validation** | Multi-point automated inspection: structural clock purity, ground pedestal bounds, pointer hover/picking hooks, and prompt fidelity scoring. |
+| **One-File Offline Export** | Download a single `.html` file with the runtime inlined — open it on an airplane with no internet connection. |
 
 ---
 
-## Quick start
+## Workspace Layout
+
+Starting a project opens its dedicated studio workspace (`#/project/<id>`) pairing the conversational chat assistant on the left with the interactive live 3D viewport on the right.
+
+<p align="center">
+  <img src="docs/assets/project-chat.png" alt="Any3d project page: a conversation about a coffee cart on the left, the rendered 3D scene and version badges on the right" width="100%" />
+</p>
+
+---
+
+## Quick Start
 
 ### Prerequisites
 
-- **Node.js 20+** (for `build.mjs`, `validate.mjs`, and the dev server)
-- **Google Gemini API key** (cloud generation) or **Ollama** running locally (`ollama serve`) for offline generation
+- **Node.js 20+** (v18.18+ supported)
+- **npm** or **pnpm**
+- *(Optional)* [Ollama](https://ollama.com) for fully offline, private generation
+- *(Optional)* [Google Gemini API Key](https://aistudio.google.com/app/apikey) for cloud generation
 
-### Install & run
+### Installation
 
 ```bash
-# Clone or open the Any3d folder
-cd path/to/Any3d
+# Clone the repository
+git clone https://github.com/Dostam-07/Any3d.git
+cd Any3d
 
 # Install dependencies
 npm install
 
-# Start the dev server (Express API on :3001 + Vite frontend)
+# Start development studio (Express API on :3001 + Vite frontend on :5173)
 npm run dev
 ```
 
-Open `http://localhost:5173` (or the port Vite reports). Describe a scene in the chat, watch it build, then **Export HTML** to get a standalone file.
+Open `http://localhost:5173` in your browser. Type a scene prompt (e.g. *"A cozy corner coffee cart with a barista and a sleeping cat"*), hit **Enter**, and watch your scene come to life.
 
-### Production build
+### Production Build
 
 ```bash
-npm run build
-npm start
+npm run build     # Compiles the React/Vite studio into dist/
+npm start         # Serves static assets + Express API from port 3001
 ```
 
 ---
 
-## Core capabilities
+## Connect an AI Provider
 
-### 1. Dual-provider LLM generation
+Any3d supports dual AI providers, switchable at any time from the top header:
 
-Generate scenes from natural language with either **Google Gemini** (cloud) or **local Ollama** (offline). The system unwraps meta-prompts, extracts the primary subject and mandatory props, enforces prompt fidelity (0–100 scoring), and falls back to a deterministic procedural generator when a model is unavailable.
+### 1. Ollama (100% Private & Local)
 
-### 2. Conversational editing
+Run models locally with zero cloud dependencies and no API quota:
 
-Edit scenes by talking: "add a car", "make it red", "move it left", "switch theme to night". A deterministic offline AST editor handles SVG edits in sub-5ms with no model call; Worlds/Pixel/Dither edits fall back to the LLM. `/undo` walks back versions.
+```bash
+ollama serve
+ollama pull qwen2.5-coder:7b
+```
 
-### 3. Look system (time of day + weather)
+Any3d automatically enumerates installed Ollama models in the toolbar dropdown.
 
-Dawn / noon / dusk / night + clear / rain / snow. The look rides with the scene in the URL hash payload (`#/s/...`) and in exported HTML, so a scene opened at dusk starts at dusk. Wired into all four engines.
+### 2. Google Gemini (Fast & High-Fidelity)
 
-### 4. Exports
+1. Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. Click **Settings** (or the model badge in the toolbar) and paste your key.
+3. The key is securely stored in your browser's `localStorage` and never shared externally.
 
-| Export | Description |
+### 3. Deterministic Procedural Fallback
+
+No internet and no LLM installed? Any3d includes an offline procedural generator that crafts valid geometric scenes immediately without an AI model.
+
+---
+
+## Four Render Engines
+
+Any3d houses four dedicated rendering engines sharing a unified prompt compiler and look system:
+
+| Engine | Tech Stack | Aesthetic | Best For | Output Size |
+|---|---|---|---|---|
+| **SVG** | Dependency-free Vector SVG | 6 distinct vector themes, crisp lines, zero WebGL | Docs, app UI, landing page illustrations | ~30–35 KB |
+| **Worlds** | Three.js / WebGL 2 | Soft miniature diorama, articulated figures, dynamic shadows | Rich 3D worlds, product pedestals, games | ~0.77 MB |
+| **Pixel** | Software 2D Canvas Rasterizer | 320×240 retro resolution, 8×8 Bayer dither, dissolving edges | Nostalgic pixel-art vignettes, lightweight 2D | ~50 KB |
+| **Dither** | Pixel Kernel + 4×4 Ordered Matrix | 360×280 retro monochrome dither, sharp shadow casting | Retro hardware styling, high-contrast scenes | ≤70 KB |
+
+<br />
+
+### Engine Showcase
+
+<p align="center">
+  <img src="docs/assets/engine-svg-card.png" alt="SVG vector scene of a coffee cart" width="48%" />
+  &nbsp;
+  <img src="docs/assets/engine-worlds-card.png" alt="Three.js world diorama of a morning bakery" width="48%" />
+</p>
+<p align="center">
+  <img src="docs/assets/engine-pixel-card.png" alt="Pixel art scene of a flower stall" width="48%" />
+  &nbsp;
+  <img src="docs/assets/engine-dither-card.png" alt="Dithered retro scene of a cliffside lighthouse" width="48%" />
+</p>
+
+---
+
+## Web Presentation Sizes: Hero vs Card
+
+Any3d generates 3D scenes tailored to their real-world placement on the web:
+
+<br />
+
+| Presentation Format | Aspect Ratio | Camera & Stage Calibration | Ideal Placement |
+|---|---|---|---|
+| **Web Hero Section** | **16:9 Widescreen** | Panoramic boulevard bounds (`20.0 × 11.2`), wide camera frustum (`1.35×`), spacious multi-prop layout | Full-width landing page headers, hero sections, top-of-page visual anchors |
+| **Website Feature Card** | **4:3 Component** | Tight diorama bounds (`13.0 × 9.6`), focused component framing (`1.02×`), central pedestal emphasis | Feature cards, pricing blocks, bento grid items, documentation callouts |
+
+Switch between **Hero** and **Card** with one click in the prompt bar or toolbar to see the stage and camera bounds adapt dynamically.
+
+---
+
+## Six Live Themes & Four 3D Finishes
+
+### SVG Vector Themes
+
+Repaint any SVG scene instantly in sub-5ms without regeneration or model calls:
+
+<p align="center">
+  <img src="docs/assets/theme-cycle.gif" alt="Animated GIF cycling through the six Any3d themes: toy, soft, mono, line, night and print" width="100%" />
+</p>
+
+- **Toy**: Saturated, joyful primary palette with clean outlines.
+- **Soft**: Pastel tones with gentle warm shading.
+- **Mono**: High-contrast editorial monochrome.
+- **Line**: Technical architectural wireframe with zero fill.
+- **Night**: Dark luminescent cyber aesthetic with glowing accents.
+- **Print**: Risograph and newspaper halftone dot aesthetics.
+
+### Worlds 3D Finishes
+
+Switch the 3D post-processing shader stack:
+- **Miniature**: Soft depth-of-field diorama with ambient occlusion.
+- **Pixel**: Real-time 3D pixelation pass.
+- **Halftone**: Comic-book style screen-tone dots.
+- **Blueprint**: Technical CAD schematic drafting finish.
+
+---
+
+## Atmosphere & Lighting Scrubber
+
+Control scene lighting, sun elevation, shadows, and weather in real time:
+
+- **Time of Day**: Dawn, Noon, Dusk, Night, Golden Hour, and Blue Hour.
+- **Weather Particles**: Clear, Animated Rain, and Falling Snow.
+- **Persistent State**: The chosen atmosphere is automatically encoded into export HTML files and URL-hash payloads (`#/s/...`).
+
+---
+
+## Web Visual Grounding
+
+When you prompt a complex scene — such as *"a double-decker bus full of passengers with a conductor"* — Any3d performs automated background visual research on Wikimedia Commons.
+
+- **Authentic Photographic Studies**: Gathers real photographs of the exact subjects requested (real vehicles, real architectural details, real passenger layouts).
+- **No Mock or Fake Data**: Never uses generic placeholders or hallucinated geometries. Real-world proportions and colors directly ground the scene generator.
+
+---
+
+## AnyStack 3D Arcade
+
+Waiting for a model generation or want to take a creative break? Click **AnyStack** in the 3D toolbar to play an integrated physics-based 3D block stacking minigame directly on the 3D stage.
+
+---
+
+## Deterministic Validation & Inspector
+
+Every generated scene passes an automated 12-point quality harness before rendering:
+
+<p align="center">
+  <img src="docs/assets/inspector.png" alt="Any3d validation drawer listing structural checks and prompt fidelity for the current scene" width="100%" />
+</p>
+
+- **Clock Purity**: Ensures all animation loops derive strictly from the kernel timestamp `t` (no uncontrolled `Date.now()` or `Math.random()` jitter).
+- **Ground Pedestal Bounds**: Confirms geometry remains contained on the diorama base.
+- **Pointer & Picking Hooks**: Verifies hover highlights, name read-outs, and interactive click events.
+- **Prompt Fidelity**: Evaluates presence of mandatory subjects, props, and actions (0–100 score).
+- **Self-Healing Bundler**: Automatically fixes unclosed tags, malformed transforms, and missing imports.
+
+---
+
+## 44 Curated Presets
+
+Browse production-grade scenes across all engines via the **Presets** gallery (`Ctrl/⌘ K`):
+
+<p align="center">
+  <img src="docs/assets/gallery.png" alt="Any3d preset gallery showing curated scenes across SVG, Worlds, Pixel and Dither engines" width="100%" />
+</p>
+
+- **SVG (30)**: `town`, `island`, `farm`, `warehouse`, `powder`, `cafe`, `launchpad`, `server`, `rack`, `mailbox`, `seedling`, `desk`, `turntable`, `harbour`, `kitchen`, `assembly`, `observatory`, `vending`, `airport`, `badminton`, `barbershop`, `gym`, `laundromat`, `library`, `arcade`, `classroom`, `foodtruck`, `greenhouse`, `campsite`, `patisserie`.
+- **Worlds 3D (7)**: `bakery`, `pottery-studio`, `florist`, `observatory`, `cricket`, `basketball`, `street-juggler`.
+- **Pixel (3)**: `flower-stall`, `pier`, `allotment`.
+- **Dither (4)**: `forge`, `lighthouse`, `tea-house`, `windmill`.
+
+---
+
+## Export Suite
+
+Any3d is built to deliver assets ready for production deployment:
+
+| Export Target | Format | Description |
+|---|---|---|
+| **Standalone HTML** | `.html` | Completely self-contained single-file bundle. Inlined CSS, runtime, and scene logic. Zero dependencies, works offline. |
+| **Binary GLB** | `.glb` | Standard 3D scene graph for import into Blender, Unity, Unreal Engine, or Godot. |
+| **PNG Snapshot** | `.png` | 2× high-resolution crisp image snapshot with transparent or styled background. |
+| **Turntable Video** | `.webm` / `.gif` | Smooth 360-degree rotating camera clip recorded directly from the canvas. |
+| **Compressed URL Link** | `#/s/...` | Losslessly compressed scene payload in the URL hash. Share complete scenes without server storage. |
+| **Embed Script** | `<script>` | Drop any scene onto your existing website using `embed.js` (sandboxed, responsive iframe). |
+
+---
+
+## Mobile Responsive Design
+
+Any3d is fully responsive. On mobile screens and tablets, the interface intelligently collapses into a focused vertical stack with overlay chat drawer and compact toolbar controls:
+
+<p align="center">
+  <img src="docs/assets/mobile-home.png" alt="Any3d on a phone: stacked project view with the composer ready for a prompt" width="320" />
+</p>
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
 |---|---|
-| **Standalone HTML** | Self-contained, one file, no network at runtime |
-| **Binary .GLB** | Three.js scene graph for Blender/Unity import |
-| **Animated GIF / WebM** | Turntable clip recorded from the live preview |
-| **URL-hash link** (`#/s/...`) | Compressed scene payload — share the whole scene in a link |
-
-### 5. Embed
-
-Drop any built scene onto an external page with one script tag (`docs/embed/embed.js`, 1,355 B gzipped). Runs in a sandboxed iframe (`allow-scripts`, no `same-origin`), works from `file://`.
-
-```html
-<script src="/path/to/embed.js"
-        data-src="https://your.site/scenes/my-scene.html"
-        data-ratio="4 / 3"
-        data-title="Corner coffee cart">
-</script>
-```
+| `Ctrl/⌘ + N` | Create a new scene project |
+| `Ctrl/⌘ + K` | Open the Preset Scene Gallery |
+| `Ctrl/⌘ + J` | Toggle the conversational chat drawer |
+| `Ctrl/⌘ + I` | Open the Scene Validation Inspector |
+| `Ctrl/⌘ + B` | Toggle the project sidebar |
+| `Enter` | Send generation / edit prompt |
+| `Shift + Enter` | Insert new line in prompt composer |
 
 ---
 
-## Project structure
+## Project Architecture
 
 ```
 Any3d/
-├── server/                 # Express API studio server (:3001)
-│   ├── index.js            # API routes: presets, validate, bundle, generate, mutate, ask-scene, extract-palette
-│   ├── engine/
-│   │   ├── kernels.js      # Kernel loading (SVG, Worlds, Pixel, Dither)
-│   │   ├── validator.js    # Deterministic scene validation (10 checks)
-│   │   ├── fidelityValidator.js  # Prompt fidelity scoring (0–100)
-│   │   ├── bundler.js      # Self-healing HTML bundler + esbuild for Three.js
-│   │   ├── procedural.js   # Deterministic procedural fallback generator
-│   │   └── semantics.js    # Prompt semantics: subject, props, actions, prohibited objects
-│   ├── llm/
-│   │   ├── service.js      # Dual-provider generation (Gemini + Ollama)
-│   │   ├── prompts.js      # System prompts per engine
-│   │   ├── enhancer.js     # Prompt enhancer
-│   │   ├── mutator.js      # Conversational scene mutation
-│   │   └── offline-editor.js   # Deterministic offline AST editor (SVG)
-│   └── presets/
-│       ├── svg/            # 30 SVG figures
-│       ├── worlds/         # 7 Three.js worlds
-│       ├── pixel/          # 3 pixel scenes
-│       └── dither/         # 4 dithered yards
 ├── core/
-│   └── kernels/            # The four render kernels (SVG, Worlds, Pixel, Dither)
-│       └── templates/      # HTML bench templates
-├── src/                    # React 19 + Vite frontend studio
-│   ├── components/         # Homepage, ProjectPage, SandboxPreview, Sidebar, CodeEditor, ...
-│   ├── lib/                # scene-payload, glbExporter, turntable, productShot, look, api, ...
-│   └── types.ts            # TypeScript type definitions
-├── public/
-│   └── embed.js            # Embeddable loader script (1,355 B gzipped)
+│   ├── kernels/            # Four core render kernels (SVG, Worlds, Pixel, Dither)
+│   └── templates/          # HTML bench templates for standalone bundling
+├── server/                 # Express backend API (:3001)
+│   ├── engine/
+│   │   ├── bundler.js      # Self-healing HTML bundler + Three.js esbuild packager
+│   │   ├── validator.js    # Deterministic 12-point scene validator
+│   │   ├── fidelityValidator.js  # Semantic prompt coverage & scoring
+│   │   ├── procedural.js   # Deterministic offline procedural fallback generator
+│   │   └── semantics.js    # Subject, prop, and layout semantics extractor
+│   ├── llm/
+│   │   ├── service.js      # Dual-provider LLM coordinator (Gemini & Ollama)
+│   │   ├── prompts.js      # Engine-specific system prompts & syntax rules
+│   │   ├── enhancer.js     # Prompt expansion & real-world photo researcher
+│   │   ├── mutator.js      # Conversational differential scene editor
+│   │   └── offline-editor.js   # Sub-5ms deterministic AST editor (SVG)
+│   └── presets/            # Source code for all 44 preset scenes
+├── src/                    # React 19 + Vite 6 frontend
+│   ├── components/         # Homepage, ProjectPage, SandboxPreview, LookScrubber, AnyStack...
+│   ├── lib/                # glbExporter, turntable, look, scene-payload, api
+│   └── types.ts            # Core TypeScript schemas
 ├── docs/
-│   ├── guides/             # 16 guide pages (SVG craft, motion, React; Worlds art direction & API; Pixel; Dither; turntable; diff; embed; palette; atmosphere; scene payload)
-│   ├── embed/              # Embed demo (demo.html, embed.js, scene.html)
-│   ├── assets/             # Screenshots
-│   ├── ROADMAP.md          # Roadmap v2
-│   ├── AUDIT_AND_ROADMAP.md
-│   └── GAP-AUDIT-AND-PLAN.md
-├── scripts/                # Test & verification scripts (payload, diff, offline editor, clip, look, seed, embed)
-└── package.json
+│   ├── assets/             # Screenshots, GIFs, and engine comparison cards
+│   ├── guides/             # In-depth architectural and authoring guides
+│   └── ROADMAP.md          # Project milestones and feature roadmap
+└── public/
+    └── embed.js            # Standalone zero-dependency embed script
 ```
 
-### Preset library (44 scenes)
+---
 
-**SVG (30):** town, island, farm, warehouse, powder, cafe, launchpad, server, rack, mailbox, seedling, desk, turntable, harbour, kitchen, assembly, observatory, vending, airport, badminton, barbershop, gym, laundromat, library, arcade, classroom, foodtruck, greenhouse, campsite, patisserie
+## Documentation Guides (`docs/guides/`)
 
-**Worlds (7):** bakery, pottery-studio, florist, observatory, cricket, basketball, street-juggler
-
-**Pixel (3):** flower-stall, pier, allotment
-
-**Dither (4):** forge, lighthouse, tea-house, windmill
+- **Vector SVG**: [SVG Craft](docs/guides/svg-craft.md) • [SVG Motion Loops](docs/guides/svg-motion.md) • [SVG + React](docs/guides/svg-react.md)
+- **Three.js Worlds**: [Worlds Art Direction](docs/guides/worlds-art-direction.md) • [Worlds Scene API](docs/guides/worlds-scene-api.md)
+- **Pixel & Dither**: [Pixel Art Direction](docs/guides/pixel-art-direction.md) • [Pixel Scene API](docs/guides/pixel-scene-api.md) • [Dither Yard Engine](docs/guides/dither-yard.md)
+- **Exports & Embeds**: [Turntable Export](docs/guides/turntable-export.md) • [Embed Script & Storyboard](docs/guides/embed-and-storyboard.md)
+- **Atmosphere**: [Atmosphere & Look Scrubber](docs/guides/atmosphere-and-look.md) • [Palette from Photo](docs/guides/palette-from-photo.md)
+- **Architecture**: [Scene Payload Protocol](docs/guides/scene-payload.md) • [Version Diff & Seeds](docs/guides/version-diff-and-seeds.md)
 
 ---
 
-## Commands
+## FAQ & Troubleshooting
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start API + Vite frontend (concurrently) |
-| `npm run dev:server` | Start Express API only |
-| `npm run dev:client` | Start Vite frontend only |
-| `npm run build` | Vite production build |
-| `npm start` | Start the production server |
-| `npm run test:payload` | Scene-payload round-trip tests (369 assertions over 44 presets) |
-| `npm run test:diff` | Version diff tests (23 assertions) |
-| `node scripts/test-offline-editor.mjs` | Offline editor tests (67 assertions) |
-| `npx tsc --noEmit` | TypeScript type check |
+<details>
+<summary><b>Does Any3d require an active internet connection?</b></summary>
+No. When using Ollama with local models or the built-in procedural generator, Any3d operates 100% offline. Exported HTML files also function completely offline with zero external network requests.
+</details>
 
-Every roadmap item ships with a test or measured number and no regressions in `test:payload`, `test:diff`, `test-offline-editor.mjs`, `tsc --noEmit`, or `npm run build`.
+<details>
+<summary><b>Where is my scene data stored?</b></summary>
+All project sessions, chat histories, and custom scenes are persisted locally in your browser's <code>localStorage</code> (keys: <code>any3d_saved_sessions</code> and <code>any3d_chat_history</code>).
+</details>
 
----
+<details>
+<summary><b>Can I import Any3d models into Blender or Unity?</b></summary>
+Yes. In the Worlds 3D engine, click <b>Export → GLB</b> to download a standard binary <code>.glb</code> file containing the Three.js mesh geometry and materials.
+</details>
 
-## Guides (`docs/guides/`)
-
-- **SVG:** `svg-craft.md`, `svg-motion.md`, `svg-react.md`
-- **Worlds:** `worlds-art-direction.md`, `worlds-scene-api.md`
-- **Pixel:** `pixel-art-direction.md`, `pixel-scene-api.md`
-- **Dither:** `dither-yard.md`
-- **Export:** `turntable-export.md`, `embed-and-storyboard.md`
-- **Editing:** `version-diff-and-seeds.md`
-- **AI/photo:** `palette-from-photo.md`
-- **Look:** `atmosphere-and-look.md`
-- **Payload/sharing:** `scene-payload.md`
-
----
-
-## Roadmap status
-
-See `docs/ROADMAP.md` for the full roadmap v2. Highlights:
-
-- **Shipped:** versioned scene payload + `#/s/` routing, share/remix links, turntable video/GIF, atmosphere (time/weather), diff/seed/surprise/Ask, embed snippet, image→palette, deterministic offline editor, 44 presets
-- **In progress / next:** product-shot mode (product image on plinth + hero/turntable export), multi-scene worlds composition, in-browser WebLLM, universal offline editor for Worlds/Pixel
-- **Out of scope:** photorealism, node graphs, accounts/cloud sync, plugin marketplace, additional engines, server-rendered Open Graph images
-
----
-
-<<<<<<< HEAD
-
+<details>
+<summary><b>Port 3001 or 5173 is already in use. How do I change it?</b></summary>
+You can start the frontend and backend individually with custom ports:
+<code>PORT=3005 npm run dev:server</code> and <code>npm run dev:client -- --port 5175</code>.
+</details>
 
 ---
 
 ## License
 
-MIT. See `LICENSE` for details.
-=======
-**Can I use it on a phone?** Yes, the project page stacks into a single column.
->>>>>>> 9d8a50a7bfb21b0e980fdc101e6c1279aecd4042
+This project is licensed under the [MIT License](LICENSE).
