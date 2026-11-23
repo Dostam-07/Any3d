@@ -9,9 +9,16 @@
  * data-driven equivalent, and pretending four crops were four angles would be
  * a lie on a pitch deck.
  *
+ * The sheet follows the framing the user set up: the presentation size is
+ * stamped on every tile, and when the user picked an explicit angle the first
+ * tile is exactly that angle (`storyboardAngles`). A sheet that ignored both
+ * would show four views of a scene nobody asked for.
+ *
  * The scene is restored to its original angle when the sheet is finished.
  */
 
+import type { WebPresentationSize } from '../types';
+import type { CameraPick } from './camera';
 import { svgMarkupAtSize } from './turntable';
 
 export const STORYBOARD_WIDTH = 2400;
@@ -34,6 +41,44 @@ export const STORYBOARD_ANGLES: StoryboardAngle[] = [
   { id: 'plan', label: 'Plan', az: 45, el: 66 },
 ];
 
+const wrapAz = (az: number) => ((az % 360) + 360) % 360;
+const clampEl = (el: number) => Math.min(89, Math.max(2, el));
+
+/**
+ * Four angles for the sheet.
+ *
+ * With no pick (or `reset`, which is "the angle this scene was authored for")
+ * the classic set is used. With an explicit pick the sheet opens on the angle
+ * the user is actually looking at, turns it both ways, and closes with a view
+ * from the other side of the horizon — so the first tile is what they framed
+ * and the rest still tells them something new.
+ */
+export function storyboardAngles(camera?: CameraPick | null): StoryboardAngle[] {
+  if (!camera || !('az' in camera) || !Number.isFinite(camera.az) || !Number.isFinite(camera.el)) {
+    return STORYBOARD_ANGLES;
+  }
+  const az = wrapAz(camera.az);
+  const el = clampEl(camera.el);
+  const other = el >= 55 ? Math.max(2, 90 - el) : Math.min(85, el + 40);
+
+  const picked: StoryboardAngle[] = [
+    { id: 'picked', label: 'Your angle', az, el },
+    { id: 'left', label: 'Turned left', az: wrapAz(az - 45), el },
+    { id: 'right', label: 'Turned right', az: wrapAz(az + 45), el },
+    { id: 'other', label: el >= 55 ? 'Lower angle' : 'Higher angle', az, el: clampEl(other) },
+  ];
+  // Two angles that rasterise identically would make one tile a duplicate, and a
+  // duplicate tile is a lie about how many views the sheet has.
+  const seen = new Set<string>();
+  const unique = picked.filter((angle) => {
+    const key = `${Math.round(angle.az)}/${Math.round(angle.el)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return unique.length === 4 ? unique : STORYBOARD_ANGLES;
+}
+
 export interface StoryboardResult {
   blob: Blob;
   width: number;
@@ -41,6 +86,8 @@ export interface StoryboardResult {
   bytes: number;
   name: string;
   angles: string[];
+  /** Presentation the tiles were rendered at (hero 16:9 / card 4:3). */
+  size: WebPresentationSize;
   /**
    * Largest luminance difference between the title band and the sheet
    * background. Used by the checks to prove the name was actually burned in
@@ -53,6 +100,10 @@ interface StoryboardOptions {
   name?: string;
   background?: string;
   onProgress?: (progress: number) => void;
+  /** Presentation to render each tile at; defaults to the figure's own. */
+  size?: WebPresentationSize;
+  /** The angle the user framed, if any. */
+  camera?: CameraPick | null;
 }
 
 const BACKGROUND = '#0c0e17';
@@ -128,7 +179,8 @@ function drawTile(
 export function composeStoryboard(
   tiles: HTMLCanvasElement[],
   name: string,
-  background = BACKGROUND
+  background = BACKGROUND,
+  labels = STORYBOARD_ANGLES.map((a) => a.label)
 ): { canvas: HTMLCanvasElement; nameContrast: number } {
   const canvas = document.createElement('canvas');
   canvas.width = STORYBOARD_WIDTH;
@@ -159,7 +211,7 @@ export function composeStoryboard(
     const row = Math.floor(index / 2);
     const x = PAD + column * (tileWidth + GAP);
     const y = HEADER + row * (tileHeight + GAP);
-    drawTile(g, tile, x, y, tileWidth, tileHeight, STORYBOARD_ANGLES[index].label);
+    drawTile(g, tile, x, y, tileWidth, tileHeight, labels[index] || STORYBOARD_ANGLES[index].label);
   });
 
   // Prove the title is on the pixels: compare the title band against the corner.
@@ -199,7 +251,7 @@ export async function renderStoryboard(
     throw new Error('Storyboard angles are SVG-only — switch the scene to the SVG engine.');
   }
 
-  const figures = Api.figures as { camera?: unknown; size?: unknown }[] | undefined;
+  const figures = Api.figures as { camera?: unknown; size?: WebPresentationSize }[] | undefined;
   const fig = figures && figures.length ? figures[figures.length - 1] : null;
   if (!fig) throw new Error('No figure declared in the preview');
 
@@ -208,6 +260,8 @@ export async function renderStoryboard(
 
   const name = options.name || (fig as { title?: string }).title || 'Untitled scene';
   const look = win.__any3dLook || undefined;
+  const size: WebPresentationSize = options.size || (fig as { size?: WebPresentationSize }).size || 'card';
+  const angles = storyboardAngles(options.camera);
 
   // Tile size: the sheet grid, at 2× so the PNG is crisp on a projector.
   const tileWidth = Math.floor((STORYBOARD_WIDTH - PAD * 2 - GAP) / 2) * 2;
@@ -217,18 +271,25 @@ export async function renderStoryboard(
   let live: { destroy?: () => void } | null = null;
 
   try {
-    for (let i = 0; i < STORYBOARD_ANGLES.length; i++) {
-      const angle = STORYBOARD_ANGLES[i];
+    for (let i = 0; i < angles.length; i++) {
+      const angle = angles[i];
       if (live && live.destroy) live.destroy();
       live = Api.mount(
-        { ...(fig as object), camera: { az: angle.az, el: angle.el, pad: 1.06 } },
+        { ...(fig as object), size, camera: { az: angle.az, el: angle.el, pad: 1.06 } },
         { el: stage, reduced: true, still: true, look }
       );
-      const svg = stage.querySelector('svg') as SVGSVGElement | null;
+      // The preview's own mount is still in the stage, so take the newest svg:
+      // the one this angle was just mounted into. Reaching for the first one
+      // rasterised the live view four times under four different labels.
+      // The stage keeps the preview's own mount, and a destroyed mount can linger,
+      // so take the newest svg: the one this angle was just mounted into.
+      // Reaching for the first one rasterised whichever mount happened to lead.
+      const mounts = stage.querySelectorAll('svg');
+      const svg = mounts.length ? (mounts[mounts.length - 1] as SVGSVGElement) : null;
       if (!svg) throw new Error(`The ${angle.label} angle did not render`);
       const markup = svgMarkupAtSize(svg, tileWidth, tileHeight);
       tiles.push(await rasterise(markup, tileWidth, tileHeight));
-      options.onProgress?.((i + 1) / STORYBOARD_ANGLES.length);
+      options.onProgress?.((i + 1) / angles.length);
     }
   } finally {
     // Put the scene back the way the user left it.
@@ -240,7 +301,9 @@ export async function renderStoryboard(
     }
   }
 
-  const { canvas, nameContrast } = composeStoryboard(tiles, name, options.background);
+  // Burn in the labels of the angles that were rendered, not the classic four:
+  // a sheet that says "Isometric" over the user's own top-down view is a lie.
+  const { canvas, nameContrast } = composeStoryboard(tiles, name, options.background, angles.map((a) => a.label));
   const blob = await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
       (result) => (result ? resolve(result) : reject(new Error('Could not encode the storyboard PNG'))),
@@ -254,7 +317,8 @@ export async function renderStoryboard(
     height: STORYBOARD_HEIGHT,
     bytes: blob.size,
     name,
-    angles: STORYBOARD_ANGLES.map((a) => a.label),
+    angles: angles.map((a) => a.label),
+    size,
     nameContrast,
   };
 }

@@ -10,7 +10,14 @@ The bundle template is chrome-less by construction: `.head`, `.means`, `.foot` a
 
 ## Storyboard sheet
 
-Four camera angles taken from the figure's own `camera` option, each re-mounted and serialised, composited 2×2 at **2400×1350** with the scene name burned in. SVG-only (canvas engines keep their camera in Three.js; the button is disabled there with a reason). The live scene is remounted afterwards. `StoryboardControl.tsx` mirrors `ClipControl.tsx`.
+Four camera angles each re-mounted inside the preview and serialised, composited 2×2 at **2400×1350** with the scene name burned in. The sheet follows the frame the user set up:
+
+- **Presentation:** every tile is mounted at the size the user chose (hero 16:9 or card 4:3), so the sheet shows the framing on screen rather than the figure's default.
+- **Camera:** with no pick the classic set is used (*Isometric · Front · Side · Plan*). Once the user picks an angle, `storyboardAngles` leads with **Your angle**, turns it ±45°, and closes from the other side of the horizon (*Lower angle* or *Higher angle*). Azimuth wraps into 0–360, elevation clamps to 2–89, and a set that would repeat an angle falls back to the classic four.
+- **Labels:** the labels burned into the tiles are the labels of the angles that were rendered.
+- **The mount matters:** the stage already holds the preview's own `<svg>`, and a destroyed mount can linger, so each tile is rasterised from the *newest* svg. Picking the first one rasterised a stale mount.
+
+`scripts/test-storyboard.ts` covers the angle set (16 checks) and `scripts/verify-storyboard.mjs` drives the real studio (12 checks: 2400×1350 PNG, four labelled tiles, the picked angle leads, tile 1 ≠ tile 4, and the sheet's picture changes with the pick (mean Δ 24–25) and with the presentation size (mean Δ 20)). SVG-only (canvas engines keep their camera in Three.js; the button is disabled there with a reason). The live scene is remounted afterwards. `StoryboardControl.tsx` mirrors `ClipControl.tsx`.
 
 ## Acceptance
 

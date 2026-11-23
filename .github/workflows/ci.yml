@@ -78,6 +78,9 @@ jobs:
       - name: Verify the camera an export carries
         run: npm run verify:camera
 
+      - name: Verify the storyboard follows the framing
+        run: npm run verify:storyboard
+
       - name: Verify documented pixel toolkit
         if: always()
         run: npm run verify:pixel-api

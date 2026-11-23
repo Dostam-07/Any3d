@@ -9,10 +9,11 @@
     "dev:client": "vite",
     "build": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
     "start": "node server/index.js",
-    "test": "npm run test:payload && npm run test:diff && node scripts/test-builds.mjs && npm run verify:worlds-api",
+    "test": "npm run test:payload && npm run test:diff && npm run test:storyboard && node scripts/test-builds.mjs && npm run verify:worlds-api",
     "test:builds": "node scripts/test-builds.mjs",
     "test:payload": "esbuild scripts/test-scene-payload.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/payload.test.mjs && node .tmp/payload.test.mjs",
     "test:diff": "esbuild scripts/test-diff.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/diff.test.mjs && node .tmp/diff.test.mjs",
+    "test:storyboard": "esbuild scripts/test-storyboard.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/storyboard.test.mjs && node .tmp/storyboard.test.mjs",
     "preview": "vite preview",
     "showcase": "node scripts/showcase.mjs",
     "showcase:gifs": "node scripts/showcase.mjs --gifs",
@@ -23,6 +24,7 @@
     "verify:pixel-api": "node scripts/verify-pixel-api.mjs",
     "verify:fidelity": "node scripts/verify-still-fidelity.mjs",
     "verify:camera": "node scripts/verify-export-camera.mjs",
+    "verify:storyboard": "node scripts/verify-storyboard.mjs",
     "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {

@@ -447,7 +447,13 @@ function SandboxPreviewInner({
       if (untrusted) throw new Error('Storyboard export is disabled for shared scenes');
       const frame = iframeRef.current;
       if (!frame) throw new Error('Preview is not ready');
-      return renderStoryboard(frame, options);
+      // The sheet shows the frame the user is looking at: the presentation they
+      // chose and, when they picked one, their own angle as the first tile.
+      return renderStoryboard(frame, {
+        ...options,
+        size: currentSize,
+        camera: cameraRef.current,
+      });
     },
   }));
 
