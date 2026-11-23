@@ -183,11 +183,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             No saved scenes yet. Create your first 3D world!
           </div>
         ) : (
-          sessions.map((sess) => {
+          sessions.map((sess, idx) => {
             const Icon = FORMAT_ICONS[sess.format] || Shapes;
             const isSelected = sess.id === currentSessionId && activeView !== 'home';
             return (
-              <div key={sess.id} className="group flex items-center gap-1">
+              <div key={`${sess.id}-${idx}`} className="group flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => {

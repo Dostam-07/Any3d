@@ -365,11 +365,11 @@ export const Homepage: React.FC<HomepageProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {sessions.slice(0, 6).map((sess) => {
+              {sessions.slice(0, 6).map((sess, idx) => {
                 const Icon = FORMAT_ICONS[sess.format] || Shapes;
                 return (
                   <button
-                    key={sess.id}
+                    key={`${sess.id}-${idx}`}
                     type="button"
                     onClick={() => onSelectSession?.(sess)}
                     className="group flex flex-col justify-between p-3.5 rounded-2xl bg-[#0c0e17] hover:bg-[#111422] border border-white/[0.08] hover:border-indigo-500/35 transition-all text-left cursor-pointer shadow-sm hover:shadow-lg hover:shadow-indigo-950/25"

@@ -15,7 +15,7 @@ export function synthesizeProceduralScene(prompt, format = 'svg', visualResearch
   const p = (prompt || '').trim();
   const core = unwrapCorePrompt(p);
   const semantics = extractPromptSemantics(p);
-  const effectiveSize = semantics.requestedSize || size || 'card';
+  const effectiveSize = semantics.requestedSize || (semantics.category === 'harbor' || semantics.category === 'space' ? 'hero' : size) || 'card';
 
   // Ground with real-world web visual research components if available
   if (visualResearch?.decomposition?.components?.length) {
@@ -754,9 +754,9 @@ export default defineWorld({
     }
 
     // Golden Hay Bales
-    const hay1 = cylinder(0.4, 0.7, '#facc15', 2.8, 0.35, 2.4, null, 14); hay1.rotation.z = Math.PI / 2;
-    const hay2 = cylinder(0.4, 0.7, '#facc15', 3.6, 0.35, 2.2, null, 14); hay2.rotation.z = Math.PI / 2;
-    const hay3 = cylinder(0.4, 0.7, '#facc15', 3.2, 0.95, 2.3, null, 14); hay3.rotation.z = Math.PI / 2;
+    const hay1 = cylinder(0.4, 0.7, '#facc15', 2.8, 0.35, 2.4, undefined, 14); hay1.rotation.z = Math.PI / 2;
+    const hay2 = cylinder(0.4, 0.7, '#facc15', 3.6, 0.35, 2.2, undefined, 14); hay2.rotation.z = Math.PI / 2;
+    const hay3 = cylinder(0.4, 0.7, '#facc15', 3.2, 0.95, 2.3, undefined, 14); hay3.rotation.z = Math.PI / 2;
 
     // Classic Red Timber Barn
     const barn = group(-2.2, 0, -1.8);
@@ -1046,7 +1046,33 @@ export default defineWorld({
       cylinder(0.08, 0.7, '#451a03', 0.5, 0.05, pz, pier, 8);
     }
 
-    return { boat, spreader, crane };
+    // Container Freighter Cargo Ship Moored Along Quay
+    const ship = group(-1.6, 0.15, 3.4);
+    box(8.2, 0.8, 2.4, '#1e293b', 0, 0.4, 0, ship);
+    box(8.4, 0.15, 2.5, '#dc2626', 0, 0.1, 0, ship);
+    box(1.4, 1.2, 1.8, '#f8fafc', -2.8, 1.2, 0, ship);
+    cylinder(0.18, 0.8, '#ea580c', -2.8, 1.9, -0.4, ship, 10);
+    box(1.2, 0.6, 1.0, '#0284c7', -1.2, 1.1, -0.45, ship);
+    box(1.2, 0.6, 1.0, '#10b981', 0.2, 1.1, -0.45, ship);
+    box(1.2, 0.6, 1.0, '#f59e0b', 1.6, 1.1, -0.45, ship);
+    box(1.2, 0.6, 1.0, '#ef4444', -1.2, 1.1, 0.45, ship);
+    box(1.2, 0.6, 1.0, '#8b5cf6', 0.2, 1.1, 0.45, ship);
+    box(1.2, 0.6, 1.0, '#06b6d4', 1.6, 1.1, 0.45, ship);
+    box(1.2, 0.6, 1.0, '#f97316', 0.2, 1.7, -0.45, ship);
+    box(1.2, 0.6, 1.0, '#ec4899', 1.6, 1.7, 0.45, ship);
+
+    // Transport Truck on Quay Road
+    const truck = group(2.0, 0.55, -2.4);
+    box(1.0, 0.9, 1.2, '#f59e0b', 1.2, 0.5, 0, truck);
+    box(2.8, 0.2, 1.1, '#334155', -0.6, 0.35, 0, truck);
+    box(1.8, 0.7, 1.0, '#3b82f6', -0.6, 0.8, 0, truck);
+    for (let wx of [-1.4, -0.2, 1.0]) {
+      for (let wz of [-0.55, 0.55]) {
+        cylinder(0.18, 0.12, '#0f172a', wx, 0.18, wz, truck, 10).rotation.x = Math.PI / 2;
+      }
+    }
+
+    return { boat, spreader, crane, ship, truck };
   },
   tick({ t, parts: p }) {
     if (p.boat) {
@@ -1056,6 +1082,13 @@ export default defineWorld({
     }
     if (p.spreader) {
       p.spreader.position.z = 1.4 + Math.sin(t * 1.0) * 0.4;
+    }
+    if (p.ship) {
+      p.ship.position.y = 0.15 + Math.sin(t * 1.8) * 0.02;
+      p.ship.rotation.z = Math.sin(t * 1.4) * 0.015;
+    }
+    if (p.truck) {
+      p.truck.position.x = 2.0 + Math.sin(t * 0.8) * 1.5;
     }
   },
   contacts() { return []; }
@@ -2481,7 +2514,7 @@ export default defineWorld({
     // Stone Garden Lanterns at Perimeter Corners
     for (const lx of [-4.8, 4.8]) {
       for (const lz of [-3.4, 3.4]) {
-        cylinder(0.06, 1.6, '#334155', lx, 0.8, lz, null, 8);
+        cylinder(0.06, 1.6, '#334155', lx, 0.8, lz, undefined, 8);
         box(0.3, 0.3, 0.3, '#fef08a', lx, 1.6, lz);
       }
     }
@@ -4258,37 +4291,101 @@ Any3d.figure({
     D.box(0.9, 0.5, 1.4, pal.mustard, -2.4, 0.25, 1.6);
     return { ground: ground, hot: hot, plane: plane, radar: radar };
     ` : category === 'harbor' ? `
-    // Deep Ocean Water Slab & Concrete Quay
-    var ground = D.slab(11.5, 9.0, pal.sky, 0, 0, 0, null, { h: 0.5, r: 0.8, side: pal.cobalt });
-    D.box(5.2, 0.6, 8.6, pal.slate, -3.1, 0.3, 0);
-    [-3.0, 0, 3.0].forEach(function (bz) {
-      D.cyl(0.1, 0.12, 0.3, pal.ink, -0.6, 0.65, bz, null, 8);
-    });
-
-    // Container Gantry Crane
-    var crane = D.group(-2.6, 0.6, 0);
-    crane.name = 'container gantry crane';
-    hot.push(crane);
-    D.box(0.12, 3.8, 0.12, pal.mustard, -1.2, 1.9, -1.6, crane);
-    D.box(0.12, 3.8, 0.12, pal.mustard, 1.2, 1.9, -1.6, crane);
-    D.box(0.12, 3.8, 0.12, pal.mustard, -1.2, 1.9, 1.6, crane);
-    D.box(0.12, 3.8, 0.12, pal.mustard, 1.2, 1.9, 1.6, crane);
-    D.box(2.8, 0.16, 4.4, pal.mustard, 0.6, 3.8, 0, crane);
-
-    // Stacked Shipping Containers
-    D.box(1.0, 0.9, 2.4, pal.coral, -3.8, 0.95, -1.8);
-    D.box(1.0, 0.9, 2.4, pal.cobalt, -3.8, 0.95, 1.2);
-    D.box(1.0, 0.9, 2.4, pal.mustard, -3.8, 1.85, -1.8);
-
-    // Cargo Tugboat
-    var tug = D.group(2.6, 0.3, 0.5);
-    tug.name = 'cargo tug';
-    hot.push(tug);
-    D.box(1.8, 0.6, 3.8, pal.coral, 0, 0.3, 0, tug);
-    D.wedge(1.8, 0.6, 1.0, pal.coral, 0, 0.3, 2.4, tug);
-    D.box(1.2, 0.8, 1.4, pal.paper, 0, 0.9, 0.2, tug);
-    D.cyl(0.16, 0.16, 0.7, pal.ink, 0, 1.5, -0.4, tug, 8);
-    return { ground: ground, hot: hot, crane: crane, tug: tug };
+    var ground = D.slab(44, 28, pal.water, 0, 0, -1, null, { h: .9, r: 3 });
+    var waves = []; [[-16, 9], [-12, 2], [-18, -4], [-8, 11], [2, 12], [10, 12.5], [-6, 6], [16, 10]].forEach(function (p, k) { waves.push(D.box(1.2 + (k % 3) * .3, .02, .1, pal.line, p[0], .03, p[1], null, { shadow: false })); });
+    /* the quay: a concrete plate on the back-right, with an apron and a road loop */
+    D.slab(30, 15, pal.cloud, 4, .5, -6.5, null, { h: .5, r: 1.2, side: pal.mist });
+    D.box(27, .03, 2.6, pal.asphalt, 4, .52, -12, null, { shadow: false }); D.box(2.6, .03, 8, pal.asphalt, 16.2, .52, -9.3, null, { shadow: false }); D.box(2.6, .03, 8, pal.asphalt, -8.2, .52, -9.3, null, { shadow: false }); D.box(27, .03, 2.6, pal.asphalt, 4, .52, -6.6, null, { shadow: false });
+    for (var i = -7; i <= 15; i += 2.2) D.box(1.1, .012, .14, pal.line, i, .545, -12, null, { shadow: false });
+    D.box(24, .03, 3.2, pal.cloud, 4, .52, -2.4, null, { shadow: false });
+    [[-6, -.6], [-1, -.6], [4, -.6], [9, -.6], [14, -.6]].forEach(function (p) { D.cyl(.22, .26, .5, pal.ink, p[0], .75, p[1], null, 10); });
+    /* the ship, moored along the quay, nose toward +x */
+    var ship = D.group(3, 0, 3.4); ship.name = 'container freighter'; hot.push(ship);
+    D.rbox(16, 1.6, 4.4, pal.steel, 0, .9, 0, ship, { r: .25 }); D.box(16.2, .3, 4.5, pal.bad, 0, .3, 0, ship); D.box(15.4, .12, 4.0, pal.cloud, 0, 1.75, 0, ship);
+    var bow = D.wedge(1.6, 2.4, 4.4, pal.steel, 8.0, .9, 0, ship); bow.rotation.z = -Math.PI / 2;
+    D.wedge(.3, 2.45, 4.5, pal.bad, 8.0, .3, 0, ship).rotation.z = -Math.PI / 2; D.wedge(.12, 2.2, 4.0, pal.cloud, 8.0, 1.75, 0, ship).rotation.z = -Math.PI / 2;
+    var bridge = D.group(-6.6, 1.8, 0, ship); D.box(2.6, 2.2, 3.4, pal.paper, 0, 1.1, 0, bridge); D.box(2.8, .3, 3.6, pal.slate, 0, 2.3, 0, bridge); D.box(2.2, .6, .06, pal.sky, 0, 1.7, 1.72, bridge, { shadow: false });
+    D.cyl(.4, .5, 1.4, pal.coral, -.6, 3.1, -.9, bridge, 12); D.cyl(.42, .42, .2, pal.ink, -.6, 3.8, -.9, bridge, 12); D.cyl(.04, .04, 2.4, pal.ink, .6, 3.6, .6, bridge, 6);
+    var deck = [], DC = [pal.teal, pal.mustard, pal.plum, pal.sage, pal.coral, pal.teal, pal.rose, pal.mustard];
+    for (var dz = 0; dz < 2; dz++) for (var dx = 0; dx < 4; dx++) { var c = D.box(2.4, 1.0, 1.3, DC[dz * 4 + dx], -3.6 + dx * 2.7, 2.3, -.9 + dz * 1.8, ship); deck.push(c); }
+    /* the crane: a portal on the quay, a boom out over the ship, a trolley with a spreader on cables */
+    var crane = D.group(-.6, .5, -2.2); crane.name = 'gantry crane'; hot.push(crane);
+    [[-2.2, -2.6], [2.2, -2.6], [-2.2, 1.0], [2.2, 1.0]].forEach(function (p) { D.box(.5, 8, .5, pal.coral, p[0], 4, p[1], crane); D.box(1.2, .5, 1.2, pal.ink, p[0], .25, p[1], crane); });
+    D.box(5.2, .6, .6, pal.coral, 0, 8.2, -2.6, crane); D.box(5.2, .6, .6, pal.coral, 0, 8.2, 1.0, crane);
+    D.box(.6, .6, 13, pal.coral, -2.2, 8.5, 1.4, crane); D.box(.6, .6, 13, pal.coral, 2.2, 8.5, 1.4, crane);
+    [-5, -1, 3, 7].forEach(function (z) { D.box(4.4, .2, .3, pal.coral, 0, 8.3, z, crane); });
+    D.box(1.4, 1.6, 2.0, pal.paper, 2.2, 7.1, -.8, crane); D.box(1.0, .5, .06, pal.sky, 2.2, 7.3, .22, crane, { shadow: false });
+    var beacon = D.box(.2, .2, .2, pal.bad, 0, 9.1, -2.6, crane, { mat: { emissive: pal.bad, emissiveIntensity: 1.2 }, shadow: false });
+    D.box(2.0, 1.8, 1.6, pal.paper, 0, .9, -.4, crane); D.box(.8, .5, .06, pal.sky, 0, 1.2, .41, crane, { shadow: false }); D.box(.7, .3, .06, pal.ink, 0, 1.6, -1.21, crane, { shadow: false });
+    var trolley = D.group(0, 8.9, 0, crane); D.box(3.6, .5, 1.6, pal.ink, 0, 0, 0, trolley);
+    var cables = [-1.2, 1.2].map(function (x) { return D.box(.06, 6, .06, pal.ink, x, -3, 0, trolley, { shadow: false }); });
+    var spreader = D.group(0, -6, 0, trolley); D.box(2.6, .3, 1.4, pal.mustard, 0, 0, 0, spreader);
+    var carried = D.box(2.4, 1.0, 1.3, pal.teal, 0, -.65, 0, spreader);
+    var landing = D.box(2.4, 1.0, 1.3, pal.teal, 0, 1.0, -2.4, crane); landing.visible = false;
+    /* the stack, the gate, the office, the furniture */
+    var stack = D.group(11, .5, -3.0); [[0, 0, pal.plum], [2.7, 0, pal.sage], [0, 1.8, pal.mustard], [2.7, 1.8, pal.teal], [1.35, .9, pal.coral]].forEach(function (q, k) { D.box(2.4, 1.0, 1.3, q[2], q[0], .5 + (k === 4 ? 1.0 : 0), q[1], stack); });
+    var gate = D.group(4, .5, -6.6); gate.rotation.y = Math.PI / 2; D.box(.3, 2.6, .3, pal.steel, -1.6, 1.3, 0, gate); D.box(.3, 2.6, .3, pal.steel, 1.6, 1.3, 0, gate); D.box(3.6, .3, .4, pal.mustard, 0, 2.7, 0, gate);
+    var arm = D.group(1.6, 1.5, .25, gate); D.box(3.0, .1, .1, pal.mustard, -1.5, 0, 0, arm); [-.6, -1.4, -2.2].forEach(function (x) { D.box(.3, .12, .12, pal.bad, x, 0, 0, arm, { shadow: false }); });
+    var office = D.group(12, .5, -9.0); office.name = 'harbour office'; hot.push(office);
+    D.box(4.4, 2.6, 3, pal.paper, 0, 1.3, 0, office); D.box(4.7, .3, 3.3, pal.slate, 0, 2.75, 0, office); [-1.3, 0, 1.3].forEach(function (x) { D.box(.8, .7, .06, pal.sky, x, 1.5, 1.52, office, { shadow: false, mat: { emissive: pal.sky, emissiveIntensity: .4 } }); });
+    D.box(.7, 1.3, .06, pal.ink, 1.4, .65, -1.52, office, { shadow: false }); var flag = D.props.flag(2.6, 1.0, office, { h: 3.4, color: pal.coral });
+    [[-4, -13.6], [6, -13.6], [18.4, -5.6], [-8.6, -13.6]].forEach(function (p) { D.props.lamp(p[0], p[1], null).position.y = .5; });
+    [[7.6, -3.6], [8.6, -3.6]].forEach(function (p, k) { D.props.crate(p[0], .5 + (k ? .8 : 0), p[1], null, { w: .8, h: .8, d: .8 }); });
+    D.props.cone(-4.6, -4.0).position.y = .5; D.props.cone(-5.3, -4.3).position.y = .5;
+    [[18.2, -2.2], [18.0, -.4], [-10.3, -3.4]].forEach(function (p, k) { D.props.tree(p[0], p[1], null, { r: .5 + k * .08, kind: k === 1 ? 'pine' : 'round', yaw: k }).position.y = .5; });
+    D.props.rock(-20.5, 10.4, null, { r: .7, h: .5 }); D.props.rock(-19, 11.6, null, { r: .45, yaw: 1 }); D.props.rock(20.6, 12, null, { r: .5 });
+    /* the breakwater: a stone mole in the basin with a lighthouse at its end */
+    D.slab(3, 11, pal.mist, -19.5, .4, 0, null, { h: .4, r: .8, side: pal.slate }); D.props.rock(-19.6, -4.6, null, { r: .6, h: .5, yaw: 2 });
+    var light = D.group(-19.5, .4, 3.6); D.cyl(.6, .7, .5, pal.slate, 0, .25, 0, light, 12); D.cyl(.42, .5, 2.4, pal.paper, 0, 1.7, 0, light, 12); D.cyl(.47, .47, .5, pal.bad, 0, 1.9, 0, light, 12);
+    D.cyl(.5, .5, .15, pal.ink, 0, 2.95, 0, light, 12); var lamp = D.ball(.3, pal.lampGlow, 0, 3.3, 0, light); lamp.material = D.mat(pal.lampGlow, { emissive: pal.lampGlow, emissiveIntensity: 1.2 }).clone(); D.cone(.5, .5, pal.ink, 0, 3.85, 0, light, 12);
+    var buoy = D.group(15, .4, 4); buoy.name = 'channel buoy'; hot.push(buoy); D.cyl(.35, .45, .8, pal.bad, 0, .4, 0, buoy, 10); D.cone(.35, .6, pal.bad, 0, 1.1, 0, buoy, 10); D.ball(.12, pal.mustard, 0, 1.45, 0, buoy);
+    /* the tractor: a cab and a flat trailer with a container, on a lap of the quay road */
+    var truck = D.group(0, .5, 0), tw = []; truck.name = 'transport truck'; hot.push(truck);
+    D.box(1.4, 1.6, 1.8, pal.mustard, 1.9, 1.1, 0, truck); D.box(.08, .7, 1.5, pal.ink, 2.62, 1.3, 0, truck, { shadow: false }); D.box(4.6, .3, 1.6, pal.steel, -1.2, .7, 0, truck);
+    var load = D.box(2.4, 1.0, 1.3, pal.plum, -1.0, 1.35, 0, truck);
+    [1.8, -1.0, -2.6].forEach(function (x) { [-.9, .9].forEach(function (z) { tw.push(D.wheel(.34, .3, pal.tyre, x, .34, z, truck)); }); });
+    var lap = D.path([[-8.2, -12], [16.2, -12], [16.2, -6.6], [-8.2, -6.6]], true, 2.4);
+    /* the tug, on a lap in the basin, with a wake */
+    var tug = D.group(0, 0, 0); tug.name = 'harbor tugboat'; hot.push(tug);
+    D.rbox(3.2, .8, 1.5, pal.coral, 0, .4, 0, tug, { r: .2 }); D.box(2.8, .12, 1.3, pal.paper, 0, .8, 0, tug); D.box(1.2, 1.0, 1.1, pal.paper, -.4, 1.35, 0, tug); D.box(.9, .45, .06, pal.ink, .22, 1.5, .56, tug, { shadow: false });
+    D.cyl(.18, .22, .7, pal.ink, -.9, 2.1, 0, tug, 10); D.box(.3, .3, .3, pal.mustard, -1.2, 1.0, 0, tug);
+    var wake = D.box(1.8, .02, .6, pal.line, -2.3, .04, 0, tug, { shadow: false, mat: { transparent: true, opacity: .7 } });
+    var basin = D.path([[-15, -9], [-15.5, 2], [-13, 9], [-3, 12], [10, 12.5], [18, 9], [12, 8.5], [0, 9], [-9, 6], [-13, -2]], true, 3);
+    function gull(parent) { var g = D.group(0, 0, 0, parent); var l = D.box(.5, .03, .14, pal.paper, -.26, 0, 0, g, { shadow: false }), r = D.box(.5, .03, .14, pal.paper, .26, 0, 0, g, { shadow: false }); D.box(.18, .06, .12, pal.cloud, 0, 0, 0, g, { shadow: false }); return { g: g, l: l, r: r }; }
+    var gulls = [gull(), gull()], fly = D.path([[-20, 2], [-6, 8], [8, 9], [20, 2]]);
+    return { ground: ground, hot: hot, ship: ship, crane: crane, trolley: trolley, spreader: spreader, cables: cables, carried: carried, landing: landing, deck: deck, beacon: beacon, truck: truck, tw: tw, load: load, lap: lap, tug: tug, wake: wake, basin: basin, gulls: gulls, fly: fly, waves: waves, flag: flag, arm: arm, lamp: lamp, buoy: buoy, base: 0, lastPress: -1, lift: {} };
+    ` : (category === 'space' || category === 'launchpad' || primarySubject === 'rocket') ? `
+    var ground = D.slab(11, 9, pal.ground, 0, 0, 0, null, { h: .6, r: 1.2, side: pal.base });
+    D.box(7.5, .03, 7, pal.asphalt, .4, .04, .2, null, { shadow: false });
+    D.cyl(2.2, 2.2, .3, pal.cloud, 1.2, .15, .6, null, 24); D.cyl(1.6, 1.6, .06, pal.ink, 1.2, .3, .6, null, 24);
+    [[-3.2, 3.2], [4.4, 3.4], [4.6, -3.0], [-3.4, -3.1]].forEach(function (p) { D.props.lamp(p[0], p[1], null, { h: 2.8 }); });
+    var rocket = D.group(1.2, .3, .6); rocket.name = 'rocket'; hot.push(rocket);
+    var engine = D.group(0, 0, 0, rocket), body = D.group(0, 0, 0, rocket), nose = D.group(0, 0, 0, rocket);
+    D.cyl(.3, .45, .5, pal.steel, 0, .5, 0, engine, 14);
+    [0, 1, 2, 3].forEach(function (k) { var f = D.wedge(.08, .9, .7, pal.accent, 0, .4, 0, engine); f.position.set(Math.cos(k * Math.PI / 2) * .62, .35, Math.sin(k * Math.PI / 2) * .62); f.rotation.y = -k * Math.PI / 2 + Math.PI / 2; });
+    D.cyl(.5, .5, 3.4, pal.paper, 0, 2.4, 0, body, 20); D.cyl(.52, .52, .5, pal.accent, 0, 1.1, 0, body, 20); D.cyl(.52, .52, .3, pal.accent, 0, 3.6, 0, body, 20);
+    D.box(.5, .4, .06, pal.sky, 0, 3.1, .5, body, { shadow: false, mat: { emissive: pal.sky, emissiveIntensity: .4 } });
+    D.cyl(.5, .5, .2, pal.paper, 0, 4.2, 0, nose, 20); D.cone(.5, 1.2, pal.accent, 0, 4.9, 0, nose, 20);
+    var apart = D.apart([{ g: nose, y: 1.5 }, { g: body, y: .7 }], { stagger: .08 });
+    var flame = D.group(0, .2, 0, rocket); var f1 = D.cone(.42, 1.6, pal.mustard, 0, -.8, 0, flame, 12); f1.rotation.x = Math.PI; f1.castShadow = false; f1.material = D.mat(pal.mustard, { emissive: pal.mustard, emissiveIntensity: 1.6 });
+    var f2 = D.cone(.26, 2.4, pal.accent, 0, -1.2, 0, flame, 12); f2.rotation.x = Math.PI; f2.castShadow = false; f2.material = D.mat(pal.accent, { emissive: pal.accent, emissiveIntensity: 1.2 });
+    var smoke = []; [0, 1, 2, 3, 4].forEach(function (k) { var s = D.ball(.35, pal.cloud, 0, 0, 0, null); s.castShadow = false; smoke.push(s); });
+    var vent = []; [0, 1, 2].forEach(function (k) { var v = D.ball(.16, pal.cloud, 0, 0, 0, null); v.castShadow = false; vent.push(v); });
+    var gantry = D.group(-.6, 0, .6); gantry.name = 'gantry'; hot.push(gantry);
+    [[-.4, -.4], [.4, -.4], [-.4, .4], [.4, .4]].forEach(function (p) { D.box(.12, 6.2, .12, pal.steel, p[0], 3.1, p[1], gantry); });
+    [1.2, 2.4, 3.6, 4.8, 6.0].forEach(function (y) { D.box(.95, .08, .95, pal.steel, 0, y, 0, gantry); });
+    D.box(.3, .3, .3, pal.steel, .5, 4.2, 0, gantry); var arm = D.group(.6, 4.2, 0, gantry); D.box(.7, .16, .4, pal.mustard, .35, 0, 0, arm); D.box(.2, .5, .5, pal.mustard, .7, .1, 0, arm);
+    var beacon = D.box(.16, .16, .05, pal.bad, 0, 6.3, .5, gantry, { mat: { emissive: pal.bad, emissiveIntensity: 1.5 }, shadow: false });
+    var tank = D.group(4.0, 0, 2.6); D.cyl(.8, .8, 2.4, pal.cloud, 0, 1.2, 0, tank, 18); D.dome(.8, pal.cloud, 0, 2.4, 0, tank); D.cyl(.82, .82, .15, pal.steel, 0, 1.0, 0, tank, 18);
+    D.cyl(.06, .06, 3.2, pal.steel, 2.4, .2, 1.6, null, 8).rotation.z = Math.PI / 2;
+    var bunker = D.group(-3.2, 0, -2.4); bunker.rotation.y = .3; bunker.name = 'control room'; hot.push(bunker);
+    D.box(3.2, 1.4, 2.2, pal.paper, 0, .7, 0, bunker); D.box(3.4, .2, 2.4, pal.slate, 0, 1.5, 0, bunker);
+    [-.9, 0, .9].forEach(function (x) { D.box(.6, .5, .06, pal.sky, x, .8, 1.12, bunker, { shadow: false, mat: { emissive: pal.sky, emissiveIntensity: .9 } }); });
+    var dish = D.group(-1.1, 1.6, -.5, bunker); D.cyl(.05, .05, .5, pal.steel, 0, .25, 0, dish, 6); var disc = D.cyl(.42, .3, .1, pal.cloud, 0, .55, 0, dish, 14); disc.rotation.x = -.9; D.cyl(.03, .03, .4, pal.steel, 0, .6, .25, dish, 6).rotation.x = -.9;
+    D.cyl(.04, .04, 1.6, pal.steel, 1.2, 2.3, -.6, bunker, 6); D.ball(.12, pal.bad, 1.2, 3.1, -.6, bunker).material = D.mat(pal.bad, { emissive: pal.bad, emissiveIntensity: 1.5 });
+    var tech = D.props.person(0, 0, null, { shirt: pal.mustard, hat: pal.paper }), walk = D.path([[-3.0, 3.5], [1.6, 3.5]]);
+    D.props.rock(-4.2, 3.4, null, { r: .3 }); D.props.bush(4.6, -3.6, null, { r: .35 }); D.props.bush(-4.4, -3.6, null, { r: .28 });
+    return { ground: ground, hot: hot, rocket: rocket, apart: apart, bunker: bunker, flame: flame, smoke: smoke, vent: vent, dish: dish, tech: tech, walk: walk, arm: arm, beacon: beacon, base: 0, lastPress: -1, lift: {} };
     ` : category === 'lighthouse' ? `
     // Ocean Water Slab & Stepped Rock Cliff Island
     var ground = D.slab(11.5, 9.0, pal.sky, 0, 0, 0, null, { h: 0.5, r: 0.8, side: pal.cobalt });
@@ -5494,6 +5591,140 @@ Any3d.figure({
     if (p.radar) p.radar.rotation.y = t * 3.0;
     if (p.beam) p.beam.rotation.y = t * 2.2;
     if (p.fountainJet) p.fountainJet.position.y = 1.1 + Math.sin(t * 8) * 0.08;
+
+    // Container Gantry Crane Active Hoist & Trolley Animation
+    if (p.crane && p.trolley && p.spreader) {
+      if (ctx.pressed === p.crane && ctx.pressedAt !== p.lastPress) {
+        p.lastPress = ctx.pressedAt;
+        if (D.phase(t - (p.base || 0) + 9, 18) * 18 >= 15) p.base = t + 9;
+      }
+      var T = D.phase(t - (p.base || 0) + 9, 18) * 18, zShip = 4.7, zQuay = -2.4, z, drop, loaded, read;
+      if (T < 3) { z = D.lerp(zQuay, zShip, D.inOut(T / 3)); drop = 0; loaded = false; read = 'crane · out to the ship'; }
+      else if (T < 5) { z = zShip; drop = D.smooth((T - 3) / 2) * 4.25; loaded = false; read = 'crane · down to the deck'; }
+      else if (T < 5.5) { z = zShip; drop = 4.25; loaded = T > 5.25; read = 'crane · hooked on'; }
+      else if (T < 7.5) { z = zShip; drop = 4.25 * (1 - D.smooth((T - 5.5) / 2)); loaded = true; read = 'crane · lifting'; }
+      else if (T < 10.5) { z = D.lerp(zShip, zQuay, D.inOut((T - 7.5) / 3)); drop = 0; loaded = true; read = 'crane · over the quay'; }
+      else if (T < 12.5) { z = zQuay; drop = D.smooth((T - 10.5) / 2) * 5.05; loaded = true; read = 'crane · setting down'; }
+      else if (T < 13) { z = zQuay; drop = 5.05; loaded = T < 12.75; read = 'crane · released'; }
+      else if (T < 15) { z = zQuay; drop = 5.05 * (1 - D.smooth((T - 13) / 2)); loaded = false; read = 'crane · back up'; }
+      else { z = zQuay; drop = 0; loaded = false; read = 'crane · waiting'; }
+      p.trolley.position.z = z;
+      p.spreader.position.y = -2.2 - drop;
+      if (p.cables) p.cables.forEach(function (c) { c.scale.y = (2.2 + drop) / 6; c.position.y = -(2.2 + drop) / 2; });
+      if (p.carried) p.carried.visible = loaded;
+      if (p.deck && p.deck[0]) p.deck[0].visible = T < 5.25 || T >= 17.5;
+      if (p.landing) p.landing.visible = T >= 12.75 && T < 17;
+      ctx.read = read;
+      if (p.beacon && p.beacon.material) p.beacon.material.emissiveIntensity = D.phase(t, 1.1) < 0.5 ? 1.4 : 0.15;
+    }
+
+    // Transport Trucks Lapping Quay Road with Barrier Arm
+    if (p.truck && p.lap) {
+      var L = p.lap.length, U = D.phase(t, 26) * 26, gateAt = L * 0.66, dist;
+      if (U < 11) dist = D.inOut(U / 11) * gateAt;
+      else if (U < 15) dist = gateAt;
+      else dist = gateAt + D.inOut((U - 15) / 11) * (L - gateAt);
+      var open = U < 14 ? 0 : U < 15 ? D.smooth(U - 14) : U < 19.5 ? 1 : U < 20.5 ? 1 - D.smooth(U - 19.5) : 0;
+      if (p.arm) p.arm.rotation.z = -1.35 * open;
+      D.place(p.truck, p.lap, dist);
+      if (p.tw) D.spin(p.tw, dist, 0.34);
+    }
+
+    // Harbor Tugboat Basin Navigation & Wave Bobbing
+    if (p.tug && p.basin) {
+      var td = D.phase(t, 34) * p.basin.length;
+      D.place(p.tug, p.basin, td);
+      p.tug.position.y = 0.02 + 0.05 * D.wave(t, 2.4);
+      p.tug.rotation.z = 0.03 * D.wave(t, 2.0);
+      p.tug.rotation.x = 0.02 * D.wave(t, 3.1);
+    }
+
+    // Animated Ocean Waves
+    if (p.waves) {
+      var wrapX = function (x) { return ((x + 21) % 42 + 42) % 42 - 21; };
+      p.waves.forEach(function (w, k) {
+        w.scale.x = 0.6 + 0.5 * (D.wave(t, 3.5, k * 0.17) * 0.5 + 0.5);
+        var x0 = w.userData.x0 == null ? (w.userData.x0 = w.position.x) : w.userData.x0;
+        w.position.x = wrapX(x0 + 0.25 * t * (k % 2 ? 1 : -1));
+      });
+    }
+
+    // Overhead Gliding Gulls
+    if (p.gulls && p.fly) {
+      p.gulls.forEach(function (g, k) {
+        var u = D.phase(t, 24, k * 0.45), s = p.fly.at(u * p.fly.length);
+        g.g.position.set(s.x, 8.5 + k * 0.9 + 0.3 * D.wave(t, 3, k), s.z);
+        g.g.rotation.y = s.yaw;
+        var flap = 0.6 * D.wave(t, 0.45, k * 0.3);
+        g.l.rotation.x = flap;
+        g.r.rotation.x = -flap;
+      });
+    }
+
+    // Channel Buoy & Lighthouse Beacon
+    if (p.buoy) {
+      p.buoy.position.y = 0.4 + 0.08 * D.wave(t, 2.2);
+      p.buoy.rotation.z = 0.08 * D.wave(t, 1.8);
+    }
+    if (p.lamp && p.lamp.material) p.lamp.material.emissiveIntensity = 0.3 + 1.2 * D.pulse(t, 4, 0.3);
+    if (p.flag && p.flag.cloth) p.flag.cloth.rotation.y = 0.25 * D.wave(t, 2.1) + 0.1 * D.wave(t, 0.7);
+
+    // Rocket Launchpad Staged Launch Animation
+    if (p.rocket && p.apart) {
+      if (ctx.pressed === p.bunker && ctx.pressedAt !== p.lastPress) {
+        p.lastPress = ctx.pressedAt;
+        if (D.phase(t - (p.base || 0), 20) * 20 < 12) p.base = t - 12;
+      }
+      var T2 = D.phase(t - (p.base || 0), 20) * 20;
+      var armOut = D.smooth((T2 - 12) / 1.5) * (1 - D.smooth((T2 - 18.5) / 1.2));
+      if (p.arm) p.arm.rotation.y = -1.6 * armOut;
+      var burn = T2 > 13.5 && T2 < 18, u2 = D.clamp((T2 - 13.5) / 4.5, 0, 1), rise = u2 * u2 * 16;
+      p.rocket.position.y = 0.3 + rise;
+      var back = D.smooth((T2 - 18) / 1.5);
+      if (T2 >= 18) p.rocket.position.y = 0.3 + 16 * (1 - back);
+      ctx.read = T2 < 12 ? 'on the pad · T−' + Math.ceil(12 - T2) + ' s' : T2 < 13.5 ? 'arm away · ignition' : T2 < 18 ? 'lift-off · ' + Math.round(rise) + ' m' : 'back on the pad';
+      p.apart.open((ctx.hover === p.rocket || ctx.active === p.rocket) && !(T2 >= 12 && T2 < 18));
+      p.apart.step(ctx.dt);
+      if (p.beacon && p.beacon.material) p.beacon.material.emissiveIntensity = D.phase(t, 1.2) < 0.5 ? 1.6 : 0.15;
+      if (p.dish) p.dish.rotation.y = t * 0.5;
+      if (p.tech && p.walk) {
+        var W = D.phase(t, 11), wd = W < 0.5 ? D.smooth(W * 2) : 1 - D.smooth((W - 0.5) * 2);
+        D.place(p.tech, p.walk, wd * p.walk.length);
+        if (W >= 0.5) p.tech.rotation.y += Math.PI;
+        p.tech.position.y = 0.05 * Math.abs(D.wave(t, 0.5));
+      }
+      if (p.vent) {
+        p.vent.forEach(function (v, k) {
+          var w = D.phase(t, 2.4, k * 0.33);
+          v.position.set(4.0 + 0.35 + 0.1 * D.wave(t, 1.3, k), 2.55 + w * 1.1, 2.6 - 0.3 + 0.08 * D.wave(t, 0.9, k));
+          v.scale.setScalar((0.5 + w) * (1 - w) * 2 + 0.1);
+        });
+      }
+      if (p.flame) {
+        p.flame.visible = burn;
+        p.flame.scale.set(1, 0.8 + 0.5 * Math.abs(D.wave(t, 0.15)) + 0.6 * u2, 1);
+      }
+      if (p.smoke) {
+        p.smoke.forEach(function (s, k) {
+          var on = burn && u2 < 0.8;
+          var v = D.phase(t, 1.1, k * 0.2);
+          s.visible = on;
+          s.position.set(1.2 + Math.cos(k * 1.26) * (0.4 + v * 1.6), 0.5 + v * 0.6, 0.6 + Math.sin(k * 1.26) * (0.4 + v * 1.6));
+          s.scale.setScalar(0.5 + v * 1.1);
+        });
+      }
+    }
+
+    // Interactive Hover Spring Lifts
+    if (p.hot && p.lift) {
+      p.hot.forEach(function (g) {
+        if (!g) return;
+        var s = p.lift[g.id] || (p.lift[g.id] = D.spring(120, 18));
+        s.t = ctx.hover === g ? 0.35 : 0;
+        s.step(ctx.dt);
+        g.position.y = (g.userData.y0 == null ? (g.userData.y0 = g.position.y) : g.userData.y0) + s.x + (g === p.tug ? 0.02 + 0.05 * D.wave(t, 2.4) : 0);
+      });
+    }
     if (p.ship) {
       p.ship.position.y = 0.15 + Math.sin(a) * 0.06;
       p.ship.rotation.z = Math.cos(a) * 0.04;

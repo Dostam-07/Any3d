@@ -58,20 +58,40 @@ export function toolkit(parent) {
     if (!materials.has(color)) materials.set(color, new THREE.MeshStandardMaterial({ color, roughness: 1, flatShading: true }));
     return materials.get(color);
   };
+  function resolveParent(c) {
+    return (c && typeof c.add === 'function') ? c : parent;
+  }
   function group(x = 0, y = 0, z = 0, container = parent) {
-    const g = new THREE.Group(); g.position.set(x, y, z); container.add(g); return g;
+    const g = new THREE.Group(); g.position.set(x, y, z);
+    resolveParent(container).add(g);
+    return g;
   }
   function mesh(geo, color, x, y, z, container = parent) {
-    const m = new THREE.Mesh(geo, material(color)); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; container.add(m); return m;
+    const m = new THREE.Mesh(geo, material(color));
+    m.position.set(x, y, z);
+    m.castShadow = m.receiveShadow = true;
+    resolveParent(container).add(m);
+    return m;
   }
   function box(w, h, d, color, x = 0, y = 0, z = 0, container = parent) {
-    const m = mesh(geometry('box', () => new THREE.BoxGeometry(1, 1, 1)), color, x, y, z, container); m.scale.set(w, h, d); return m;
+    const m = mesh(geometry('box', () => new THREE.BoxGeometry(1, 1, 1)), color, x, y, z, container);
+    m.scale.set(w, h, d);
+    return m;
   }
   function ball(r, color, x = 0, y = 0, z = 0, container = parent) {
-    const m = mesh(geometry('ball', () => new THREE.IcosahedronGeometry(1, 1)), color, x, y, z, container); m.scale.setScalar(r); return m;
+    const m = mesh(geometry('ball', () => new THREE.IcosahedronGeometry(1, 1)), color, x, y, z, container);
+    m.scale.setScalar(r);
+    return m;
   }
   function cylinder(r, h, color, x = 0, y = 0, z = 0, container = parent, segments = 8) {
-    const m = mesh(geometry(`cyl${segments}`, () => new THREE.CylinderGeometry(1, 1, 1, segments)), color, x, y, z, container); m.scale.set(r, h, r); return m;
+    if (typeof container === 'number') {
+      segments = container;
+      container = parent;
+    }
+    const safeSegments = typeof segments === 'number' ? segments : 8;
+    const m = mesh(geometry(`cyl${safeSegments}`, () => new THREE.CylinderGeometry(1, 1, 1, safeSegments)), color, x, y, z, container);
+    m.scale.set(r, h, r);
+    return m;
   }
   function line(points, color, width = .035, container = parent) {
     const g = group(0, 0, 0, container);
@@ -84,9 +104,14 @@ export function toolkit(parent) {
     return g;
   }
   function ring(radius, color, x, y, z, container = parent, tube = .028, arc = Math.PI * 2) {
+    if (typeof container === 'number') {
+      tube = container;
+      container = parent;
+    }
     const key = `ring:${radius}:${tube}:${arc}`;
     const m = mesh(geometry(key, () => new THREE.TorusGeometry(radius, tube, 4, 64, arc)), color, x, y, z, container);
-    m.rotation.x = -Math.PI / 2; return m;
+    m.rotation.x = -Math.PI / 2;
+    return m;
   }
   function surface(width, depth, color, x = 0, y = .03, z = 0, seed = 12, variation = .13) {
     const rng = seeded(seed), canvas = document.createElement('canvas'); canvas.width = canvas.height = 256;

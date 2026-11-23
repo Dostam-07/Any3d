@@ -419,7 +419,7 @@ function SandboxPreviewInner({
       {/* Top Floating Controls Bar — single-row clubbed actions */}
       <div
         className={
-          'min-h-11 px-2.5 py-1.5 border-b border-white/[0.08] bg-[#0c0e17]/95 backdrop-blur-md items-center justify-between gap-2 z-10 shrink-0 w-full overflow-x-auto scrollbar-none ' +
+          'min-h-11 px-2.5 py-1.5 border-b border-white/[0.08] bg-[#0c0e17]/95 backdrop-blur-md items-center justify-between gap-2 z-10 shrink-0 w-full overflow-x-auto scrollbar-none flex-nowrap ' +
           (hideControls ? 'hidden' : 'flex')
         }
       >
@@ -459,7 +459,7 @@ function SandboxPreviewInner({
         ) : (
           /* Normal 3D Scene View: Clubbed controls in ONE single slender row */
           <>
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 flex-nowrap">
               {/* Club 1: Environment & Lighting */}
               <LookScrubber look={sceneLook} onChange={handleLookChange} />
 
@@ -609,7 +609,7 @@ function SandboxPreviewInner({
                   }`}
                 >
                   <Compass className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                  <span className="font-mono text-[11px] uppercase">{activeCamera}</span>
+                  <span className="font-mono text-[11px] uppercase hidden sm:inline">{activeCamera}</span>
                   <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${cameraMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -662,7 +662,7 @@ function SandboxPreviewInner({
                   }`}
                 >
                   <Frame className="w-3.5 h-3.5 text-purple-400 shrink-0" />
-                  <span className="capitalize text-[11px] font-medium">{currentSize}</span>
+                  <span className="capitalize text-[11px] font-medium hidden sm:inline">{currentSize}</span>
                   <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${sizeMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -698,7 +698,7 @@ function SandboxPreviewInner({
             </div>
 
             {/* Right Group: Playback, AnyStack, Snapshot, Fullscreen */}
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 flex-nowrap">
               {/* Play / Pause Toggle & Speed */}
               <div className="flex items-center rounded-xl bg-zinc-900/90 border border-white/[0.08] p-0.5 shrink-0">
                 <button
@@ -707,7 +707,7 @@ function SandboxPreviewInner({
                   className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 shrink-0"
                 >
                   {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
-                  <span className="text-[11px]">{isPaused ? 'Still' : 'Loop'}</span>
+                  <span className="text-[11px] hidden sm:inline">{isPaused ? 'Still' : 'Loop'}</span>
                 </button>
 
                 {/* Worlds Speed Selector */}
@@ -736,7 +736,7 @@ function SandboxPreviewInner({
                 }`}
               >
                 <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="text-[11px]">AnyStack</span>
+                <span className="text-[11px] hidden sm:inline">AnyStack</span>
               </button>
 
               {/* Snapshot PNG Button */}
@@ -746,7 +746,7 @@ function SandboxPreviewInner({
                 className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-medium bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 shrink-0"
               >
                 <Camera className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="text-[11px]">PNG</span>
+                <span className="text-[11px] hidden sm:inline">PNG</span>
               </button>
 
               {/* Reload Button */}

@@ -186,13 +186,13 @@ export function extractPromptSemantics(rawPrompt) {
   const hasCity = !hasBus && /\b(city|metropolis|downtown|urban|skyline|city\s*street|street\s*corner|street|avenue|boulevard|crossroad|crossroads|cityscape|town|skyscraper|skyscrapers|tram|traffic|crosswalk|cobblestone|crane)\b/i.test(corpus);
   const hasFarm = /\b(farm|farmstead|farmland|barn|farmhouse|ranch|countryside|pasture|crop|crops|orchard|tractor|hay|silo|livestock|windmill|windpump)\b/i.test(corpus);
   const hasPark = /\b(park|botanical|meadow|nature\s*park|greenery|campsite|camping)\b/i.test(corpus);
-  const hasHarbor = /\b(harbor|harbour|port|pier|dock|docks|marina|wharf|seaport|quay|dockyard|container\s*ship|cargo\s*ship)\b/i.test(corpus);
+  const hasHarbor = /\b(harbor|harbour|port|pier|dock|docks|marina|wharf|seaport|quay|dockyard|container\s*ship|cargo\s*ship|container\s*terminal|freighter|gantry\s*crane|maritime|shipping|cargo|tugboat|marine\s*terminal)\b/i.test(corpus);
   const hasCastle = /\b(castle|fortress|medieval|kingdom|citadel|rampart|towers|stronghold)\b/i.test(corpus);
   const hasLighthouse = /\b(lighthouse|light\s*station|beacon\s*tower|rocky\s*island)\b/i.test(corpus);
   const hasClassroom = /\b(classroom|class\s*room|teacher|lesson|lecture|school\s*class|students|pupils|chalkboard|blackboard|desks?|chalk)\b/i.test(corpus);
   const hasSports = /\b(badminton|tennis|court|ping\s*pong|table\s*tennis|basketball|volleyball|soccer|football|racket|shuttlecock|referee)\b/i.test(corpus);
   const hasCampus = !hasClassroom && /\b(school|college|university|campus|academy|high\s*school|quadrangle|lecture\s*hall|dormitory)\b/i.test(corpus);
-  const hasAirport = /\b(airport|airfield|aerodrome|terminal|hangar|air\s*traffic\s*control|concourse|runway|tarmac)\b/i.test(corpus);
+  const hasAirport = /\b(airport|airfield|aerodrome|air\s*terminal|flight\s*terminal|hangar|air\s*traffic\s*control|concourse|runway|tarmac)\b/i.test(corpus) && !/\b(container|shipping|cargo|freighter|marine|maritime|port|quay|dock)\b/i.test(corpus);
   const hasSea = !hasHarbor && !hasLighthouse && !hasSubmarine && /\b(sea|ocean|open\s*water|deep\s*sea|marine|maritime|sailing|yacht|sailboat|schooner|beach|coast)\b/i.test(corpus);
 
   // 2. Identify High-Level Subject Type
@@ -235,6 +235,14 @@ export function extractPromptSemantics(rawPrompt) {
     category = 'park';
     primarySubject = 'park';
     environment = 'nature_park';
+  } else if (hasRocket) {
+    category = 'space';
+    primarySubject = 'rocket';
+    environment = 'launchpad';
+  } else if (hasHarbor) {
+    category = 'harbor';
+    primarySubject = 'harbor';
+    environment = 'coastal_harbor';
   } else if (hasLighthouse) {
     category = 'lighthouse';
     primarySubject = 'lighthouse';
@@ -243,10 +251,6 @@ export function extractPromptSemantics(rawPrompt) {
     category = 'airport';
     primarySubject = 'airport';
     environment = 'airport_terminal';
-  } else if (hasHarbor) {
-    category = 'harbor';
-    primarySubject = 'harbor';
-    environment = 'coastal_harbor';
   } else if (hasCampus) {
     category = 'campus';
     primarySubject = 'campus';

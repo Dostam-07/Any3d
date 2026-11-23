@@ -9,6 +9,8 @@
     "dev:client": "vite",
     "build": "node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build",
     "start": "node server/index.js",
+    "test": "npm run test:payload && npm run test:diff && node scripts/test-builds.mjs",
+    "test:builds": "node scripts/test-builds.mjs",
     "test:payload": "esbuild scripts/test-scene-payload.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/payload.test.mjs && node .tmp/payload.test.mjs",
     "test:diff": "esbuild scripts/test-diff.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/diff.test.mjs && node .tmp/diff.test.mjs",
     "preview": "vite preview"

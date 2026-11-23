@@ -192,7 +192,15 @@ export function App() {
   const [sessions, setSessions] = useState<SceneSession[]>(() => {
     try {
       const saved = localStorage.getItem('any3d_saved_sessions');
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+      const seen = new Set<string>();
+      return parsed.filter((s: SceneSession) => {
+        if (!s || !s.id || seen.has(s.id)) return false;
+        seen.add(s.id);
+        return true;
+      });
     } catch {
       return [];
     }
@@ -555,7 +563,7 @@ export function App() {
         messages: [userMsg],
         code: '',
       },
-      ...prev,
+      ...prev.filter((s) => s.id !== newSessId),
     ]);
     openProject(newSessId);
 
@@ -714,7 +722,7 @@ export function App() {
         messages: [userMsg, assistantMsg],
         code: preset.code,
       },
-      ...prev,
+      ...prev.filter((s) => s.id !== newSessId),
     ]);
     countSceneCreated();
     openProject(newSessId);
@@ -990,7 +998,7 @@ export function App() {
           messages: [],
           code: '',
         },
-        ...prev,
+        ...prev.filter((s) => s.id !== id),
       ]);
     }
 
