@@ -301,7 +301,7 @@ if (runtime) {
 }
 
 /**
- * Unified bundler supporting all 4 engines with smart auto-detection.
+ * Unified bundler supporting every engine with smart auto-detection.
  */
 export async function bundleScene(code, format = 'svg', look = null) {
   // The ordered-dither engine was removed; its scenes were Pixel.scene documents

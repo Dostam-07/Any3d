@@ -13,7 +13,7 @@ The previous roadmap ran phases 0–6. Most of it shipped; this version records 
 | 0 | Versioned scene payload + `#/s/` route | **Shipped** | `src/lib/scene-payload.ts`, trust gate, `npm run test:payload` — 369 assertions over 44 presets |
 | 1 | Share/remix links + "Remix this" | **Shipped, 1b open** | Share dialog and trust gate work; the preview iframe is still `allow-same-origin`; preset and export cards have no Remix entry point |
 | 2 | Turntable video/GIF export | **Shipped** | `src/lib/turntable.ts`, `ClipControl.tsx`, `scripts/verify-clip.mjs` (1080² WebM, 640² GIF); SVG video still lands at 9–12 fps |
-| 3 | Atmosphere: time of day + weather | **Partial** | Payload carries `look`; all four kernels contain the look path; SVG verified (mean luma 0.533 → 0.424 at night, 0 bundle requests while scrubbing). Worlds and Pixel visual parity is unmeasured (the ordered-dither engine has since been removed) |
+| 3 | Atmosphere: time of day + weather | **Partial** | Payload carries `look`; every kernel contains the look path; SVG verified (mean luma 0.533 → 0.424 at night, 0 bundle requests while scrubbing). Worlds and Pixel visual parity is unmeasured (the ordered-dither engine has since been removed) |
 | 4 | Diff, seed lock, surprise deck, Ask | **Shipped, one gap** | `src/lib/diff.ts` + `VersionDiff.tsx` (now also on the project page), seed plumbing, `surprise-deck.ts`, `/api/ask-scene`; locked-seed reproduction is still unmeasured |
 | 5 | Embed snippet + storyboard | **Shipped, verification gaps** | `public/embed.js` at 1,355 B gzipped; storyboard 2400×1350 with burned-in name; `file://` untested; no published demo; storyboard is SVG-only |
 | 6 | Image→palette, product-shot, multi-scene | **Partial** | `/api/extract-palette` + `PaletteFromPhoto` + guide shipped; product-shot and multi-scene not started |
@@ -57,7 +57,7 @@ The product makes claims that are not fully verified. Close those before adding 
 **A1 · Sandbox the preview and move exports into the bundle.**
 The share payload is executable code running same-origin, so it can read `localStorage` (including the Gemini key). Move PNG capture and GLB export inside the bundled scene over `postMessage`, then switch the iframe to `sandbox="allow-scripts"` without `allow-same-origin`.
 *Acceptance:* a shared scene cannot read the parent origin; PNG and GLB still export from project and Studio; the security note in the share dialog is removed because it is no longer needed. If a GLB converter cannot fit the size budget for vector scenes, disable GLB inside shared/embed contexts and say so in the UI.
-*Status:* shared payloads are sandboxed (`allow-scripts`, opaque origin) and PNG capture now runs inside the bundle on all four engines. GLB, clips and storyboards are gated for shared scenes until the bundle exporter lands.
+*Status:* shared payloads are sandboxed (`allow-scripts`, opaque origin) and PNG capture now runs inside the bundle on every engine. GLB, clips and storyboards are gated for shared scenes until the bundle exporter lands.
 
 **A2 · Measure locked-seed reproduction.** — DONE 2026-11-23
 `scripts/test-seed-lock.mjs` runs the same prompt twice through the deterministic procedural fallback across 6 prompt × format cases; all 6 are byte-identical (code identity). Model-path (Ollama/Gemini) seed reproduction requires a live provider and is documented in the script; the claim is softened to “procedural fallback is deterministic; model output reproducible only when provider/model/temperature/seed are fixed.”
@@ -81,7 +81,7 @@ Chat editing is the product’s differentiator, but the instant path only covers
 Added an **Undo** button in the ProjectPage composer (next to Surprise), backed by `/undo`. It restores the previous checkpoint (`codeVersions[length-2]`) without creating a new one; repeated Undo walks back versions. No new checkpoint is added.
 
 **B3 · Resolve references and recover from failure.** — DONE (Phase 2)
-Pronoun resolution ("it"/"that"/"the last thing") works for add/remove/move across all four engines via `/*a3d:...*/` markers. Color change ("make it red", "change it to blue") works on SVG, Pixel and Worlds (when the target's creation line carries visible hex colors). Failed offline edits reply with two concrete rephrasings instead of a generic failure.
+Pronoun resolution ("it"/"that"/"the last thing") works for add/remove/move across every engine via `/*a3d:...*/` markers. Color change ("make it red", "change it to blue") works on SVG, Pixel and Worlds (when the target's creation line carries visible hex colors). Failed offline edits reply with two concrete rephrasings instead of a generic failure.
 
 ---
 

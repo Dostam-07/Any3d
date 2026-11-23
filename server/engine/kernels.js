@@ -35,8 +35,3 @@ export function getPixelBenchTemplate() {
   const benchPath = path.join(rootDir, 'core', 'templates', 'pixel-bench.html');
   return fs.readFileSync(benchPath, 'utf8').replace(/\r\n/g, '\n');
 }
-
-export function getDitherBenchTemplate() {
-  const benchPath = path.join(rootDir, 'core', 'templates', 'dither-bench.html');
-  return fs.readFileSync(benchPath, 'utf8').replace(/\r\n/g, '\n');
-}
