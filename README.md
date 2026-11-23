@@ -187,6 +187,7 @@ See `docs/ROADMAP.md` for the full roadmap v2. Highlights:
 
 ---
 
+<<<<<<< HEAD
 
 
 ---
@@ -194,3 +195,6 @@ See `docs/ROADMAP.md` for the full roadmap v2. Highlights:
 ## License
 
 MIT. See `LICENSE` for details.
+=======
+**Can I use it on a phone?** Yes, the project page stacks into a single column.
+>>>>>>> 9d8a50a7bfb21b0e980fdc101e6c1279aecd4042
