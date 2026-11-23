@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const STUDIO = 'http://localhost:5173/#/studio';
+const STUDIO = `${process.env.A3D_URL || 'http://localhost:5173'}/#/studio`;
 const log = (...a) => console.log(...a);
 const fail = (msg) => { log('FAIL:', msg); process.exitCode = 1; };
 
@@ -49,6 +49,11 @@ const sample = () => frame.evaluate((f) => {
     weatherNodes: doc.querySelectorAll('.weather > *').length,
   };
 });
+
+// The look controls live in a popover now, opened from the button that shows
+// the current stop: click it before reaching for the slider and the chips.
+await page.getByRole('button', { name: /^(Dawn|Noon|Dusk|Night)( |$)/ }).first().click();
+await page.waitForTimeout(300);
 
 const noon = await sample();
 log('1. noon:', JSON.stringify(noon));

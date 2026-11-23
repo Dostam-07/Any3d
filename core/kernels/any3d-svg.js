@@ -128,6 +128,10 @@
      D.place(group, path, dist)      put a group on a path, its local +x facing along it (build vehicles nose toward +x)
      D.spin(meshes, dist, r)         roll wheels by distance travelled
      D.stagger(i, from, step)        |i − from| · step
+
+     Every primitive above coerces a non-finite size, position or segment count instead of trusting it: a bad
+     number never throws inside the painter and never blanks the scene. scripts/verify-svg-api.mjs walks this
+     list in CI and fails if a documented call disappears or stops drawing.
    ============================================================================ */
 var Any3d = (function () {
   'use strict';
@@ -407,9 +411,14 @@ var Any3d = (function () {
       return MATS[k];
     }
     function resolveParent(p) { return (p && typeof p.add === 'function') ? p : world; }
+    /* A bad number in a figure must never reach the painter: a NaN extent or a
+       non-numeric segment count used to throw inside draw(), which blanked the
+       whole scene. Coerce, and keep every default the same. */
+    function num(v, d) { return typeof v === 'number' && isFinite(v) ? v : d; }
+    function segN(v, d) { var n = Math.floor(num(v, d)); return n >= 3 ? Math.min(n, 96) : d; }
     function mesh(g, c, x, y, z, parent, o) {
       var m = new Mesh(g, mat(c, o && o.mat));
-      m.position.set(x || 0, y || 0, z || 0); m.castShadow = !(o && o.shadow === false); m.receiveShadow = true;
+      m.position.set(num(x, 0), num(y, 0), num(z, 0)); m.castShadow = !(o && o.shadow === false); m.receiveShadow = true;
       if (o && o.shadow === false) m.userData.mark = true;
       if (o && o.on) m.on = o.on;
       resolveParent(parent).add(m); return m;
@@ -417,18 +426,18 @@ var Any3d = (function () {
     var D = {
       pal: pal, M: M, theme: theme, clamp: clamp, lerp: lerp, smooth: smooth, out: out, inOut: inOut, phase: phase, wave: wave, pulse: pulse,
       spring: spring, apart: apart, path: path, place: place, spin: spin, stagger: stagger, mat: mat,
-      group: function (x, y, z, parent) { var g = new Group(); g.position.set(x || 0, y || 0, z || 0); resolveParent(parent).add(g); return g; },
-      box: function (w, h, d, c, x, y, z, parent, o) { return mesh(geo('BoxGeometry', { w: w, h: h, d: d, r: o && o.r ? o.r : 0 }, [-w / 2, -h / 2, -d / 2, w / 2, h / 2, d / 2]), c, x, y, z, parent, o); },
-      rbox: function (w, h, d, c, x, y, z, parent, o) { o = o || {}; return mesh(geo('BoxGeometry', { w: w, h: h, d: d, r: o.r || Math.min(w, h, d) * .22 }, [-w / 2, -h / 2, -d / 2, w / 2, h / 2, d / 2]), c, x, y, z, parent, o); },
-      cyl: function (rt, rb, h, c, x, y, z, parent, seg) { var r = Math.max(rt, rb); return mesh(geo('CylinderGeometry', { rt: rt, rb: rb, h: h, seg: seg || 18 }, [-r, -h / 2, -r, r, h / 2, r]), c, x, y, z, parent); },
-      cone: function (r, h, c, x, y, z, parent, seg) { return mesh(geo('ConeGeometry', { r: r, h: h, seg: seg || 18 }, [-r, -h / 2, -r, r, h / 2, r]), c, x, y, z, parent); },
-      ball: function (r, c, x, y, z, parent) { return mesh(geo('SphereGeometry', { r: r }, [-r, -r, -r, r, r, r]), c, x, y, z, parent); },
-      dome: function (r, c, x, y, z, parent) { return mesh(geo('SphereGeometry', { r: r, dome: true }, [-r, 0, -r, r, r, r]), c, x, y, z, parent); },
-      torus: function (r, tube, c, x, y, z, parent) { return mesh(geo('TorusGeometry', { r: r, tube: tube }, [-r - tube, -r - tube, -tube, r + tube, r + tube, tube]), c, x, y, z, parent); },
-      wheel: function (r, w, c, x, y, z, parent) { var m = D.cyl(r, r, w, c || pal.tyre, x, y, z, parent, 18); m.rotation.x = Math.PI / 2; return m; },
-      wedge: function (w, h, d, c, x, y, z, parent) { return mesh(geo('ExtrudeGeometry', { wedge: true, w: w, h: h, d: d }, [-w / 2, 0, -d / 2, w / 2, h, d / 2]), c, x, y, z, parent); },
+      group: function (x, y, z, parent) { var g = new Group(); g.position.set(num(x, 0), num(y, 0), num(z, 0)); resolveParent(parent).add(g); return g; },
+      box: function (w, h, d, c, x, y, z, parent, o) { w = num(w, 1); h = num(h, 1); d = num(d, 1); return mesh(geo('BoxGeometry', { w: w, h: h, d: d, r: o && o.r ? num(o.r, 0) : 0 }, [-w / 2, -h / 2, -d / 2, w / 2, h / 2, d / 2]), c, x, y, z, parent, o); },
+      rbox: function (w, h, d, c, x, y, z, parent, o) { o = o || {}; w = num(w, 1); h = num(h, 1); d = num(d, 1); return mesh(geo('BoxGeometry', { w: w, h: h, d: d, r: o.r ? num(o.r, 0) : Math.min(w, h, d) * .22 }, [-w / 2, -h / 2, -d / 2, w / 2, h / 2, d / 2]), c, x, y, z, parent, o); },
+      cyl: function (rt, rb, h, c, x, y, z, parent, seg) { rt = Math.max(0, num(rt, .3)); rb = Math.max(0, num(rb, .3)); h = num(h, 1); var r = Math.max(rt, rb, 0.001); return mesh(geo('CylinderGeometry', { rt: rt, rb: rb, h: h, seg: segN(seg, 18) }, [-r, -h / 2, -r, r, h / 2, r]), c, x, y, z, parent); },
+      cone: function (r, h, c, x, y, z, parent, seg) { r = Math.max(.001, num(r, .3)); h = num(h, 1); return mesh(geo('ConeGeometry', { r: r, h: h, seg: segN(seg, 18) }, [-r, -h / 2, -r, r, h / 2, r]), c, x, y, z, parent); },
+      ball: function (r, c, x, y, z, parent) { r = Math.max(.001, num(r, .3)); return mesh(geo('SphereGeometry', { r: r }, [-r, -r, -r, r, r, r]), c, x, y, z, parent); },
+      dome: function (r, c, x, y, z, parent) { r = Math.max(.001, num(r, .3)); return mesh(geo('SphereGeometry', { r: r, dome: true }, [-r, 0, -r, r, r, r]), c, x, y, z, parent); },
+      torus: function (r, tube, c, x, y, z, parent) { r = Math.max(.001, num(r, .4)); tube = Math.max(.001, num(tube, .05)); return mesh(geo('TorusGeometry', { r: r, tube: tube }, [-r - tube, -r - tube, -tube, r + tube, r + tube, tube]), c, x, y, z, parent); },
+      wheel: function (r, w, c, x, y, z, parent) { var m = D.cyl(Math.max(.001, num(r, .3)), Math.max(.001, num(r, .3)), Math.max(.001, num(w, .14)), c || pal.tyre, x, y, z, parent, 18); m.rotation.x = Math.PI / 2; return m; },
+      wedge: function (w, h, d, c, x, y, z, parent) { w = num(w, 1); h = num(h, 1); d = num(d, 1); return mesh(geo('ExtrudeGeometry', { wedge: true, w: w, h: h, d: d }, [-w / 2, 0, -d / 2, w / 2, h, d / 2]), c, x, y, z, parent); },
       slab: function (w, d, c, x, y, z, parent, o) {
-        o = o || {}; var h = o.h || .5, r = o.r == null ? Math.min(w, d) * .06 : o.r;
+        o = o || {}; w = num(w, 4); d = num(d, 3); var h = num(o.h, .5), r = o.r == null ? Math.min(w, d) * .06 : num(o.r, Math.min(w, d) * .06);
         var m = mesh(geo('ExtrudeGeometry', { slab: true, w: w, d: d, h: h, r: Math.min(r, w / 2, d / 2) }, [-w / 2, -h, -d / 2, w / 2, 0, d / 2]), c || pal.base, x, y, z, parent, { shadow: false });
         m.userData.slab = true; m.userData.mark = false;
         if (o.side) m.side = mat(o.side);
@@ -436,7 +445,7 @@ var Any3d = (function () {
         return m;
       },
       label: function (text, w, h, o) {
-        o = o || {}; var m = mesh(geo('PlaneGeometry', { label: true, w: w, h: h, text: text, color: hexOf(toned(o.color || pal.ink)), bg: o.bg ? hexOf(toned(o.bg)) : null, size: o.size, weight: o.weight || 800, font: o.font || '"Bricolage Grotesque", Figtree, system-ui, sans-serif' }, [-w / 2, -h / 2, -.001, w / 2, h / 2, .001]), o.bg || pal.paper, 0, 0, 0, null, { shadow: false });
+        o = o || {}; w = num(w, 1); h = num(h, .4); var m = mesh(geo('PlaneGeometry', { label: true, w: w, h: h, text: text, color: hexOf(toned(o.color || pal.ink)), bg: o.bg ? hexOf(toned(o.bg)) : null, size: o.size, weight: o.weight || 800, font: o.font || '"Bricolage Grotesque", Figtree, system-ui, sans-serif' }, [-w / 2, -h / 2, -.001, w / 2, h / 2, .001]), o.bg || pal.paper, 0, 0, 0, null, { shadow: false });
         world.remove(m); if (o.rot) { m.rotation.x = o.rot[0] || 0; m.rotation.y = o.rot[1] || 0; m.rotation.z = o.rot[2] || 0; } return m;
       },
       props: {}

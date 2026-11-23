@@ -66,6 +66,12 @@ jobs:
       - name: Verify documented pixel finish options
         if: always()
         run: npm run verify:pixel-finish
+
+      # The SVG kernel header is the contract for every figure; call all of it,
+      # with sane and with non-finite arguments, and inspect the markup.
+      - name: Verify documented SVG toolkit
+        if: always()
+        run: npm run verify:svg-api
       - name: Server logs
         if: failure()
         run: tail -n 80 .tmp-api.log .tmp-vite.log
