@@ -21,7 +21,7 @@ import { SCENES } from './showcase-scenes.mjs';
 
 const COMMITTED = 'docs/assets/showcase';
 const FRESH = '.tmp/fidelity';
-const GRID = { w: 64, h: 36 };
+const GRID = { w: 64, h: 36, crop: 0.82 };
 
 let passed = 0;
 let failed = 0;
@@ -77,10 +77,14 @@ const diff = await page.evaluate(async ({ committed, fresh, keys, grid, cross })
     return ctx.getImageData(0, 0, image.width, image.height);
   };
   // Mean luminance of each cell of a w x h grid, ignoring transparent pixels.
+  // Only the top of the still is compared: the bottom of a card carries copy and
+  // chrome whose height follows font metrics, which is a layout property this
+  // check does not want to police pixel by pixel (the scene fills the top).
   const gridOf = (data) => {
     const cells = new Float64Array(grid.w * grid.h).fill(-1);
-    for (let y = 0; y < data.height; y += 1) {
-      const cy = Math.min(grid.h - 1, Math.floor(y / data.height * grid.h));
+    const yMax = Math.floor(data.height * grid.crop);
+    for (let y = 0; y < yMax; y += 1) {
+      const cy = Math.min(grid.h - 1, Math.floor(y / yMax * grid.h));
       for (let x = 0; x < data.width; x += 1) {
         const i = (y * data.width + x) * 4;
         if (data.data[i + 3] < 16) continue;
@@ -100,19 +104,33 @@ const diff = await page.evaluate(async ({ committed, fresh, keys, grid, cross })
     const other = cross ? keys[(index + 1) % keys.length] : key;
     const a = gridOf(await load(committed[other]));
     const b = gridOf(await load(fresh[key]));
-    let sum = 0;
-    let worst = 0;
-    let hot = 0;
-    let cells = 0;
-    for (let k = 0; k < a.length; k += 1) {
-      if (a[k] < 0 && b[k] < 0) continue;
-      const d = Math.abs((a[k] < 0 ? 0 : a[k]) - (b[k] < 0 ? 0 : b[k]));
-      sum += d;
-      worst = Math.max(worst, d);
-      if (d > 40) hot += 1;
-      cells += 1;
+    // A card still is cropped to the card's content height, and that height moves
+    // with font metrics, so the same scene can be a couple of grid rows off on
+    // another machine. Compare at the best small vertical shift instead of
+    // loosening the limits: a different scene does not line up at any shift.
+    const score = (shift) => {
+      let sum = 0, worst = 0, hot = 0, cells = 0;
+      for (let y = 0; y < grid.h; y += 1) {
+        const sy = y + shift;
+        if (sy < 0 || sy >= grid.h) continue;
+        for (let x = 0; x < grid.w; x += 1) {
+          const ka = sy * grid.w + x, kb = y * grid.w + x;
+          if (a[ka] < 0 && b[kb] < 0) continue;
+          const d = Math.abs((a[ka] < 0 ? 0 : a[ka]) - (b[kb] < 0 ? 0 : b[kb]));
+          sum += d;
+          worst = Math.max(worst, d);
+          if (d > 40) hot += 1;
+          cells += 1;
+        }
+      }
+      return { mean: sum / Math.max(1, cells), worst, hot: hot / Math.max(1, cells), cells };
+    };
+    let best = null;
+    for (let shift = -2; shift <= 2; shift += 1) {
+      const candidate = score(shift);
+      if (!best || candidate.mean < best.mean) best = { ...candidate, shift };
     }
-    rows.push({ key, mean: +(sum / Math.max(1, cells)).toFixed(2), worst: +worst.toFixed(1), hot: +(hot / Math.max(1, cells)).toFixed(3), cells });
+    rows.push({ key, mean: +best.mean.toFixed(2), worst: +best.worst.toFixed(1), hot: +best.hot.toFixed(3), shift: best.shift, cells: best.cells });
   }
   return rows;
 }, {
@@ -140,7 +158,7 @@ const HOT_LIMIT = 0.05;
 for (const row of diff) {
   check(`${row.key} matches its committed still`,
     row.mean <= MEAN_LIMIT && row.hot <= HOT_LIMIT,
-    `mean ${row.mean} / hot ${(row.hot * 100).toFixed(1)}% / worst ${row.worst} (limit ${MEAN_LIMIT} / ${HOT_LIMIT * 100}%)`);
+    `mean ${row.mean} / hot ${(row.hot * 100).toFixed(1)}% / worst ${row.worst} / shift ${row.shift} (limit ${MEAN_LIMIT} / ${HOT_LIMIT * 100}%)`);
 }
 
 if (!process.env.KEEP) fs.rmSync(FRESH, { recursive: true, force: true });
