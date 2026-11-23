@@ -77,60 +77,70 @@ const diff = await page.evaluate(async ({ committed, fresh, keys, grid, cross })
     return ctx.getImageData(0, 0, image.width, image.height);
   };
   // Mean luminance of each cell of a w x h grid, ignoring transparent pixels.
-  // Only the top of the still is compared: the bottom of a card carries copy and
-  // chrome whose height follows font metrics, which is a layout property this
-  // check does not want to police pixel by pixel (the scene fills the top).
-  const gridOf = (data) => {
+  //
+  // Only the top `crop` of the still is looked at, and it is sampled through a
+  // scale window: a card still is cropped to the card's content height and width,
+  // and both follow font metrics and scrollbar width, so the same scene lands a
+  // few percent larger or smaller on another machine. A different scene does not
+  // line up at any scale, so searching a small window costs no sensitivity.
+  const gridOf = (data, sx, sy) => {
     const cells = new Float64Array(grid.w * grid.h).fill(-1);
-    const yMax = Math.floor(data.height * grid.crop);
-    for (let y = 0; y < yMax; y += 1) {
-      const cy = Math.min(grid.h - 1, Math.floor(y / yMax * grid.h));
-      for (let x = 0; x < data.width; x += 1) {
-        const i = (y * data.width + x) * 4;
+    const counts = new Int32Array(grid.w * grid.h);
+    const h = Math.floor(data.height * grid.crop);
+    const w = data.width;
+    const winW = w * sx;
+    const winH = h * sy;
+    const x0 = (w - winW) / 2;
+    for (let y = 0; y < winH; y += 1) {
+      const sy0 = Math.min(h - 1, Math.floor(y / sy));
+      const cy = Math.min(grid.h - 1, Math.floor(y / winH * grid.h));
+      for (let x = 0; x < winW; x += 1) {
+        const sx0 = Math.min(w - 1, Math.max(0, Math.floor(x0 + x / sx)));
+        const i = (sy0 * w + sx0) * 4;
         if (data.data[i + 3] < 16) continue;
-        const cx = Math.min(grid.w - 1, Math.floor(x / data.width * grid.w));
+        const cx = Math.min(grid.w - 1, Math.floor(x / winW * grid.w));
         const k = cy * grid.w + cx;
         const luma = 0.2126 * data.data[i] + 0.7152 * data.data[i + 1] + 0.0722 * data.data[i + 2];
-        cells[k] = cells[k] < 0 ? luma : cells[k];
+        cells[k] = cells[k] < 0 ? luma : cells[k] + luma;
+        counts[k] += 1;
       }
     }
+    for (let k = 0; k < cells.length; k += 1) if (counts[k] > 0) cells[k] /= counts[k];
     return cells;
   };
 
+  const SCALES = [0.96, 0.98, 1, 1.02, 1.04];
   const rows = [];
   for (const [index, key] of keys.entries()) {
     // CROSS=1 pairs every fresh still with the next committed one, which is how
     // this check proves it would notice a scene that stopped being itself.
     const other = cross ? keys[(index + 1) % keys.length] : key;
-    const a = gridOf(await load(committed[other]));
-    const b = gridOf(await load(fresh[key]));
-    // A card still is cropped to the card's content height, and that height moves
-    // with font metrics, so the same scene can be a couple of grid rows off on
-    // another machine. Compare at the best small vertical shift instead of
-    // loosening the limits: a different scene does not line up at any shift.
-    const score = (shift) => {
-      let sum = 0, worst = 0, hot = 0, cells = 0;
-      for (let y = 0; y < grid.h; y += 1) {
-        const sy = y + shift;
-        if (sy < 0 || sy >= grid.h) continue;
-        for (let x = 0; x < grid.w; x += 1) {
-          const ka = sy * grid.w + x, kb = y * grid.w + x;
-          if (a[ka] < 0 && b[kb] < 0) continue;
-          const d = Math.abs((a[ka] < 0 ? 0 : a[ka]) - (b[kb] < 0 ? 0 : b[kb]));
-          sum += d;
-          worst = Math.max(worst, d);
-          if (d > 40) hot += 1;
-          cells += 1;
-        }
-      }
-      return { mean: sum / Math.max(1, cells), worst, hot: hot / Math.max(1, cells), cells };
-    };
+    const committedImage = await load(committed[other]);
+    const freshImage = await load(fresh[key]);
     let best = null;
-    for (let shift = -2; shift <= 2; shift += 1) {
-      const candidate = score(shift);
-      if (!best || candidate.mean < best.mean) best = { ...candidate, shift };
+    for (const sx of SCALES) {
+      const a = gridOf(committedImage, sx, 1);
+      const b = gridOf(freshImage, sx, 1);
+      for (let shift = -2; shift <= 2; shift += 1) {
+        let sum = 0, worst = 0, hot = 0, cells = 0;
+        for (let y = 0; y < grid.h; y += 1) {
+          const sy = y + shift;
+          if (sy < 0 || sy >= grid.h) continue;
+          for (let x = 0; x < grid.w; x += 1) {
+            const ka = sy * grid.w + x, kb = y * grid.w + x;
+            if (a[ka] < 0 && b[kb] < 0) continue;
+            const d = Math.abs((a[ka] < 0 ? 0 : a[ka]) - (b[kb] < 0 ? 0 : b[kb]));
+            sum += d;
+            worst = Math.max(worst, d);
+            if (d > 40) hot += 1;
+            cells += 1;
+          }
+        }
+        const mean = sum / Math.max(1, cells);
+        if (!best || mean < best.mean) best = { mean, worst, hot: hot / Math.max(1, cells), cells, sx, shift };
+      }
     }
-    rows.push({ key, mean: +best.mean.toFixed(2), worst: +best.worst.toFixed(1), hot: +best.hot.toFixed(3), shift: best.shift, cells: best.cells });
+    rows.push({ key, mean: +best.mean.toFixed(2), worst: +best.worst.toFixed(1), hot: +best.hot.toFixed(3), sx: best.sx, shift: best.shift, cells: best.cells });
   }
   return rows;
 }, {
@@ -158,7 +168,7 @@ const HOT_LIMIT = 0.05;
 for (const row of diff) {
   check(`${row.key} matches its committed still`,
     row.mean <= MEAN_LIMIT && row.hot <= HOT_LIMIT,
-    `mean ${row.mean} / hot ${(row.hot * 100).toFixed(1)}% / worst ${row.worst} / shift ${row.shift} (limit ${MEAN_LIMIT} / ${HOT_LIMIT * 100}%)`);
+    `mean ${row.mean} / hot ${(row.hot * 100).toFixed(1)}% / worst ${row.worst} / scale ${row.sx} shift ${row.shift} (limit ${MEAN_LIMIT} / ${HOT_LIMIT * 100}%)`);
 }
 
 if (!process.env.KEEP) fs.rmSync(FRESH, { recursive: true, force: true });
