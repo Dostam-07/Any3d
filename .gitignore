@@ -3,3 +3,6 @@ dist/
 .tmp/
 *.log
 .DS_Store
+
+# Local verification artifacts (screenshots, GIF frames, reports)
+browser-results/

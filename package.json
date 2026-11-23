@@ -13,7 +13,11 @@
     "test:builds": "node scripts/test-builds.mjs",
     "test:payload": "esbuild scripts/test-scene-payload.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/payload.test.mjs && node .tmp/payload.test.mjs",
     "test:diff": "esbuild scripts/test-diff.ts --bundle --platform=node --format=esm --external:esbuild --log-level=warning --outfile=.tmp/diff.test.mjs && node .tmp/diff.test.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "showcase": "node scripts/showcase.mjs",
+    "showcase:gifs": "node scripts/showcase.mjs --gifs",
+    "verify:showcase": "node scripts/verify-showcase.mjs",
+    "check": "npm run test && npx tsc --noEmit && npm run build"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",

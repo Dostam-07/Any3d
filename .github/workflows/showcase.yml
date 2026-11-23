@@ -1,0 +1,64 @@
+name: Showcase images
+
+# Refreshes the README captures (docs/assets/showcase) with the real studio.
+# Runs weekly and on demand; commits the images only when asked to.
+on:
+  workflow_dispatch:
+    inputs:
+      commit_images:
+        description: Commit refreshed images to the branch
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 4 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Start API and app
+        run: |
+          node server/index.js > .tmp-api.log 2>&1 &
+          npx vite --port 5174 --strictPort > .tmp-vite.log 2>&1 &
+      - name: Capture twelve scenes (stills + two animated banners)
+        run: npm run showcase:gifs
+        env:
+          A3D_URL: http://localhost:5174
+          A3D_API: http://localhost:3001
+      - name: Presentation invariants
+        run: npm run verify:showcase
+        env:
+          A3D_URL: http://localhost:5174
+          A3D_API: http://localhost:3001
+          A3D_TIMEOUT_MS: 120000
+      - name: Server logs
+        if: failure()
+        run: tail -n 80 .tmp-api.log .tmp-vite.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: showcase-images
+          path: |
+            docs/assets/showcase
+            browser-results/showcase/report.json
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Commit refreshed images
+        if: ${{ inputs.commit_images }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/showcase
+          git diff --cached --quiet || git commit -m "chore(showcase): refresh README captures"
+          git push

@@ -10,7 +10,7 @@
 [![Local-First](https://img.shields.io/badge/Privacy-Local--First-10b981?style=flat-square)](https://ollama.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-[Quick Start](#quick-start) • [Complex Scene Gallery](#complex-scene-gallery--prompt-cookbook) • [Three Render Engines](#three-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
+[Quick Start](#quick-start) • [Complex Scene Gallery](#complex-scene-gallery--prompt-cookbook) • [Three Render Engines](#three-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Inside-Out Showcase](#inside-out-showcase-hero-and-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
 
 </div>
 
@@ -224,6 +224,110 @@ Any3d generates 3D scenes tailored to their real-world placement on the web:
 | **Website Feature Card** | **4:3 Component** | Tight diorama bounds (`13.0 × 9.6`), focused component framing (`1.02×`), central pedestal emphasis | Feature cards, bento grids, standalone rocket launchpad pedestals |
 
 Switch between **Hero** and **Card** with one click in the prompt bar or toolbar to see the stage and camera bounds adapt dynamically.
+
+---
+
+## Inside-Out Showcase: Hero and Card
+
+Twelve captures taken straight from the running studio with `node scripts/showcase.mjs` — no retouching, no mock layout:
+
+- **Six hero sections** (full-bleed banner: nav, one headline, one CTA) and **six card sections** (a live 4:3 card in a responsive grid, beside a *Ship this scene* card with an Export HTML CTA and a peek at the generated source, and the look controls). The scene spec rides as quiet chips in the section header instead of competing with the output.
+- Each presentation mixes **four presets** with **two prompt-only scenes that are not in the preset library** (night market, glacier lighthouse, rooftop greenhouse, coral nursery). Those four were typed as prompts and generated end to end, which is how the framing and coverage bugs below were caught.
+- Two hero banners are looping GIFs because their motion is the point: crane travel on the harbour, lantern sway in the night market. Everything else is a still.
+
+<h3 align="center">Hero Sections — 6 scenes</h3>
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/assets/showcase/harbour-hero.gif" alt="SVG harbour scene as a full-bleed hero banner with nav and headline" /><br />
+      <sub><b>harbour</b> · SVG Vector · preset — blueprint gantry cranes over water</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/assets/showcase/florist-hero.png" alt="Three.js florist shop front as a full-bleed hero banner" /><br />
+      <sub><b>florist</b> · Three.js · preset — warm shop front with a street of planters</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/assets/showcase/windmill-hero.png" alt="Dithered windmill on a hillside in a hero banner" /><br />
+      <sub><b>windmill</b> · 4×4 Dither · preset — ordered-dither landscape with turning blades</sub>
+    </td>
+    <td align="center">
+      <img src="docs/assets/showcase/airport-hero.png" alt="SVG airport terminal and runway in a hero banner" /><br />
+      <sub><b>airport</b> · SVG Vector · preset — terminal, apron and runway lights</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/assets/showcase/market-hero.gif" alt="Night market with lanterns and stalls as a hero banner" /><br />
+      <sub><b>night market</b> · Three.js · <i>prompt only</i> — “a bustling night market with noodle stalls and paper lanterns”</sub>
+    </td>
+    <td align="center">
+      <img src="docs/assets/showcase/glacier-hero.png" alt="Glacier lighthouse and research hut as a hero banner" /><br />
+      <sub><b>glacier lighthouse</b> · Three.js · <i>prompt only</i> — “a lighthouse at the edge of a glacier with a stranded research hut”</sub>
+    </td>
+  </tr>
+</table>
+
+<h3 align="center">Card Sections — 6 scenes</h3>
+
+<table>
+  <tr>
+    <td width="33%" align="center">
+      <img src="docs/assets/showcase/bakery-card.png" alt="Bakery scene embedded as a card in a dark grid" /><br />
+      <sub><b>bakery</b> · Three.js · preset</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="docs/assets/showcase/classroom-card.png" alt="Classroom scene embedded as a card in a dark grid" /><br />
+      <sub><b>classroom</b> · SVG Vector · preset</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="docs/assets/showcase/flowerstall-card.png" alt="Pixel art flower stall embedded as a card" /><br />
+      <sub><b>flower stall</b> · Pixel Art · preset</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="docs/assets/showcase/teahouse-card.png" alt="Dithered tea house embedded as a card" /><br />
+      <sub><b>tea house</b> · 4×4 Dither · preset</sub>
+    </td>
+    <td align="center">
+      <img src="docs/assets/showcase/greenhouse-card.png" alt="Rooftop greenhouse with watering arm embedded as a card" /><br />
+      <sub><b>rooftop greenhouse</b> · Three.js · <i>prompt only</i></sub>
+    </td>
+    <td align="center">
+      <img src="docs/assets/showcase/coral-card.png" alt="Underwater coral nursery embedded as a card" /><br />
+      <sub><b>coral nursery</b> · Three.js · <i>prompt only</i></sub>
+    </td>
+  </tr>
+</table>
+
+The two prompt-only worlds per presentation were sent through the same `POST /api/generate` path the studio uses. On this CPU-only machine the local 7B model exceeded the generation timeout, so the request fell back to the built-in procedural composer — that composer output is what the screenshots show, and it is the reason the fallback was rebuilt (see below).
+
+### What this audit run fixed
+
+| Found while shooting the showcase | Fix |
+|---|---|
+| Any prompt outside a hand-written category produced the same courtyard: pergola, table, one person. | `server/engine/custom-world.js` now composes from the prompt's own nouns — palette profile (`ice`, `underwater`, `volcanic`, `orbital`, `market`, `industrial`, `garden`, `desert`) plus set pieces (stalls, lanterns, lamp posts, greenhouse, crop rows, watering arm, coral, bubbles, huts, glaciers, domes, solar arrays). |
+| Worlds written with the SVG API passed validation, then failed bundling with `Could not resolve "@any3d/figure"` → HTTP 500. | `validateWorlds()` rejects `D.*`, `pal.*`, `Any3d.*`, `Pixel.*`, `Dither.*` and any import other than `@any3d/worlds`. |
+| The four dither presets were unreachable: the gallery filtered `format !== 'dither'`. | Dither is a first-class filter tab, and its four presets open, bundle and render. |
+| Pixel and dither scenes appeared as a postage stamp in the middle of the stage, because the canvas kept its native 320×240 box. | `fit()` scales to the largest whole-number multiple of both stage axes — in the studio and in exported files. |
+| The default (noon) look painted the stage pure white behind every scene. | Noon background is a soft studio tone (`#e6ebf3`), and the first paint before the look applies is dark. |
+| Generated scenes showed a slug in the headline and exports: “a-bustling-night-market-with-n”. | `src/lib/scene-title.ts` prefers the scene description, drops a truncated tail, and trims dangling connectors. |
+| A 4:3 card section left a tall empty tail in a squarish stage. | The card section measures its content and compacts itself; the showcase crops stills to the content box. |
+| Switching Hero ↔ Card rewrote the scene source, re-bundled it and reloaded the frame — the camera pose was lost and the code editor quietly changed. | The size is a runtime message to the live frame; only the exported file is stamped (`src/lib/presentation-size.ts`). Verified: the iframe document survives every switch. |
+
+To regenerate everything: start the API (`node server/index.js`) and the app (`npm run dev`), then run `npm run showcase` (pass scene keys to re-shoot a subset, and `npm run showcase:gifs` to record the two animated banners). The four prompt-only scenes are rebuilt deterministically by the script itself, so a clean checkout can reproduce every image.
+
+Before pushing, `npm run check` runs the test suite, the typechecker and the production build. `npm run verify:showcase` covers the live presentation invariants and needs the API and app running.
+
+CI keeps this honest:
+
+| Workflow | What it does |
+|---|---|
+| `.github/workflows/ci.yml` | `npm test`, `tsc --noEmit`, `npm run build`, then boots the API and app and runs `npm run verify:showcase` — the presentation invariants (frame survives Hero ↔ Card, card CTA exports and copies, *Editable source* opens the editor, pixel art fills its frame, console clean). |
+| `.github/workflows/showcase.yml` | Weekly / on demand: re-captures all twelve scenes with `showcase:gifs`, uploads them as an artifact, and commits the refreshed images only when `commit_images` is set. |
 
 ---
 

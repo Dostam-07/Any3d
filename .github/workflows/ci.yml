@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Tests, types and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npx tsc --noEmit
+      - run: npm run build
+
+  presentation:
+    name: Presentation invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # The studio talks to its own API, so both halves run in the job.
+      - name: Start API and app
+        run: |
+          node server/index.js > .tmp-api.log 2>&1 &
+          npx vite --port 5174 --strictPort > .tmp-vite.log 2>&1 &
+      # verify-showcase waits for both servers itself and fails on the invariants:
+      # iframe survives a presentation switch, card CTA exports and copies, the
+      # Editable source link opens the editor, pixel art fills its frame, and the
+      # console stays clean.
+      - name: Verify hero and card presentations
+        run: npm run verify:showcase
+        env:
+          A3D_URL: http://localhost:5174
+          A3D_API: http://localhost:3001
+          A3D_TIMEOUT_MS: 120000
+      - name: Server logs
+        if: failure()
+        run: tail -n 80 .tmp-api.log .tmp-vite.log
