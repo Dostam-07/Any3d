@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowUpRight, Camera, Maximize2, Pause, Play } from 'lucide-react';
+import { Camera, Maximize2, Pause, Play } from 'lucide-react';
 import { LOOK_STOPS, nearestStop, type SceneLook } from '../lib/look';
 import type { RenderFormat, SVGTheme, WebPresentationSize, WorldFinish } from '../types';
 
@@ -109,49 +109,6 @@ export function HeroSiteChrome({ sceneName, format, motion, onFullscreen, onSnap
         </div>
       </div>
     </>
-  );
-}
-
-export function CardSectionHeader({
-  format,
-  columns,
-  compact = false,
-}: {
-  format: RenderFormat;
-  columns: number;
-  /** Short stages drop the blurb so the cards themselves stay above the fold. */
-  compact?: boolean;
-}) {
-  const meta = FORMAT_META[format];
-  return (
-    // One row at every width: a wrapping header changes its own height, and the
-    // card below is sized from what is left, so a wrap would shrink the scene.
-    <header className="@container flex flex-nowrap items-end justify-between gap-3 pb-1">
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 truncate text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--text-muted)]">
-          <span className="h-px w-6 shrink-0 bg-indigo-400/60" />
-          Cards section
-        </div>
-        <h2 className="mt-1.5 truncate text-lg font-semibold tracking-tight text-[var(--text-primary)] sm:text-xl">
-          Your scene as a card in a section
-        </h2>
-        {compact ? null : (
-          <p className="mt-1 hidden max-w-lg truncate text-[11px] leading-relaxed text-[var(--text-muted)] @[600px]:block">
-            Compact 4:3 media, its own title and metadata, and the look controls
-            kept off the card where they belong. {meta.label} embedded live.
-          </p>
-        )}
-      </div>
-      <div className={compact ? 'hidden' : 'flex shrink-0 items-center gap-1.5'}>
-        <span className="hidden whitespace-nowrap rounded-full border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1 text-[10px] font-medium text-[var(--text-secondary)] @[520px]:inline">
-          Grid up to {columns} wide
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1 text-[10px] font-medium text-[var(--text-secondary)]">
-          Card
-          <ArrowUpRight className="h-3 w-3" />
-        </span>
-      </div>
-    </header>
   );
 }
 

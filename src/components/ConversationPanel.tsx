@@ -575,26 +575,9 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
           ))}
         </div>
 
-        {/* Engine Format & Model Controls Strip */}
-        <div className="px-3 py-1.5 flex items-center justify-between text-xs border-b border-white/[0.04]">
-          {/* Format Selector */}
-          {setFormat && (
-            <div className="flex items-center p-0.5 rounded-lg bg-zinc-950/70 border border-white/[0.06] text-[11px]">
-              {(['svg', 'worlds', 'pixel'] as const).map((fmt) => (
-                <button
-                  key={fmt}
-                  type="button"
-                  onClick={() => setFormat(fmt)}
-                  className={`px-2 py-0.5 rounded font-mono uppercase font-semibold transition cursor-pointer ${
-                    format === fmt ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-300'
-                  }`}
-                >
-                  {fmt}
-                </button>
-              ))}
-            </div>
-          )}
-
+        {/* Model & seed strip. The engine is chosen once, in the app bar: a second
+            switcher here meant two controls for one piece of state, side by side. */}
+        <div className="px-3 py-1.5 flex items-center justify-end text-xs border-b border-white/[0.04]">
           {/* Model & AI Settings */}
           <div className="flex items-center gap-1.5">
             {onToggleSeedLock && (

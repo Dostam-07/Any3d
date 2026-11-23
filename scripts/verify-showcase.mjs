@@ -101,6 +101,52 @@ try {
   }
   if (!tabs.some((t) => /dither/i.test(t))) pass('dither engine is gone');
   else fail('dither engine is gone', 'a dither filter is still offered');
+
+  // --- the gallery shows the scenes, not just their names ------------------
+  // Forty rows of titles, line counts and file paths, in a scene generator, with
+  // no scene on screen: the split view puts the real bundle beside the list.
+  const previewFrame = modal.locator('aside iframe').first();
+  await previewFrame.waitFor({ state: 'attached', timeout: 30000 });
+  await page.waitForTimeout(3500);
+  const previewDraws = await previewFrame.evaluate((frame) => {
+    const doc = frame.contentDocument;
+    if (!doc) return { mounted: false };
+    return {
+      mounted: true,
+      shapes: doc.querySelectorAll('svg *').length + doc.querySelectorAll('canvas').length,
+    };
+  }).catch(() => ({ mounted: false }));
+  if (previewDraws.mounted && previewDraws.shapes > 20)
+    pass('the gallery previews the scene', `${previewDraws.shapes} shapes`);
+  else fail('the gallery previews the scene', JSON.stringify(previewDraws));
+
+  // Hovering another engine must swap the frame, not keep the first bundle.
+  const worldsTab = modal.locator('button').filter({ hasText: /Three\.js/i }).last();
+  await worldsTab.click();
+  await page.waitForTimeout(700);
+  await modal.locator('div.p-4.rounded-2xl').nth(1).hover();
+  await page.waitForTimeout(3800);
+  const swapped = await previewFrame.evaluate((frame) => {
+    const doc = frame.contentDocument;
+    return { canvases: doc?.querySelectorAll('canvas').length ?? 0 };
+  }).catch(() => ({ canvases: -1 }));
+  if (swapped.canvases > 0) pass('the gallery preview follows the pointer', `${swapped.canvases} canvases`);
+  else fail('the gallery preview follows the pointer', JSON.stringify(swapped));
+
+  // Exactly one row may look selected, and it must be the one on screen: the row
+  // ring used to mark the studio's active scene while the preview showed another.
+  const marked = await modal.evaluate((node) => {
+    const rows = [...node.querySelectorAll('div.p-4.rounded-2xl')];
+    const ringed = rows.filter((r) => /ring-indigo/.test(r.className || ''));
+    const previewText = node.querySelector('aside')?.innerText || '';
+    return { ringed: ringed.length, title: ringed[0]?.querySelector('span')?.textContent || '', previewText };
+  });
+  if (marked.ringed === 1 && marked.title && marked.previewText.includes(marked.title))
+    pass('the gallery marks the row it previews', marked.title);
+  else fail('the gallery marks the row it previews', JSON.stringify(marked));
+  const allTab = modal.locator('button').filter({ hasText: /^All \(/ }).first();
+  if (await allTab.count()) await allTab.click();
+  await page.waitForTimeout(400);
   await page.keyboard.press('Escape');
 
   // --- one scene, both presentations, frame must survive -------------------
@@ -147,6 +193,15 @@ try {
         stage?.querySelector('[aria-label="Look controls"]')?.getBoundingClientRect().top ?? 0,
       cardBottom: stage?.querySelector('article')?.getBoundingClientRect().bottom ?? 0,
       exportCards: /Ship this scene|Export HTML/i.test(text),
+      // A marketing band above a scene the user is editing ("Cards section /
+      // Your scene as a card in a section") cost 54px of the scene at every width.
+      sectionBand: /Cards section|Your scene as a card/i.test(text),
+      lookControlsInToolbar: document.querySelectorAll(
+        'button[title="Atmosphere, lighting & weather controls"]',
+      ).length,
+      loopControlsInToolbar: [...document.querySelectorAll('button[title]')].filter((b) =>
+        /Resume Animation|Show Still Frame/.test(b.getAttribute('title') || ''),
+      ).length,
       codePeek: Boolean(stage?.querySelector('div[class*="font-mono"]')),
       frameKept: frame?.dataset.probe === 'kept' && frame?.contentWindow?.__probe === 'kept',
     };
@@ -167,6 +222,19 @@ try {
   if (card.lookStrip && card.stripTop >= card.cardBottom - 2 && Math.abs(card.stripLeft - card.cardLeft) < 2)
     pass('look controls sit under the card', `${Math.round(card.stripLeft)}/${Math.round(card.cardLeft)}`);
   else fail('look controls sit under the card', JSON.stringify({ strip: card.stripTop, card: card.cardBottom }));
+  // Nothing above the card but the stage toolbar: the section band was demo copy
+  // in an editor, and it pushed the scene down by its own height.
+  if (!card.sectionBand) pass('the stage has no demo band above the scene');
+  else fail('the stage has no demo band above the scene', 'a section header is back in the stage');
+  // One owner per control. The strip carries the look and the play state in this
+  // presentation, so the toolbar must not repeat them beside it.
+  if (card.lookControlsInToolbar === 0 && card.loopControlsInToolbar === 0)
+    pass('the card presentation owns its own controls');
+  else
+    fail(
+      'the card presentation owns its own controls',
+      `toolbar repeats look x${card.lookControlsInToolbar}, loop x${card.loopControlsInToolbar}`,
+    );
 
   // --- the stage toolbar exports a standalone file ------------------------
   // The toolbar sits above the @container stage, so look for the chip on the page.

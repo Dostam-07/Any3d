@@ -1,6 +1,7 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { X, Check, Shapes, Cuboid, Grid3X3, Sparkles, Search } from 'lucide-react';
 import { PresetScene, RenderFormat } from '../types';
+import { PresetPreview } from './PresetPreview';
 
 interface PresetGalleryProps {
   isOpen: boolean;
@@ -14,20 +15,23 @@ interface PresetGalleryProps {
 
 const ENGINE_LABELS: Record<
   RenderFormat,
-  { label: string; icon: React.FC<{ className?: string }>; badgeStyle: string }
+  { label: string; short: string; icon: React.FC<{ className?: string }>; badgeStyle: string }
 > = {
   svg: {
     label: 'SVG Vector',
+    short: 'SVG',
     icon: Shapes,
     badgeStyle: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
   },
   worlds: {
     label: 'Three.js 3D',
+    short: '3D',
     icon: Cuboid,
     badgeStyle: 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/30',
   },
   pixel: {
     label: 'Pixel Art',
+    short: 'Pixel',
     icon: Grid3X3,
     badgeStyle: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
   },
@@ -44,24 +48,36 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
   const [filter, setFilter] = useState<RenderFormat | 'all'>('all');
   const [search, setSearch] = useState('');
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  // The preview follows the pointer; the first row shows until the user hovers
+  // another, so the pane is never a blank rectangle.
+  const [previewId, setPreviewId] = useState<string | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const filtered = presets
-    .filter((p) => {
-      const matchesFormat = filter === 'all' || p.format === filter;
-    const matchesSearch =
-      !search.trim() ||
-      p.title.toLowerCase().includes(search.toLowerCase()) ||
-      p.name.toLowerCase().includes(search.toLowerCase());
-    return matchesFormat && matchesSearch;
-  });
+  // Memoised: this array is a dependency of the focus effect, and a fresh array on
+  // every render kept resetting the keyboard focus to the first row.
+  const filtered = useMemo(
+    () =>
+      presets.filter((p) => {
+        const matchesFormat = filter === 'all' || p.format === filter;
+        const matchesSearch =
+          !search.trim() ||
+          p.title.toLowerCase().includes(search.toLowerCase()) ||
+          p.name.toLowerCase().includes(search.toLowerCase());
+        return matchesFormat && matchesSearch;
+      }),
+    [presets, filter, search],
+  );
 
+  const previewPreset = filtered.find((p) => p.id === previewId) ?? filtered[0] ?? null;
+
+  // Enter loads whatever the preview pane is showing, so the keyboard and the
+  // pointer agree even when the user never touched the arrow keys.
   const selectFocused = useCallback(() => {
-    if (focusedIndex != null && filtered[focusedIndex]) {
-      onSelectPreset(filtered[focusedIndex]);
-      onClose();
-    }
-  }, [filtered, focusedIndex, onSelectPreset, onClose]);
+    const target = focusedIndex != null ? filtered[focusedIndex] : previewPreset;
+    if (!target) return;
+    onSelectPreset(target);
+    onClose();
+  }, [filtered, focusedIndex, previewPreset, onSelectPreset, onClose]);
 
   // Keyboard navigation: arrow keys move focus, Enter selects, Escape closes.
   useEffect(() => {
@@ -107,9 +123,11 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, filtered.length, selectFocused, onClose]);
 
-  // Reset focus when the filtered list changes.
+  // Clear the keyboard cursor when the list changes, instead of parking it on the
+  // first row: a focus ring on a row the user never selected read as a second
+  // selection beside the one the preview pane was actually showing.
   useEffect(() => {
-    setFocusedIndex(filtered.length > 0 ? 0 : null);
+    setFocusedIndex(null);
   }, [filtered]);
 
   // Scroll the focused card into view.
@@ -145,6 +163,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
       ? emptyState
       : filtered.map((preset, index) => {
           const isSelected = preset.id === currentId;
+          const isPreviewed = previewPreset?.id === preset.id;
           const cfg = ENGINE_LABELS[preset.format];
           const Icon = cfg?.icon || Shapes;
           const isFocused = focusedIndex === index;
@@ -161,6 +180,8 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
                 onSelectPreset(preset);
                 onClose();
               }}
+              onMouseEnter={() => setPreviewId(preset.id)}
+              onFocus={() => setPreviewId(preset.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
@@ -169,7 +190,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
                 }
               }}
               className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group active:scale-[0.99] ${
-                isSelected
+                isPreviewed
                   ? 'border-indigo-500 bg-indigo-950/25 shadow-lg shadow-indigo-950/50 ring-1 ring-indigo-500/40'
                   : 'border-white/[0.06] hover:border-indigo-500/40 bg-white/[0.02] hover:bg-white/[0.05] shadow-sm'
               } ${isFocused ? 'ring-2 ring-indigo-500 bg-zinc-900/30' : ''}`}
@@ -185,7 +206,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
                     }`}
                   >
                     <Icon className="w-3 h-3" />
-                    <span>{preset.format}</span>
+                    <span>{cfg?.short || preset.format}</span>
                   </span>
                 </div>
                 <p className="text-xs text-zinc-400 font-mono">
@@ -228,7 +249,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-fade-in">
-      <div className="bg-[#0e101a] border border-white/[0.08] rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl shadow-indigo-950/40 flex flex-col max-h-[85vh]">
+      <div className="bg-[#0e101a] border border-white/[0.08] rounded-3xl w-full max-w-6xl overflow-hidden shadow-2xl shadow-indigo-950/40 flex flex-col max-h-[88vh]">
         {/* Header */}
         <div className="px-6 py-4.5 border-b border-white/[0.08] flex items-center justify-between bg-[#0a0c13]/80">
           <div>
@@ -308,8 +329,32 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
           </div>
         </div>
 
-        {/* Presets Grid */}
-        <div className="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-3.5">{gridContent}</div>
+        {/* Split view: names on the left, the real scene on the right — the gallery
+            is how you browse forty scenes, and it used to show none of them. */}
+        <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+          <div className="relative min-h-0 flex-1 md:w-[47%] md:flex-none">
+            <div className="h-full overflow-y-auto p-4 grid grid-cols-1 gap-2.5 content-start">{gridContent}</div>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#0e101a] to-transparent"
+            />
+          </div>
+          <aside className="hidden min-h-0 flex-col justify-center border-l border-white/[0.06] bg-[#0a0c13]/70 p-4 md:flex md:w-[53%] md:flex-none">
+            <PresetPreview preset={previewPreset} />
+            <button
+              type="button"
+              onClick={() => {
+                if (!previewPreset) return;
+                onSelectPreset(previewPreset);
+                onClose();
+              }}
+              disabled={!previewPreset}
+              className="mt-2.5 w-full shrink-0 rounded-xl bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-40 cursor-pointer"
+            >
+              Load {previewPreset ? `“${previewPreset.title}”` : 'preset'} →
+            </button>
+          </aside>
+        </div>
       </div>
     </div>
   );

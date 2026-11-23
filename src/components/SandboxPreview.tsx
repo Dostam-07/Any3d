@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { GenerationPlayground } from './GenerationPlayground';
-import { CardSectionHeader, HeroSiteChrome, LiveCardBody, LookStrip } from './PresentationViews';
+import { HeroSiteChrome, LiveCardBody, LookStrip } from './PresentationViews';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
@@ -506,7 +506,6 @@ function SandboxPreviewInner({
 
   // Two presentations, one live iframe: only the surrounding CSS changes when
   // the size is switched, so the scene never reloads and keeps its pose.
-  const stageColumns = stageWidth >= 1024 ? 3 : stageWidth >= 768 ? 2 : 1;
   const motionLabel = isPaused ? 'Paused still' : 'Live loop';
 
   // Engine accent badge config
@@ -570,8 +569,9 @@ function SandboxPreviewInner({
           /* Normal 3D Scene View: Clubbed controls in ONE single slender row */
           <>
             <div className="flex items-center gap-1.5 shrink-0 flex-nowrap">
-              {/* Club 1: Environment & Lighting */}
-              <LookScrubber look={sceneLook} onChange={handleLookChange} />
+              {/* Club 1: Environment & Lighting — the card strip owns the look in
+                  that presentation, so this only appears for the hero. */}
+              {currentSize !== 'card' && <LookScrubber look={sceneLook} onChange={handleLookChange} />}
 
               {/* Club 2: Material Style / Finish / Theme */}
               <div className="relative shrink-0" ref={styleMenuRef}>
@@ -813,14 +813,16 @@ function SandboxPreviewInner({
             <div className="flex items-center gap-1.5 shrink-0 flex-nowrap">
               {/* Play / Pause Toggle & Speed */}
               <div className="flex items-center rounded-xl bg-zinc-900/90 border border-white/[0.08] p-0.5 shrink-0">
-                <button
-                  onClick={handleTogglePlay}
-                  title={isPaused ? 'Resume Animation' : 'Show Still Frame'}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 shrink-0"
-                >
-                  {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
-                  <span className="text-[11px] hidden sm:inline">{isPaused ? 'Still' : 'Loop'}</span>
-                </button>
+                {currentSize !== 'card' && (
+                  <button
+                    onClick={handleTogglePlay}
+                    title={isPaused ? 'Resume Animation' : 'Show Still Frame'}
+                    className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 shrink-0"
+                  >
+                    {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Pause className="w-3.5 h-3.5 text-amber-400" />}
+                    <span className="text-[11px] hidden sm:inline">{isPaused ? 'Still' : 'Loop'}</span>
+                  </button>
+                )}
 
                 {/* Worlds Speed Selector */}
                 {format === 'worlds' && (
@@ -959,15 +961,7 @@ function SandboxPreviewInner({
               onFullscreen={toggleFullscreen}
               onSnapshot={handleSnapshotPng}
             />
-          ) : (
-            <div className="flex shrink-0 flex-col gap-2">
-              <CardSectionHeader
-                format={format}
-                columns={stageColumns}
-                compact={stageHeight > 0 && stageHeight < 820}
-              />
-            </div>
-          )}
+          ) : null}
 
           <div
             className={
@@ -980,7 +974,7 @@ function SandboxPreviewInner({
               className={
                 currentSize === 'hero'
                   ? 'absolute inset-0 overflow-hidden'
-                  : 'group flex flex-col overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0b0d16] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:border-[rgba(255,255,255,0.16)]'
+                  : 'group flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-primary)] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--text-muted)]/40'
               }
             >
               <div
