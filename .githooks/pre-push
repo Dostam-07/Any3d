@@ -7,12 +7,21 @@ cd "$(git rev-parse --show-toplevel)" || exit 1
 
 # esbuild cleans its temp files on exit; on Windows an antivirus scan of those
 # files makes that cleanup fail with "Access is denied" and the build dies after
-# it already succeeded. Keep the temp dir inside the repo for the same reason.
+# succeeding. Keep the temp dir inside the repo, and set the Windows variables
+# as well as TMPDIR — esbuild reads TEMP/TMP there.
 mkdir -p .tmp/esbuild-tmp
 TMPDIR="$(pwd)/.tmp/esbuild-tmp"
+export TMPDIR
+if command -v cygpath >/dev/null 2>&1; then
+  TEMP="$(cygpath -w "$TMPDIR")"
+else
+  TEMP="$TMPDIR"
+fi
+TMP="$TEMP"
+export TEMP TMP
 
 echo "pre-push: npm run check (SKIP_CHECK=1 to bypass)"
-if ! TMPDIR="$TMPDIR" npm run check --silent; then
+if ! npm run check --silent; then
   echo "pre-push: check failed — push aborted"
   exit 1
 fi
