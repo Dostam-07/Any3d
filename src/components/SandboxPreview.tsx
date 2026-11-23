@@ -186,6 +186,21 @@ function SandboxPreviewInner({
     return () => observer.disconnect();
   }, []);
 
+  // The card section is a page section, so it has to read as one band: both tiles
+  // visible without scrolling. The tiles keep their 4:3 crop and the section just
+  // gets narrower on a short stage. Modelled from the measured layout — the grid
+  // starts 110px down (section header) and each tile adds a 142px card body above
+  // its 4:3 crop — then clamped to the design width.
+  const cardSectionWidth = (() => {
+    if (currentSize !== 'card' || stageHeight <= 0) return undefined;
+    const headerAllowance = 110;
+    const bodyHeight = 142;
+    const gap = 12;
+    const usable = stageHeight - headerAllowance - bodyHeight - 8;
+    const width = gap + (usable / 0.375);
+    return Math.max(532, Math.min(1152, Math.round(width)));
+  })();
+
   useEffect(() => {
     if (!menuOpen && !styleMenuOpen && !cameraMenuOpen && !sizeMenuOpen) return;
     const onPointerDown = (e: MouseEvent) => {
@@ -894,10 +909,13 @@ function SandboxPreviewInner({
           )
         )}
 
-        <div className={currentSize === 'hero'
+        <div
+          className={currentSize === 'hero'
             ? 'absolute inset-0'
-            : 'mx-auto flex w-full max-w-6xl flex-col ' +
-              (stageHeight > 0 && stageHeight < 820 ? 'gap-2.5' : 'gap-3')}>
+            : 'mx-auto flex w-full flex-col ' +
+              (stageHeight > 0 && stageHeight < 820 ? 'gap-2.5' : 'gap-3')}
+          style={currentSize === 'card' && cardSectionWidth ? { maxWidth: `${cardSectionWidth}px` } : undefined}
+        >
           {currentSize === 'hero' ? (
             <HeroSiteChrome
               sceneName={sceneName}

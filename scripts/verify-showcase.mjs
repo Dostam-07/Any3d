@@ -309,6 +309,30 @@ try {
   const cameraOffered = await cameraButton().count();
   if (!cameraOffered) pass('camera hidden for the 2D engines');
   else fail('camera hidden for the 2D engines', 'camera control shown for pixel art');
+
+  // --- the card section fits its stage -----------------------------------
+  // A wide pane on a short screen used to clip the live card and make the section
+  // scroll: the tiles were pinned to a fixed 1152px design width whatever the
+  // height. The section is a page band, so both tiles have to be visible at once.
+  const previousViewport = page.viewportSize();
+  await page.setViewportSize({ width: 2200, height: 760 });
+  await openPreset(/SVG Vector/i, /pier nine/i);
+  await switchSize(/^Cards Section/);
+  await page.waitForTimeout(2400);
+  const fit = await page.evaluate(() => {
+    const stage = document.querySelector('div[class*="@container"]');
+    if (!stage) return null;
+    return {
+      stageH: stage.clientHeight,
+      stageW: stage.clientWidth,
+      overflow: stage.scrollHeight - stage.clientHeight,
+      tiles: stage.querySelectorAll('article').length,
+    };
+  });
+  if (fit && fit.overflow <= 0 && fit.tiles === 2) pass('the card section fits a short stage', JSON.stringify(fit));
+  else fail('the card section fits a short stage', JSON.stringify(fit));
+  if (previousViewport) await page.setViewportSize(previousViewport);
+  await page.waitForTimeout(800);
 } catch (error) {
   fail('run', String(error).slice(0, 300));
 }
