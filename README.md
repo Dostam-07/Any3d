@@ -326,10 +326,15 @@ Any3d is built to deliver assets ready for production deployment:
 
 ## Mobile Responsive Design
 
-Any3d is fully responsive. On mobile screens and tablets, the interface intelligently collapses into a focused vertical stack with overlay chat drawer and compact toolbar controls:
+Any3d is built mobile-first and fully responsive across smartphones and tablets. The studio interface dynamically adapts for touch-first screens:
+
+- **Mobile Home Studio**: The prompt capsule, engine selectors, aspect ratio switches, and curated inspirations stack into an ergonomic single-column view with touch-friendly controls.
+- **Mobile Project Studio**: The conversation assistant and interactive 3D viewport stack vertically with progressive disclosure menus for camera presets, lighting scrubbers, and live preview tabs.
 
 <p align="center">
-  <img src="docs/assets/mobile-home.png" alt="Any3d on a phone: stacked project view with the composer ready for a prompt" width="320" />
+  <img src="docs/assets/mobile-home.png" alt="Any3d on mobile: home prompt composer and inspiration grid" width="45%" />
+  &nbsp; &nbsp;
+  <img src="docs/assets/mobile-project.png" alt="Any3d on mobile: stacked project view with live 3D diorama and conversational editor" width="45%" />
 </p>
 
 ---

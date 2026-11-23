@@ -724,7 +724,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
 
                 <div className="mt-5">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Engine</p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {(Object.keys(ENGINE_META) as RenderFormat[]).map((key) => {
                       const active = key === format;
                       return (
