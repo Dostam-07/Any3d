@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { GenerationPlayground } from './GenerationPlayground';
-import { CardSectionHeader, HeroSiteChrome, LiveCardBody, LookCard, SceneSpecStrip, ShipCard } from './PresentationViews';
+import { CardSectionHeader, HeroSiteChrome, LiveCardBody, LookCard, SceneSpecStrip } from './PresentationViews';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
@@ -103,7 +103,6 @@ function SandboxPreviewInner({
   untrusted = false,
   code = '',
   onExportHtml,
-  onOpenCode,
   camera,
   onCameraChange,
 }: SandboxPreviewProps, ref: React.Ref<SandboxPreviewHandle>) {
@@ -804,6 +803,20 @@ function SandboxPreviewInner({
                 <span className="text-[11px] hidden sm:inline">AnyStack</span>
               </button>
 
+              {/* Standalone HTML Export — the same action the project header offers,
+                  kept here so the hub stage has one too. */}
+              {onExportHtml && (
+                <button
+                  onClick={onExportHtml}
+                  disabled={!code}
+                  title="Download standalone offline HTML (runtime inlined)"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-medium bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] text-zinc-300 hover:text-white transition cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                >
+                  <Download className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-[11px] hidden sm:inline">HTML</span>
+                </button>
+              )}
+
               {/* Snapshot PNG Button */}
               <button
                 onClick={handleSnapshotPng}
@@ -915,7 +928,7 @@ function SandboxPreviewInner({
             className={
               currentSize === 'hero'
                 ? 'absolute inset-0 z-0'
-                : 'grid grid-cols-1 gap-3 @md:grid-cols-2 @4xl:grid-cols-3'
+                : 'grid grid-cols-1 gap-3 @md:grid-cols-2'
             }
           >
             <article
@@ -971,16 +984,6 @@ function SandboxPreviewInner({
               )}
             </article>
 
-            {currentSize === 'card' && (
-              <ShipCard
-                code={code}
-                format={format}
-                sceneName={sceneName}
-                compact={stageHeight > 0 && stageHeight < 820}
-                onExportHtml={onExportHtml}
-                onOpenCode={onOpenCode}
-              />
-            )}
             {currentSize === 'card' && (
               <LookCard
                 accent={accentColor}

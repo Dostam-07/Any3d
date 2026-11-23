@@ -1034,7 +1034,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                 onSizeChange={handleSizeChange}
                 code={code}
                 onExportHtml={onExportHtml}
-                onOpenCode={() => setStage('code')}
               />
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-3 text-center px-8">

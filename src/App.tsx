@@ -1685,7 +1685,6 @@ export function App() {
                         onCameraChange={setStageCamera}
                         code={code}
                         onExportHtml={handleExportHtml}
-                        onOpenCode={() => setStageView('code')}
                       />
                     </div>
                   )}

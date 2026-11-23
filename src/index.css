@@ -280,44 +280,52 @@
 }
 
 /* The app uses utility classes for layout; these tokens keep its existing
-   component surfaces consistent while allowing a complete light theme. */
-[data-theme='light'] [class~="bg-[#090b11]"],
-[data-theme='light'] [class~="bg-[#090b11]/90"],
-[data-theme='light'] [class~="bg-[#0b0d14]"],
-[data-theme='light'] [class~="bg-[#08090f]"],
-[data-theme='light'] [class~="bg-[#07080d]"],
-[data-theme='light'] [class~="bg-[#090a10]"] {
+   component surfaces consistent while allowing a complete light theme.
+
+   These match on a substring, not on an exact class: the surfaces are written
+   with opacity suffixes (`bg-[#0c0e17]/95`, `bg-zinc-950/90`) and every extra
+   opacity that was not enumerated stayed black in light mode — the workspace
+   toolbar was the visible one. Substring selectors cover any suffix. */
+[data-theme='light'] [class*="bg-[#090b11]"],
+[data-theme='light'] [class*="bg-[#08090f]"],
+[data-theme='light'] [class*="bg-[#07080d]"],
+[data-theme='light'] [class*="bg-[#090a10]"] {
   background-color: var(--app-bg);
 }
 
-[data-theme='light'] [class~="bg-[#0c0e17]"],
-[data-theme='light'] [class~="bg-[#0c0e17]/90"],
-[data-theme='light'] [class~="bg-[#0d0f18]"],
-[data-theme='light'] [class~="bg-[#0d0f18]/90"],
-[data-theme='light'] [class~="bg-[#0d0f1a]"],
-[data-theme='light'] [class~="bg-[#0e101a]"],
-[data-theme='light'] [class~="bg-[#10131f]"] {
+[data-theme='light'] [class*="bg-[#0c0e17]"],
+[data-theme='light'] [class*="bg-[#0d0f18]"],
+[data-theme='light'] [class*="bg-[#0d0f1a]"],
+[data-theme='light'] [class*="bg-[#0e101a]"],
+[data-theme='light'] [class*="bg-[#0e1119]"],
+[data-theme='light'] [class*="bg-[#10131f]"],
+[data-theme='light'] [class*="bg-[#0b0d16]"],
+[data-theme='light'] [class*="bg-[#0b0d14]"],
+[data-theme='light'] [class*="bg-[#11141f]"],
+[data-theme='light'] [class*="bg-[#111422]"],
+[data-theme='light'] [class*="bg-[#080a11]"],
+[data-theme='light'] [class*="bg-[#05070d]"] {
   background-color: var(--surface-primary);
 }
 
-[data-theme='light'] [class~="bg-[#0a0c13]"],
-[data-theme='light'] [class~="bg-[#0a0c13]/80"],
-[data-theme='light'] [class~="bg-[#111320]"] {
+[data-theme='light'] [class*="bg-[#0a0c13]"],
+[data-theme='light'] [class*="bg-[#111320]"] {
   background-color: var(--surface-secondary);
 }
 
-[data-theme='light'] [class~="bg-[#121422]"],
-[data-theme='light'] [class~="bg-[#11131f]/90"],
-[data-theme='light'] [class~="bg-zinc-950/80"],
-[data-theme='light'] [class~="bg-zinc-950/70"],
-[data-theme='light'] [class~="bg-zinc-950/60"],
-[data-theme='light'] [class~="bg-zinc-950"],
-[data-theme='light'] [class~="bg-zinc-900/90"],
-[data-theme='light'] [class~="bg-zinc-900/80"],
-[data-theme='light'] [class~="bg-zinc-900/60"],
-[data-theme='light'] [class~="bg-zinc-900"],
-[data-theme='light'] [class~="bg-zinc-800"] {
+[data-theme='light'] [class*="bg-[#121422]"],
+[data-theme='light'] [class*="bg-[#11131f]"],
+[data-theme='light'] [class*="bg-zinc-950"],
+[data-theme='light'] [class*="bg-zinc-900"],
+[data-theme='light'] [class*="bg-zinc-800"] {
   background-color: var(--surface-raised);
+}
+
+/* The card stage paints a dark radial gradient behind the tiles. In light mode
+   the gradient stops are utility classes, not backgrounds, so the palette stayed
+   near-black under a light page. */
+[data-theme='light'] [class*="bg-[radial-gradient"] {
+  background-image: none;
 }
 
 [data-theme='light'] [class~="bg-white/[0.02]"],

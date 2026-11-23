@@ -4,9 +4,9 @@
 //   A3D_URL=http://localhost:5174 A3D_API=http://localhost:3001 node scripts/verify-showcase.mjs
 //
 // It fails (exit 1) when the frame reloads on a presentation switch, when a
-// console error appears, when the card CTA stops exporting or copying, when the
-// "Editable source" link stops reaching the editor, or when a pixel frame
-// collapses back into a postage stamp.
+// console error appears, when the stage's export stops producing a standalone
+// file, when a card duplicates the toolbar's export as its own panel, or when a
+// pixel frame collapses back into a postage stamp.
 import { chromium } from 'playwright';
 import * as fs from 'node:fs';
 
@@ -137,50 +137,100 @@ try {
     const text = stage?.innerText || '';
     return {
       stage: stage ? { w: Math.round(stage.clientWidth), h: Math.round(stage.clientHeight) } : null,
-      threeTiles: stage ? stage.querySelectorAll('article').length : 0,
+      twoTiles: stage ? stage.querySelectorAll('article').length : 0,
       specChips: /ENGINE/i.test(text) && /MOTION/i.test(text),
-      ship: /Ship this scene/i.test(text),
+      exportCards: /Ship this scene|Export HTML/i.test(text),
       codePeek: Boolean(stage?.querySelector('div[class*="font-mono"]')),
       frameKept: frame?.dataset.probe === 'kept' && frame?.contentWindow?.__probe === 'kept',
     };
   });
   if (card.frameKept) pass('iframe survives card switch');
   else fail('iframe survives card switch', JSON.stringify(card));
-  if (card.ship) pass('card shows the ship CTA');
-  else fail('card shows the ship CTA');
+  // The export lives in the toolbar, next to the PNG snapshot. A card that repeats
+  // it was the redundancy the project header's own download button already covered.
+  if (!card.exportCards) pass('card does not duplicate the export');
+  else fail('card does not duplicate the export', 'an export panel is inside the card stage');
   if (card.specChips) pass('spec lives in the card chrome');
   else fail('spec lives in the card chrome', 'chips missing');
-  if (card.threeTiles >= 3) pass('card grid keeps three tiles', `${card.threeTiles} articles`);
-  else fail('card grid keeps three tiles', `${card.threeTiles} articles`);
+  if (card.twoTiles === 2) pass('card grid keeps two tiles', `${card.twoTiles} articles`);
+  else fail('card grid keeps two tiles', `${card.twoTiles} articles`);
 
-  // --- copy + export actually work from the tile ---------------------------
-  const stage = page.locator('div[class*="@container"]').first();
-  await stage.getByRole('button', { name: /^Copy$/ }).first().click();
-  await page.waitForTimeout(500);
-  const copied = (await stage.getByRole('button', { name: /Copied/ }).count()) > 0;
-  if (copied) pass('card copy action');
-  else fail('card copy action', 'no Copied state');
+  // --- the stage toolbar exports a standalone file ------------------------
+  // The toolbar sits above the @container stage, so look for the chip on the page.
+  const htmlButton = page.locator('button[title*="standalone offline HTML"]:visible').first();
+  if ((await htmlButton.count()) > 0) pass('the stage toolbar exports HTML');
+  else fail('the stage toolbar exports HTML', 'no HTML button on the stage toolbar');
 
-  const download = page.waitForEvent('download', { timeout: 45000 });
-  await stage.getByRole('button', { name: /Export HTML/ }).first().click();
-  const file = await (await download).path();
-  const html = fs.readFileSync(file, 'utf8');
+  const download = page.waitForEvent('download', { timeout: 45000 }).catch(() => null);
+  await htmlButton.click();
+  const event = await download;
+  if (!event) fail('the stage export is standalone', 'no download started');
+  const file = event ? await event.path() : '';
+  const html = file ? fs.readFileSync(file, 'utf8') : '';
   const selfContained = /mountWorld|Any3d\.figure|Pixel\.mount/.test(html) && html.length > 100000;
   const stamped = /\bsize\s*:\s*['"](card|hero)['"]/.test(html);
-  if (selfContained && stamped) pass('card export is standalone', `${Math.round(html.length / 1024)} KB`);
-  else fail('card export is standalone', JSON.stringify({ selfContained, stamped, bytes: html.length }));
+  if (selfContained && stamped) pass('the stage export is standalone', `${Math.round(html.length / 1024)} KB`);
+  else fail('the stage export is standalone', JSON.stringify({ selfContained, stamped, bytes: html.length }));
 
-  // --- editable source reaches the code editor ----------------------------
-  await stage.getByRole('button', { name: /Editable source/ }).first().click();
-  await page.waitForTimeout(1200);
-  const editor = await page.evaluate(() => ({
-    textarea: Boolean(document.querySelector('textarea')),
-    codeTab: [...document.querySelectorAll('button')].some(
-      (b) => /^Code$/i.test((b.textContent || '').trim()) && b.className.includes('bg-indigo-600'),
-    ),
-  }));
-  if (editor.textarea && editor.codeTab) pass('editable source opens the editor');
-  else fail('editable source opens the editor', JSON.stringify(editor));
+  // --- light mode has no black holes -------------------------------------
+  // Regression guard: the surfaces are written with opacity suffixes
+  // (`bg-[#0c0e17]/95`) and the light-theme remap enumerated exact classes, so
+  // the workspace toolbar, the card tiles and the card stage gradient stayed
+  // near-black under a light page.
+  const lightToggle = page.locator('button[aria-label="Switch to light mode"]:visible').first();
+  if ((await lightToggle.count()) > 0) {
+    await lightToggle.click();
+    await page.waitForTimeout(1200);
+  }
+  const darkSurfaces = await page.evaluate(() => {
+    // Tailwind resolves opacity-modified colours to oklab(), so a plain rgb()
+    // regex silently skipped exactly the surfaces that were still black. Round
+    // every colour through a canvas to get an sRGB value.
+    const canvas = document.createElement('canvas').getContext('2d');
+    const readColor = (color) => {
+      canvas.fillStyle = '#000';
+      canvas.fillStyle = color;
+      const value = String(canvas.fillStyle);
+      const hex = /^#([0-9a-f]{6})$/i.exec(value);
+      if (hex) {
+        const n = parseInt(hex[1], 16);
+        return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255, a: 1 };
+      }
+      const m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/.exec(value);
+      if (!m) return null;
+      return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]), a: m[4] === undefined ? 1 : Number(m[4]) };
+    };
+    const found = [];
+    const walk = (el) => {
+      for (const node of el.children) {
+        if (node.tagName === 'IFRAME') continue;
+        const style = getComputedStyle(node);
+        const c = readColor(style.backgroundColor);
+        if (c && c.a > 0.5) {
+          const luma = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
+          const box = node.getBoundingClientRect();
+          if (luma < 70 && box.width * box.height > 2500 && box.width > 60 && box.height > 12) {
+            found.push({
+              cls: (node.className || '').toString().slice(0, 70),
+              bg: style.backgroundColor,
+              w: Math.round(box.width),
+              h: Math.round(box.height),
+            });
+          }
+        }
+        walk(node);
+      }
+    };
+    walk(document.body);
+    return found.slice(0, 5);
+  });
+  if (darkSurfaces.length === 0) pass('light theme has no black surfaces');
+  else fail('light theme has no black surfaces', JSON.stringify(darkSurfaces));
+  const backToDark = page.locator('button[aria-label="Switch to dark mode"]:visible').first();
+  if ((await backToDark.count()) > 0) {
+    await backToDark.click();
+    await page.waitForTimeout(900);
+  }
 
   // --- a world takes its look from the studio instead of a fixed dark sky --
   // Regression guard: worlds used to ignore the look entirely and sit on the dark
