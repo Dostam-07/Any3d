@@ -447,6 +447,9 @@ export function mountWorld(def, { el, finish = 'miniature', size = 'card', pause
     sun.color.set(profile.sun); sun.intensity = profile.sunPower; sun.position.set(...profile.sunPosition);
     scene.background.set(profile.background); renderer.setClearColor(profile.background);
   }
+  // Paint the default look immediately: a world must not sit on the dark
+  // placeholder backdrop while its lights are already at noon.
+  applyLook();
   function render(t) {
     if (disposed || contextLost) return;
     time = t; def.tick({ t, parts, W }); W.updateBatches();
@@ -460,9 +463,10 @@ export function mountWorld(def, { el, finish = 'miniature', size = 'card', pause
     const rect = el.getBoundingClientRect(); width = Math.max(1, Math.round(rect.width)); height = Math.max(1, Math.round(rect.height));
     const aspect = width / height;
     // Adapt frustum framing to the web presentation format:
-    // 'hero': wide panoramic webpage hero framing (1.35x), letting the wide landscape breathe across the banner
+    // 'hero': nearly edge-to-edge banner framing (1.08x), just enough air that tall props
+    //         never graze the top edge; a wider margin read as a black band on light pages
     // 'card': tight, focused website feature card framing (1.02x), crisp pedestal fitting inside a UI card
-    const sizeMultiplier = stageSize === 'hero' ? 1.35 : 1.02;
+    const sizeMultiplier = stageSize === 'hero' ? 1.08 : 1.02;
     const spanY = Math.max(maxY - minY, (maxX - minX) / aspect) * sizeMultiplier;
     camera.left = centerX - spanY * aspect / 2; camera.right = centerX + spanY * aspect / 2;
     camera.top = centerY + spanY / 2; camera.bottom = centerY - spanY / 2; camera.updateProjectionMatrix();

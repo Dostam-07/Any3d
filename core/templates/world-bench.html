@@ -42,11 +42,24 @@
   </main>
   <!-- SCRIPT_INJECTION -->
   <script>
-  /* Capture inside the frame so an opaque sandbox can still export a still. */
+  /* The studio drives a mounted world over postMessage: look, framing size,
+     finish, playback and camera all have to reach the runtime, or the scene keeps
+     whatever it mounted with (a dark backdrop under noon lighting). */
   (function () {
+    function apply(rt, fn) { try { fn(rt); } catch (err) {} }
     window.addEventListener('message', function (e) {
       var d = e.data;
-      if (!d || d.type !== 'any3d-world' || d.want !== 'png') return;
+      if (!d || d.type !== 'any3d-world') return;
+      var rt = window.__world;
+      if (rt) {
+        if (d.look) apply(rt, function (r) { r.setLook(d.look); });
+        if (d.size) apply(rt, function (r) { r.setSize(d.size); });
+        if (d.finish) apply(rt, function (r) { r.setFinish(d.finish); });
+        if (typeof d.paused === 'boolean') apply(rt, function (r) { r.setPaused(d.paused); });
+        if (typeof d.speed === 'number') apply(rt, function (r) { r.setSpeed(d.speed); });
+        if (d.camera) apply(rt, function (r) { r.setCamera(d.camera); });
+      }
+      if (d.want !== 'png') return;
       function post(extra) {
         var payload = { type: 'any3d-world', png: { id: d.id } };
         for (var k in extra) payload.png[k] = extra[k];

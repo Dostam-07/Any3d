@@ -43,10 +43,12 @@ export function HeroSiteChrome({ sceneName, format, motion, onFullscreen, onSnap
   const meta = FORMAT_META[format];
   return (
     <>
-      {/* Readability scrims: the scene keeps the right half, copy keeps the left. */}
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(5,7,13,0.94)_0%,rgba(5,7,13,0.8)_26%,rgba(5,7,13,0.34)_50%,rgba(5,7,13,0.08)_72%,rgba(5,7,13,0)_88%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-28 bg-gradient-to-b from-[#05070d]/90 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[60%] bg-gradient-to-t from-[#05070d] from-28% via-[#05070d]/82 via-58% to-transparent" />
+      {/* Readability scrims: the copy keeps the left third, the scene keeps the right.
+          Kept as a wide gradient rather than a dark panel so a noon scene stays
+          bright across most of the banner instead of sitting in a black field. */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(5,7,13,0.88)_0%,rgba(5,7,13,0.66)_28%,rgba(5,7,13,0.3)_52%,rgba(5,7,13,0.06)_74%,rgba(5,7,13,0)_90%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-[#05070d]/70 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[56%] bg-gradient-to-t from-[#05070d]/95 from-20% via-[#05070d]/72 via-54% to-transparent" />
 
       {/* Mock site navigation: a hero belongs to a page, so the page header shows. */}
       <div

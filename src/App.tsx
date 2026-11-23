@@ -1299,7 +1299,9 @@ export function App() {
     try {
       // The exported file carries the atmosphere the user is looking at, so it
       // reopens at dusk even when opened straight from disk.
-      const res = await bundleCode(withPresentationSize(code, size), format, format === 'svg' ? stageLook : null);
+      // Every format carries the look into the exported file, not just SVG: the
+      // worlds runtime used to open at its default sky while the studio showed dusk.
+      const res = await bundleCode(withPresentationSize(code, size), format, stageLook);
       const blob = new Blob([res.html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
