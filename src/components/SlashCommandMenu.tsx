@@ -47,14 +47,6 @@ export const SLASH_COMMANDS: CommandItem[] = [
     badgeColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
   },
   {
-    command: '/dither',
-    label: '/dither',
-    description: 'Create or switch to 4×4 Bayer Ordered Dither Yard',
-    icon: Sparkles,
-    badge: 'Dither Yard',
-    badgeColor: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
-  },
-  {
     command: '/enhance',
     label: '/enhance',
     description: 'Exponentially enhance prompt with architectural nuance',

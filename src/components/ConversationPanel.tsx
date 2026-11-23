@@ -585,7 +585,7 @@ export const ConversationPanel: React.FC<ConversationPanelProps> = ({
           {/* Format Selector */}
           {setFormat && (
             <div className="flex items-center p-0.5 rounded-lg bg-zinc-950/70 border border-white/[0.06] text-[11px]">
-              {(['svg', 'worlds', 'pixel', 'dither'] as const).map((fmt) => (
+              {(['svg', 'worlds', 'pixel'] as const).map((fmt) => (
                 <button
                   key={fmt}
                   type="button"

@@ -462,7 +462,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
             { key: 'svg', label: 'SVG', Icon: SvgIcon },
             { key: 'worlds', label: 'Worlds 3D', Icon: Box },
             { key: 'pixel', label: 'Pixel', Icon: PixelIcon },
-            { key: 'dither', label: 'Dither', Icon: Sparkles },
           ].map(({ key, label, Icon }) => {
             const active = format === key;
             return (
@@ -903,7 +902,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                     </button>
                   )}
                   <span className="hidden sm:inline text-[10px] text-zinc-600 font-mono truncate">
-                    /svg · /worlds · /pixel · /dither
+                    /svg · /worlds · /pixel
                   </span>
                 </div>
                 <button

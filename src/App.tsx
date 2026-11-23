@@ -962,10 +962,10 @@ export function App() {
       commandUsed = '/pixel';
       setFormat('pixel');
     } else if (/^\/dither\s*/i.test(trimmed)) {
-      targetFormat = 'dither';
+      targetFormat = 'pixel';
       instruction = trimmed.replace(/^\/dither\s*/i, '');
-      commandUsed = '/dither';
-      setFormat('dither');
+      commandUsed = '/pixel';
+      setFormat('pixel');
     }
 
     if (!instruction.trim()) {

@@ -49,7 +49,7 @@ interface HeaderProps {
 }
 
 const ENGINE_CONFIG: Record<
-  RenderFormat,
+  'svg' | 'worlds' | 'pixel',
   {
     name: string;
     label: string;
@@ -90,16 +90,6 @@ const ENGINE_CONFIG: Record<
     activeBorder: 'border-amber-500/40',
     activeText: 'text-amber-400',
     glow: 'shadow-amber-500/20',
-  },
-  dither: {
-    name: '4×4 Dither',
-    label: 'Dither',
-    badge: '360×280 5-Tone',
-    icon: Sparkles,
-    activeBg: 'bg-cyan-500/15',
-    activeBorder: 'border-cyan-500/40',
-    activeText: 'text-cyan-400',
-    glow: 'shadow-cyan-500/20',
   },
 };
 
@@ -171,7 +161,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Engine Switcher — full label with icon matching capsule style */}
         <div className="flex items-center p-1 rounded-xl bg-zinc-950/80 border border-white/[0.08] shadow-inner shrink-0">
-          {(Object.keys(ENGINE_CONFIG) as RenderFormat[]).map((key) => {
+          {(Object.keys(ENGINE_CONFIG) as ('svg' | 'worlds' | 'pixel')[]).map((key) => {
             const cfg = ENGINE_CONFIG[key];
             const Icon = cfg.icon;
             const isActive = format === key;

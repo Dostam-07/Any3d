@@ -114,12 +114,12 @@ const INSPIRATIONS: InspirationItem[] = [
   {
     id: 'floating-citadel',
     title: 'Floating Sky Citadel',
-    format: 'dither',
+    format: 'worlds',
     description: 'Ancient monolithic fortress ruins suspended on an aerated floating rock chunk with cascading vines and atmospheric clouds.',
-    prompt: 'An ancient fortress floating on a rock island in the clouds with hanging ruins and dithered shadows',
-    badge: '4×4 Dither',
-    accent: 'text-sky-400 border-sky-500/30 bg-sky-500/10',
-    bgGlow: 'from-sky-500/10 via-transparent to-transparent',
+    prompt: 'An ancient fortress floating on a rock island in the clouds with hanging ruins and mystical obelisks',
+    badge: 'Worlds 3D',
+    accent: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
+    bgGlow: 'from-purple-500/10 via-transparent to-transparent',
   },
 ];
 

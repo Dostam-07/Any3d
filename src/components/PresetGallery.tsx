@@ -51,8 +51,10 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const filtered = presets.filter((p) => {
-    const matchesFormat = filter === 'all' || p.format === filter;
+  const filtered = presets
+    .filter((p) => p.format !== 'dither')
+    .filter((p) => {
+      const matchesFormat = filter === 'all' || p.format === filter;
     const matchesSearch =
       !search.trim() ||
       p.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -267,7 +269,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
             >
               All ({presets.length})
             </button>
-            {(['svg', 'worlds', 'pixel', 'dither'] as const).map((fmt) => {
+            {(['svg', 'worlds', 'pixel'] as const).map((fmt) => {
               const count = presets.filter((p) => p.format === fmt).length;
               const cfg = ENGINE_LABELS[fmt];
               const Icon = cfg.icon;

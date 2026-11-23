@@ -76,9 +76,7 @@ export const PromptBar: React.FC<PromptBarProps> = ({
       ? SVG_SUGGESTIONS
       : format === 'worlds'
       ? WORLDS_SUGGESTIONS
-      : format === 'pixel'
-      ? PIXEL_SUGGESTIONS
-      : DITHER_SUGGESTIONS;
+      : PIXEL_SUGGESTIONS;
 
   const placeholders: Record<RenderFormat, string> = {
     svg: 'Describe an isometric Any3d scene... (e.g. Airport with planes running on the runway)',
@@ -239,10 +237,6 @@ export const PromptBar: React.FC<PromptBarProps> = ({
           ) : format === 'pixel' ? (
             <div className="hidden sm:flex items-center px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-300">
               320×240 · 24fps
-            </div>
-          ) : format === 'dither' ? (
-            <div className="hidden sm:flex items-center px-2.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[11px] font-mono text-cyan-300">
-              360×280 · 4×4
             </div>
           ) : (
             <div className="hidden sm:flex items-center px-2.5 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-[11px] font-mono text-indigo-300">

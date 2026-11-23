@@ -154,7 +154,7 @@ export const FirstRunPanel: React.FC<FirstRunPanelProps> = ({
       <div className="mb-6">
         <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-3">Choose an Engine</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          {(['svg', 'worlds', 'pixel', 'dither'] as RenderFormat[]).map((f) => {
+          {(['svg', 'worlds', 'pixel'] as RenderFormat[]).map((f) => {
             const isActive = localFormat === f;
             const iconMap: Record<RenderFormat, React.FC<{ className?: string }>> = {
               svg: Shapes,

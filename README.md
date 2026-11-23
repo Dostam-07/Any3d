@@ -2,7 +2,7 @@
 
 # Any3d — AI 3D Scene Studio on Your Machine
 
-**Describe a place in natural language. Watch it build itself. Keep editing it conversationally. Export one self-contained HTML file that runs anywhere offline.**
+**Describe complex places in natural language — from bustling metropolis cities and deep-water container docks to orbital rocket launchpads and automated agritech farms. Watch them build in real-time. Keep editing them conversationally. Export one self-contained HTML file that runs anywhere offline.**
 
 [![React 19](https://img.shields.io/badge/React-19.0-61dafb?style=flat-square&logo=react)](https://react.dev/)
 [![Vite 6](https://img.shields.io/badge/Vite-6.0-646cff?style=flat-square&logo=vite)](https://vitejs.dev/)
@@ -10,7 +10,7 @@
 [![Local-First](https://img.shields.io/badge/Privacy-Local--First-10b981?style=flat-square)](https://ollama.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-[Quick Start](#quick-start) • [Four Render Engines](#four-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
+[Quick Start](#quick-start) • [Complex Scene Showcase](#complex-scene-showcase--prompt-cookbook) • [Three Render Engines](#three-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
 
 </div>
 
@@ -20,7 +20,9 @@
   <img src="docs/assets/home.png" alt="Any3d home screen with prompt composer, engine selectors, size switchers and curated 3D scene gallery" width="100%" />
 </p>
 
-Any3d is an open-source, local-first **text-to-3D scene creative studio**. It transforms descriptive prompts into interactive, animated, miniature 3D worlds. Every scene is fully editable in real-time chat, responsive across desktops and phones, grounded in real-world visual references, and exports into a single standalone HTML file with zero runtime dependencies.
+Any3d is an open-source, local-first **text-to-3D scene creative studio**. It transforms descriptive prompts into interactive, animated, miniature 3D worlds. Whether you need a dense cyberpunk city grid, an industrial shipping dock with operating gantry cranes, a heavy-lift rocket launch facility, or an automated crop farm with GPS combines, Any3d generates complete procedural geometry, lighting, materials, and motion loops.
+
+Every scene is fully editable in real-time chat, responsive across desktops and phones, grounded in real-world visual references, and exports into a single standalone HTML file with zero runtime dependencies.
 
 ---
 
@@ -28,11 +30,11 @@ Any3d is an open-source, local-first **text-to-3D scene creative studio**. It tr
 
 | Feature | Description |
 |---|---|
-| **Prompt to 3D Scene** | A single sentence generates a complete animated 3D scene — geometry, palette, lighting, camera frustum, and `tick()` animation loops. |
-| **Conversational Editing** | Follow-up prompts refine *the current live scene*: add props, recolor, rotate, animate, or reframe without losing scene history. |
-| **Four Render Engines** | Choose from **SVG Vector**, **Three.js Worlds**, **Pixel Art (320×240)**, and **4×4 Ordered Dither**. |
+| **Complex Prompt to 3D Scene** | Natural language compiles directly into intricate multi-object dioramas — skyscrapers, cargo cranes, launch gantries, articulated vehicles, and synchronized animation loops. |
+| **Conversational Editing** | Follow-up prompts refine *the current live scene*: "add an elevated monorail between the towers", "make the rocket engines vent vapor", "add a combine harvester to the crop field". |
+| **Three Render Engines** | Choose from **SVG Vector** (clean architectural lines), **Three.js Worlds 3D** (ambient-occluded WebGL dioramas), and **Pixel Art** (nostalgic 320×240 software rasterizer). |
 | **Web Presentation Modes** | Calibrated output formats: **Hero (16:9)** for wide landing page banners, and **Card (4:3)** for compact website UI components. |
-| **Authentic Visual Grounding** | Automatic real-photo research using Wikipedia Commons to extract authentic real-world materials, vehicle shapes, and architectural cues — never mock or fake data. |
+| **Authentic Visual Grounding** | Automated background photographic research via Wikipedia Commons extracts authentic real-world engineering details, materials, and architectural scales — never mock or fake data. |
 | **Live Atmosphere Scrubber** | Real-time lighting control (Dawn, Noon, Dusk, Night, Golden Hour, Blue Hour) and dynamic weather (Clear, Rain, Snow). |
 | **AnyStack 3D Arcade** | Integrated 3D tower-stacking physics minigame built directly into the studio to enjoy while scenes build. |
 | **Offline-First & Privacy** | Run 100% locally with **Ollama** on your GPU/CPU, or connect **Google Gemini** for high-speed cloud generation. |
@@ -48,6 +50,51 @@ Starting a project opens its dedicated studio workspace (`#/project/<id>`) pairi
 <p align="center">
   <img src="docs/assets/project-chat.png" alt="Any3d project page: a conversation about a coffee cart on the left, the rendered 3D scene and version badges on the right" width="100%" />
 </p>
+
+---
+
+## Complex Scene Showcase & Prompt Cookbook
+
+Any3d is built to handle rich, multi-layered environments with dozens of interacting elements. Here are ready-to-build prompt recipes across complex industrial, urban, aerospace, and agricultural settings:
+
+### 🏙️ Metropolis & Cyberpunk City Grid
+
+```text
+A dense multi-level cyberpunk metropolis at dusk: towering brutalist skyscrapers with illuminated window grids, glass-enclosed skybridges linking high-rises, an elevated monorail train cruising on curved tracks, multi-lane asphalt highway carrying autonomous hover-vehicles, glowing holographic billboard advertisements, neon ramen stalls with steam rising, and reflective rain puddles across the pavement.
+```
+- **Key Props**: Skyscraper cluster, skybridges, monorail with loop motion, neon billboards, highway with moving car pods, pedestrian overpasses.
+- **Interactions**: Hover over skybridge reveals structural read-out; click monorail to toggle speed.
+
+### 🚢 Deep-Water Industrial Container Dock & Harbour
+
+```text
+A sprawling deep-water maritime shipping container terminal: a massive 20,000 TEU container freighter docked along a concrete quay, three colossal rail-mounted gantry cranes actively lifting colored shipping containers, tractor trucks queueing in striped transport lanes, stacks of modular cargo crates, a harbor tugboat with water spray escort, and animated ocean waves with channel buoys.
+```
+- **Key Props**: Container freighter hull with cargo stacks, motorized gantry cranes with moving trolleys, terminal trucks, harbor tugboat with oscillating wake, navigation buoys.
+- **Interactions**: Hover over container stacks to read TEU inventory; click gantry crane to lower spreader.
+
+### 🚀 Orbital Rocket Ship & Spaceport Launchpad
+
+```text
+A nocturnal orbital rocket launch facility at T-minus 10 seconds: a massive multi-stage heavy-lift rocket on a concrete launch pedestal, articulated hydraulic gantry tower arms swinging away, billowing white cryogenic LOX vapor clouds venting from booster valves, flame trench deflector channels, parabolic telemetry satellite dishes rotating on bunker roofs, and perimeter floodlights piercing the dark sky.
+```
+- **Key Props**: Multi-stage rocket booster with interstage fairings, launch umbilical tower, swinging service arms, cryogenic vapor particle emitters, tracking radar dishes, bunker telemetry array.
+- **Interactions**: Tap launchpad to trigger countdown exhaust smoke; hover over telemetry dish to see orbital angle.
+
+### 🌾 Automated Agritech Farm & Terraced Valley
+
+```text
+A sprawling high-tech automated agricultural farm estate: expansive golden wheat fields and geometric hydroponic greenhouse domes, two autonomous GPS-guided combine harvesters cutting crop swaths with rotating reel headers, corrugated steel grain elevator silos with conveyor chutes, solar tracking photovoltaic arrays, a turning aeration windmill, and an irrigation canal network with overflow sluice gates.
+```
+- **Key Props**: Crop field swaths, automated combines with rotating cutters, hydroponic glass geodesic domes, cylindrical grain silos, tracking solar panels, lattice windmill with spinning sails.
+- **Interactions**: Hover over combine harvester to read crop yield metrics; click windmill to toggle rotation speed.
+
+### 🔬 High-Altitude Mountain Astronomical Observatory
+
+```text
+A high-altitude celestial research observatory perched on snow-dusted jagged mountain peaks: twin rotating hemispherical silver domes with open observation slits pointing massive optical telescopes toward the cosmos, an array of satellite downlink dishes, meteorological radar masts with spinning anemometers, a funicular cliffside tramway, and a brilliant starry nebula night sky.
+```
+- **Key Props**: Dual silver observatory domes with open slits, reflecting optical telescopes, funicular cable car climbing cliff tracks, meteorological sensor masts, starry night sky dome.
 
 ---
 
@@ -74,7 +121,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser. Type a scene prompt (e.g. *"A cozy corner coffee cart with a barista and a sleeping cat"*), hit **Enter**, and watch your scene come to life.
+Open `http://localhost:5173` in your browser. Type a scene prompt, hit **Enter**, and watch your scene construct itself.
 
 ### Production Build
 
@@ -112,16 +159,15 @@ No internet and no LLM installed? Any3d includes an offline procedural generator
 
 ---
 
-## Four Render Engines
+## Three Render Engines
 
-Any3d houses four dedicated rendering engines sharing a unified prompt compiler and look system:
+Any3d houses three dedicated rendering engines sharing a unified prompt compiler and look system:
 
 | Engine | Tech Stack | Aesthetic | Best For | Output Size |
 |---|---|---|---|---|
-| **SVG** | Dependency-free Vector SVG | 6 distinct vector themes, crisp lines, zero WebGL | Docs, app UI, landing page illustrations | ~30–35 KB |
-| **Worlds** | Three.js / WebGL 2 | Soft miniature diorama, articulated figures, dynamic shadows | Rich 3D worlds, product pedestals, games | ~0.77 MB |
-| **Pixel** | Software 2D Canvas Rasterizer | 320×240 retro resolution, 8×8 Bayer dither, dissolving edges | Nostalgic pixel-art vignettes, lightweight 2D | ~50 KB |
-| **Dither** | Pixel Kernel + 4×4 Ordered Matrix | 360×280 retro monochrome dither, sharp shadow casting | Retro hardware styling, high-contrast scenes | ≤70 KB |
+| **SVG** | Dependency-free Vector SVG | 6 distinct vector themes, crisp lines, zero WebGL | Complex technical schematics, architectural line art, UI illustrations | ~30–35 KB |
+| **Worlds** | Three.js / WebGL 2 | Soft miniature diorama, articulated figures, dynamic shadows | Narrative 3D worlds, industrial docks, cities, rocket launchpads | ~0.77 MB |
+| **Pixel** | Software 2D Canvas Rasterizer | 320×240 retro resolution, 8×8 Bayer dither, dissolving edges | Nostalgic retro scenes, cozy farms, lightweight vignettes | ~50 KB |
 
 <br />
 
@@ -133,9 +179,7 @@ Any3d houses four dedicated rendering engines sharing a unified prompt compiler 
   <img src="docs/assets/engine-worlds-card.png" alt="Three.js world diorama of a morning bakery" width="48%" />
 </p>
 <p align="center">
-  <img src="docs/assets/engine-pixel-card.png" alt="Pixel art scene of a flower stall" width="48%" />
-  &nbsp;
-  <img src="docs/assets/engine-dither-card.png" alt="Dithered retro scene of a cliffside lighthouse" width="48%" />
+  <img src="docs/assets/engine-pixel-card.png" alt="Pixel art scene of a flower stall" width="60%" />
 </p>
 
 ---
@@ -148,8 +192,8 @@ Any3d generates 3D scenes tailored to their real-world placement on the web:
 
 | Presentation Format | Aspect Ratio | Camera & Stage Calibration | Ideal Placement |
 |---|---|---|---|
-| **Web Hero Section** | **16:9 Widescreen** | Panoramic boulevard bounds (`20.0 × 11.2`), wide camera frustum (`1.35×`), spacious multi-prop layout | Full-width landing page headers, hero sections, top-of-page visual anchors |
-| **Website Feature Card** | **4:3 Component** | Tight diorama bounds (`13.0 × 9.6`), focused component framing (`1.02×`), central pedestal emphasis | Feature cards, pricing blocks, bento grid items, documentation callouts |
+| **Web Hero Section** | **16:9 Widescreen** | Panoramic boulevard bounds (`20.0 × 11.2`), wide camera frustum (`1.35×`), spacious multi-prop layout | Full-width landing page headers, sprawling city skylines, shipping docks |
+| **Website Feature Card** | **4:3 Component** | Tight diorama bounds (`13.0 × 9.6`), focused component framing (`1.02×`), central pedestal emphasis | Feature cards, bento grids, standalone rocket launchpad pedestals |
 
 Switch between **Hero** and **Card** with one click in the prompt bar or toolbar to see the stage and camera bounds adapt dynamically.
 
@@ -194,10 +238,10 @@ Control scene lighting, sun elevation, shadows, and weather in real time:
 
 ## Web Visual Grounding
 
-When you prompt a complex scene — such as *"a double-decker bus full of passengers with a conductor"* — Any3d performs automated background visual research on Wikimedia Commons.
+When you prompt a complex scene — such as *"an industrial deep-water container dock with a cargo ship and gantry cranes"* or *"an automated agritech farm with combines and grain silos"* — Any3d performs automated background visual research on Wikimedia Commons.
 
-- **Authentic Photographic Studies**: Gathers real photographs of the exact subjects requested (real vehicles, real architectural details, real passenger layouts).
-- **No Mock or Fake Data**: Never uses generic placeholders or hallucinated geometries. Real-world proportions and colors directly ground the scene generator.
+- **Authentic Photographic Studies**: Gathers real photographs of the exact subjects requested (real container gantry crane truss geometry, real ship draft waterlines, real combine harvester cutting reels).
+- **No Mock or Fake Data**: Never uses generic placeholders or hallucinated geometries. Real-world proportions, color palettes, and architectural scales directly ground the scene generator.
 
 ---
 
@@ -209,7 +253,7 @@ Waiting for a model generation or want to take a creative break? Click **AnyStac
 
 ## Deterministic Validation & Inspector
 
-Every generated scene passes an automated 12-point quality harness before rendering:
+Every generated scene passes an automated quality harness before rendering:
 
 <p align="center">
   <img src="docs/assets/inspector.png" alt="Any3d validation drawer listing structural checks and prompt fidelity for the current scene" width="100%" />
@@ -223,18 +267,17 @@ Every generated scene passes an automated 12-point quality harness before render
 
 ---
 
-## 44 Curated Presets
+## Curated Preset Library
 
-Browse production-grade scenes across all engines via the **Presets** gallery (`Ctrl/⌘ K`):
+Browse 40 production-grade scenes across all three engines via the **Presets** gallery (`Ctrl/⌘ K`):
 
 <p align="center">
-  <img src="docs/assets/gallery.png" alt="Any3d preset gallery showing curated scenes across SVG, Worlds, Pixel and Dither engines" width="100%" />
+  <img src="docs/assets/gallery.png" alt="Any3d preset gallery showing curated scenes across SVG, Worlds, and Pixel engines" width="100%" />
 </p>
 
 - **SVG (30)**: `town`, `island`, `farm`, `warehouse`, `powder`, `cafe`, `launchpad`, `server`, `rack`, `mailbox`, `seedling`, `desk`, `turntable`, `harbour`, `kitchen`, `assembly`, `observatory`, `vending`, `airport`, `badminton`, `barbershop`, `gym`, `laundromat`, `library`, `arcade`, `classroom`, `foodtruck`, `greenhouse`, `campsite`, `patisserie`.
 - **Worlds 3D (7)**: `bakery`, `pottery-studio`, `florist`, `observatory`, `cricket`, `basketball`, `street-juggler`.
 - **Pixel (3)**: `flower-stall`, `pier`, `allotment`.
-- **Dither (4)**: `forge`, `lighthouse`, `tea-house`, `windmill`.
 
 ---
 
@@ -282,12 +325,12 @@ Any3d is fully responsive. On mobile screens and tablets, the interface intellig
 ```
 Any3d/
 ├── core/
-│   ├── kernels/            # Four core render kernels (SVG, Worlds, Pixel, Dither)
+│   ├── kernels/            # Three core render kernels (SVG, Worlds, Pixel)
 │   └── templates/          # HTML bench templates for standalone bundling
 ├── server/                 # Express backend API (:3001)
 │   ├── engine/
 │   │   ├── bundler.js      # Self-healing HTML bundler + Three.js esbuild packager
-│   │   ├── validator.js    # Deterministic 12-point scene validator
+│   │   ├── validator.js    # Deterministic scene validator
 │   │   ├── fidelityValidator.js  # Semantic prompt coverage & scoring
 │   │   ├── procedural.js   # Deterministic offline procedural fallback generator
 │   │   └── semantics.js    # Subject, prop, and layout semantics extractor
@@ -297,7 +340,7 @@ Any3d/
 │   │   ├── enhancer.js     # Prompt expansion & real-world photo researcher
 │   │   ├── mutator.js      # Conversational differential scene editor
 │   │   └── offline-editor.js   # Sub-5ms deterministic AST editor (SVG)
-│   └── presets/            # Source code for all 44 preset scenes
+│   └── presets/            # Source code for preset scenes
 ├── src/                    # React 19 + Vite 6 frontend
 │   ├── components/         # Homepage, ProjectPage, SandboxPreview, LookScrubber, AnyStack...
 │   ├── lib/                # glbExporter, turntable, look, scene-payload, api
@@ -316,7 +359,7 @@ Any3d/
 
 - **Vector SVG**: [SVG Craft](docs/guides/svg-craft.md) • [SVG Motion Loops](docs/guides/svg-motion.md) • [SVG + React](docs/guides/svg-react.md)
 - **Three.js Worlds**: [Worlds Art Direction](docs/guides/worlds-art-direction.md) • [Worlds Scene API](docs/guides/worlds-scene-api.md)
-- **Pixel & Dither**: [Pixel Art Direction](docs/guides/pixel-art-direction.md) • [Pixel Scene API](docs/guides/pixel-scene-api.md) • [Dither Yard Engine](docs/guides/dither-yard.md)
+- **Pixel Art**: [Pixel Art Direction](docs/guides/pixel-art-direction.md) • [Pixel Scene API](docs/guides/pixel-scene-api.md)
 - **Exports & Embeds**: [Turntable Export](docs/guides/turntable-export.md) • [Embed Script & Storyboard](docs/guides/embed-and-storyboard.md)
 - **Atmosphere**: [Atmosphere & Look Scrubber](docs/guides/atmosphere-and-look.md) • [Palette from Photo](docs/guides/palette-from-photo.md)
 - **Architecture**: [Scene Payload Protocol](docs/guides/scene-payload.md) • [Version Diff & Seeds](docs/guides/version-diff-and-seeds.md)
