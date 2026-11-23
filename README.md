@@ -10,7 +10,7 @@
 [![Local-First](https://img.shields.io/badge/Privacy-Local--First-10b981?style=flat-square)](https://ollama.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-[Quick Start](#quick-start) • [Complex Scene Showcase](#complex-scene-showcase--prompt-cookbook) • [Three Render Engines](#three-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
+[Quick Start](#quick-start) • [Complex Scene Gallery](#complex-scene-gallery--prompt-cookbook) • [Three Render Engines](#three-render-engines) • [Web Presentation Sizes](#web-presentation-sizes-hero-vs-card) • [Atmosphere & Look](#atmosphere--lighting-scrubber) • [Visual Research](#web-visual-grounding) • [Exports](#export-suite) • [Docs](#documentation)
 
 </div>
 
@@ -48,32 +48,34 @@ Every scene is fully editable in real-time chat, responsive across desktops and 
 Starting a project opens its dedicated studio workspace (`#/project/<id>`) pairing the conversational chat assistant on the left with the interactive live 3D viewport on the right.
 
 <p align="center">
-  <img src="docs/assets/project-chat.png" alt="Any3d project page: a conversation about a coffee cart on the left, the rendered 3D scene and version badges on the right" width="100%" />
+  <img src="docs/assets/project-chat.png" alt="Any3d project page: a conversation about an industrial shipping harbour on the left, the rendered 3D scene and version badges on the right" width="100%" />
 </p>
 
 ---
 
-## Complex Scene Showcase & Prompt Cookbook
+## Complex Scene Gallery & Prompt Cookbook
 
-Any3d is built to handle rich, multi-layered environments with dozens of interacting elements. Here are ready-to-build prompt recipes across complex industrial, urban, aerospace, and agricultural settings:
+Any3d is built to handle rich, multi-layered environments with dozens of interacting elements. Here are ready-to-build scenes and prompts across complex industrial, urban, aerospace, and agricultural settings:
 
-### 🏙️ Metropolis & Cyberpunk City Grid
+### 🚢 Deep-Water Industrial Container Dock & Shipping Harbour
 
-```text
-A dense multi-level cyberpunk metropolis at dusk: towering brutalist skyscrapers with illuminated window grids, glass-enclosed skybridges linking high-rises, an elevated monorail train cruising on curved tracks, multi-lane asphalt highway carrying autonomous hover-vehicles, glowing holographic billboard advertisements, neon ramen stalls with steam rising, and reflective rain puddles across the pavement.
-```
-- **Key Props**: Skyscraper cluster, skybridges, monorail with loop motion, neon billboards, highway with moving car pods, pedestrian overpasses.
-- **Interactions**: Hover over skybridge reveals structural read-out; click monorail to toggle speed.
-
-### 🚢 Deep-Water Industrial Container Dock & Harbour
+<p align="center">
+  <img src="docs/assets/scene-dock.png" alt="Deep-Water Industrial Container Dock with Freighter and Gantry Cranes" width="100%" />
+</p>
 
 ```text
-A sprawling deep-water maritime shipping container terminal: a massive 20,000 TEU container freighter docked along a concrete quay, three colossal rail-mounted gantry cranes actively lifting colored shipping containers, tractor trucks queueing in striped transport lanes, stacks of modular cargo crates, a harbor tugboat with water spray escort, and animated ocean waves with channel buoys.
+A sprawling deep-water maritime shipping container terminal: a massive container freighter docked along a concrete quay, rail-mounted gantry cranes actively lifting colored shipping containers, transport trucks queueing in striped transit lanes, stacks of modular cargo crates, a harbor tugboat with water spray escort, and animated ocean waves with channel buoys.
 ```
 - **Key Props**: Container freighter hull with cargo stacks, motorized gantry cranes with moving trolleys, terminal trucks, harbor tugboat with oscillating wake, navigation buoys.
 - **Interactions**: Hover over container stacks to read TEU inventory; click gantry crane to lower spreader.
 
+---
+
 ### 🚀 Orbital Rocket Ship & Spaceport Launchpad
+
+<p align="center">
+  <img src="docs/assets/scene-launchpad.png" alt="Orbital Rocket Launchpad with Hydraulic Gantry Arms and Telemetry Bunker" width="100%" />
+</p>
 
 ```text
 A nocturnal orbital rocket launch facility at T-minus 10 seconds: a massive multi-stage heavy-lift rocket on a concrete launch pedestal, articulated hydraulic gantry tower arms swinging away, billowing white cryogenic LOX vapor clouds venting from booster valves, flame trench deflector channels, parabolic telemetry satellite dishes rotating on bunker roofs, and perimeter floodlights piercing the dark sky.
@@ -81,20 +83,46 @@ A nocturnal orbital rocket launch facility at T-minus 10 seconds: a massive mult
 - **Key Props**: Multi-stage rocket booster with interstage fairings, launch umbilical tower, swinging service arms, cryogenic vapor particle emitters, tracking radar dishes, bunker telemetry array.
 - **Interactions**: Tap launchpad to trigger countdown exhaust smoke; hover over telemetry dish to see orbital angle.
 
-### 🌾 Automated Agritech Farm & Terraced Valley
+---
+
+### 🌾 Automated Agritech Farm & Terraced Crop Estate
+
+<p align="center">
+  <img src="docs/assets/scene-farm.png" alt="Automated Agritech Farm with Crop Fields, Windmill, and Barn" width="100%" />
+</p>
 
 ```text
-A sprawling high-tech automated agricultural farm estate: expansive golden wheat fields and geometric hydroponic greenhouse domes, two autonomous GPS-guided combine harvesters cutting crop swaths with rotating reel headers, corrugated steel grain elevator silos with conveyor chutes, solar tracking photovoltaic arrays, a turning aeration windmill, and an irrigation canal network with overflow sluice gates.
+A sprawling high-tech automated agricultural farm estate: expansive golden wheat fields and geometric hydroponic greenhouse domes, autonomous GPS-guided combine harvesters cutting crop swaths with rotating reel headers, corrugated steel grain elevator silos with conveyor chutes, solar tracking photovoltaic arrays, a turning aeration windmill, and an irrigation canal network with overflow sluice gates.
 ```
 - **Key Props**: Crop field swaths, automated combines with rotating cutters, hydroponic glass geodesic domes, cylindrical grain silos, tracking solar panels, lattice windmill with spinning sails.
 - **Interactions**: Hover over combine harvester to read crop yield metrics; click windmill to toggle rotation speed.
 
-### 🔬 High-Altitude Mountain Astronomical Observatory
+---
+
+### 🏙️ Metropolis City Grid & Urban Architecture
+
+<p align="center">
+  <img src="docs/assets/scene-city.png" alt="Metropolis City Center with Multi-Tier Buildings and Transit" width="100%" />
+</p>
 
 ```text
-A high-altitude celestial research observatory perched on snow-dusted jagged mountain peaks: twin rotating hemispherical silver domes with open observation slits pointing massive optical telescopes toward the cosmos, an array of satellite downlink dishes, meteorological radar masts with spinning anemometers, a funicular cliffside tramway, and a brilliant starry nebula night sky.
+A dense multi-level urban city center at twilight: towering brutalist skyscrapers with illuminated window grids, glass-enclosed skybridges linking high-rises, an elevated monorail train cruising on curved tracks, multi-lane asphalt highway carrying autonomous commuter pods, glowing holographic billboard advertisements, neon cafes with steam rising, and reflective street pavement.
 ```
-- **Key Props**: Dual silver observatory domes with open slits, reflecting optical telescopes, funicular cable car climbing cliff tracks, meteorological sensor masts, starry night sky dome.
+- **Key Props**: Skyscraper cluster, skybridges, monorail with loop motion, neon billboards, highway with moving car pods, pedestrian overpasses.
+- **Interactions**: Hover over skybridge reveals structural read-out; click monorail to toggle transit speed.
+
+---
+
+### 🔬 High-Altitude Observatory & Regional Airport
+
+<p align="center">
+  <img src="docs/assets/scene-observatory.png" alt="High-Altitude Mountain Summit Astronomical Observatory" width="48%" />
+  &nbsp;
+  <img src="docs/assets/scene-airport.png" alt="Regional Airport Terminal with Aircraft Taxiing" width="48%" />
+</p>
+
+- **Astronomical Observatory**: Dual rotating silver domes with open aperture slits pointing reflecting telescopes toward the stars, satellite telemetry dish arrays, and cliffside funicular tramway.
+- **Airport Hub**: Modern terminal building with jet bridges, taxiways with directional striping, twin-engine passenger aircraft taxiing, and a rotating 360-degree airport radar beacon tower.
 
 ---
 
