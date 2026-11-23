@@ -55,12 +55,9 @@ if (await card.count()) {
   await card.click();
   await page.waitForTimeout(3200);
 }
-// The capture tools (Clip, Storyboard) live on the studio hub's stage toolbar,
-// and loading a preset navigates to the project page, so come back with the
-// session still loaded.
-await page.goto(`${BASE}/#/studio`, { waitUntil: 'domcontentloaded' });
-await page.waitForTimeout(3600);
-check('the hub keeps the loaded scene', (await page.frameLocator('iframe').first().locator('svg').count()) > 0);
+// Loading a preset lands on the project page, which is where a user actually
+// works — and where the storyboard control has to be reachable too.
+check('the project page is where the work happens', /#\/project\//.test(page.url()), page.url());
 
 // Freeze the live scene first. The stage keeps animating otherwise, and a sheet
 // built from the live mount (the regression this check exists for) would then be
@@ -73,6 +70,7 @@ if (await stillButton.count()) {
 }
 
 const storyboardButton = page.locator('button[aria-label="Storyboard"]').first();
+check('the project toolbar offers a storyboard', (await page.locator('button[aria-label="Storyboard"]').count()) > 0);
 check('the storyboard control is enabled for an SVG scene', await storyboardButton.isEnabled());
 
 /** Run one sheet and return its PNG bytes plus the labels the dialog reports. */
@@ -203,6 +201,15 @@ if (await sizeButton.count()) {
   const resizedDelta = await difference(picked.bytes, resized.bytes, TILE_PICTURE);
   check('the sheet follows the presentation size', resizedDelta > 3, `mean delta ${resizedDelta}`);
 }
+
+// The studio hub keeps its own entry to the same sheet.
+await page.goto(`${BASE}/#/studio`, { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(3600);
+check(
+  'the studio hub still offers a storyboard',
+  (await page.locator('button[aria-label="Storyboard"]').count()) > 0 &&
+    (await page.frameLocator('iframe').first().locator('svg').count()) > 0
+);
 
 check('no page errors while rendering sheets', errors.length === 0, errors.join(' | '));
 

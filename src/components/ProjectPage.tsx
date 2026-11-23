@@ -36,6 +36,7 @@ import {
 import { ChatMessage, OllamaModelInfo, PresetScene, RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { SandboxPreview, SandboxPreviewHandle } from './SandboxPreview';
 import { ClipControl } from './ClipControl';
+import { StoryboardControl } from './StoryboardControl';
 import { PaletteFromPhoto } from './PaletteFromPhoto';
 import {
   encodeScene,
@@ -541,8 +542,16 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               {modelName}
             </span>
           )}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-1.5">
             <ClipControl previewRef={previewRef} sceneName={sceneName} disabled={!html || untrusted} />
+            {/* The sheet belongs next to the clip: both capture the scene the user
+                is looking at, and this page is where they actually work on it. */}
+            <StoryboardControl
+              previewRef={previewRef}
+              sceneName={sceneName}
+              format={format}
+              disabled={!html || untrusted}
+            />
           </div>
           <button
             type="button"
