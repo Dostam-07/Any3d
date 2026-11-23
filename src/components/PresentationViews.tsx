@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ArrowUpRight, Camera, Maximize2, Pause, Play } from 'lucide-react';
-import { LOOK_STOPS, lookLabel, nearestStop, type SceneLook } from '../lib/look';
+import { LOOK_STOPS, nearestStop, type SceneLook } from '../lib/look';
 import type { RenderFormat, SVGTheme, WebPresentationSize, WorldFinish } from '../types';
 
 /**
@@ -124,25 +124,27 @@ export function CardSectionHeader({
 }) {
   const meta = FORMAT_META[format];
   return (
-    <header className="flex flex-wrap items-end justify-between gap-3 pb-1">
-      <div>
-        <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--text-muted)]">
-          <span className="h-px w-6 bg-indigo-400/60" />
+    // One row at every width: a wrapping header changes its own height, and the
+    // card below is sized from what is left, so a wrap would shrink the scene.
+    <header className="@container flex flex-nowrap items-end justify-between gap-3 pb-1">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2 truncate text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--text-muted)]">
+          <span className="h-px w-6 shrink-0 bg-indigo-400/60" />
           Cards section
         </div>
-        <h2 className="mt-1.5 text-lg font-semibold tracking-tight text-[var(--text-primary)] sm:text-xl">
-          Your scene as one card in a grid
+        <h2 className="mt-1.5 truncate text-lg font-semibold tracking-tight text-[var(--text-primary)] sm:text-xl">
+          Your scene as a card in a section
         </h2>
         {compact ? null : (
-          <p className="mt-1 max-w-lg text-[11px] leading-relaxed text-[var(--text-muted)]">
-            Compact 4:3 media, its own title and metadata, and sibling cards in the
-            same row. {meta.label} embedded live.
+          <p className="mt-1 hidden max-w-lg truncate text-[11px] leading-relaxed text-[var(--text-muted)] @[600px]:block">
+            Compact 4:3 media, its own title and metadata, and the look controls
+            kept off the card where they belong. {meta.label} embedded live.
           </p>
         )}
       </div>
-      <div className="flex items-center gap-1.5">
-        <span className="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1 text-[10px] font-medium text-[var(--text-secondary)]">
-          {columns} column grid
+      <div className={compact ? 'hidden' : 'flex shrink-0 items-center gap-1.5'}>
+        <span className="hidden whitespace-nowrap rounded-full border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1 text-[10px] font-medium text-[var(--text-secondary)] @[520px]:inline">
+          Grid up to {columns} wide
         </span>
         <span className="inline-flex items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1 text-[10px] font-medium text-[var(--text-secondary)]">
           Card
@@ -168,31 +170,31 @@ export function LiveCardBody({ sceneName, format, motion, hoverText, onSnapshot,
     <div className="flex flex-1 flex-col gap-2.5 p-3.5">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="truncate text-[13px] font-semibold tracking-tight text-[#f4f4f5]">{sceneName}</h3>
-          <p className="mt-0.5 truncate text-[11px] text-[#8b93a1]">
-            {meta.label} <span className="text-[#4b5158]">·</span> {motion}
+          <h3 className="truncate text-[13px] font-semibold tracking-tight text-[var(--text-primary)]">{sceneName}</h3>
+          <p className="mt-0.5 truncate text-[11px] text-[var(--text-muted)]">
+            {meta.label} <span className="text-[var(--text-muted)]">·</span> {motion}
           </p>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#6ee7b7]">
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-500">
           <span className="h-1 w-1 rounded-full bg-emerald-400" />
           Live
         </span>
       </div>
-      <div className="flex min-h-[14px] items-center gap-1.5 text-[10px] font-mono text-[#8b93a1]">
+      <div className="flex min-h-[14px] items-center gap-1.5 text-[10px] font-mono text-[var(--text-muted)]">
         {hoverText ? (
           <>
             <span className="h-1 w-1 rounded-full bg-indigo-400" />
-            <span className="truncate text-indigo-300/90">hover: {hoverText}</span>
+            <span className="truncate text-indigo-500">hover: {hoverText}</span>
           </>
         ) : (
-          <span className="truncate text-[#98a0ac]">Interactive embed · drag to orbit</span>
+          <span className="truncate text-[var(--text-muted)]">Interactive embed · drag to orbit</span>
         )}
       </div>
-      <div className="mt-auto flex items-center gap-1.5 border-t border-[rgba(255,255,255,0.06)] pt-2.5">
+      <div className="mt-auto flex items-center gap-1.5 border-t border-[var(--border-subtle)] pt-2.5">
         <button
           type="button"
           onClick={onSnapshot}
-          className="inline-flex items-center gap-1 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2 py-1 text-[10px] font-medium text-[#d4d4d8] transition hover:bg-[rgba(255,255,255,0.07)] hover:text-[#ffffff] active:scale-[0.98] cursor-pointer"
+          className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] px-2 py-1 text-[10px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)] active:scale-[0.98] cursor-pointer"
         >
           <Camera className="h-3 w-3 text-[#22d3ee]" />
           Still
@@ -200,12 +202,12 @@ export function LiveCardBody({ sceneName, format, motion, hoverText, onSnapshot,
         <button
           type="button"
           onClick={onFullscreen}
-          className="inline-flex items-center gap-1 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2 py-1 text-[10px] font-medium text-[#d4d4d8] transition hover:bg-[rgba(255,255,255,0.07)] hover:text-[#ffffff] active:scale-[0.98] cursor-pointer"
+          className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] px-2 py-1 text-[10px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)] active:scale-[0.98] cursor-pointer"
         >
           <Maximize2 className="h-3 w-3 text-[#818cf8]" />
           Expand
         </button>
-        <span className="ml-auto rounded-md border border-[rgba(255,255,255,0.06)] bg-[rgba(0,0,0,0.20)] px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wide text-[#8b93a1]">
+        <span className="ml-auto rounded-md border border-[var(--border-subtle)] bg-[var(--surface-secondary)] px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wide text-[var(--text-muted)]">
           4:3
         </span>
       </div>
@@ -213,67 +215,24 @@ export function LiveCardBody({ sceneName, format, motion, hoverText, onSnapshot,
   );
 }
 
-interface SceneSpecRow {
-  label: string;
-  value: string;
-}
-
-/**
- * Scene spec as a single quiet row of chips.
- *
- * It used to be a full card beside the live preview, which competed with the
- * thing the user actually came to look at. The same facts now ride in the
- * section chrome, and the freed slot carries the export CTA.
- */
-export function SceneSpecStrip({
-  format,
-  size,
-  motion,
-  finish,
-  theme,
-  look,
-}: {
-  format: RenderFormat;
-  size: WebPresentationSize;
-  motion: string;
-  finish: WorldFinish;
-  theme: SVGTheme;
-  look: SceneLook;
-}) {
-  const rows: SceneSpecRow[] = [
-    { label: 'Engine', value: FORMAT_META[format].label },
-    { label: 'Frame', value: size === 'hero' ? 'Full bleed' : '4:3 card' },
-    { label: 'Look', value: lookLabel(look) },
-    { label: 'Style', value: format === 'worlds' ? finish : theme },
-    { label: 'Motion', value: motion },
-  ];
-  return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      {rows.map((row) => (
-        <span
-          key={row.label}
-          className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1 text-[10px] text-[var(--text-secondary)]"
-        >
-          <span className="uppercase tracking-[0.12em] text-[var(--text-muted)]">{row.label}</span>
-          <span className="font-medium text-[var(--text-primary)]">{row.value}</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
-interface LookCardProps {
+interface LookStripProps {
   accent: string;
   look: SceneLook;
   isPaused: boolean;
-  /** Short stages tighten spacing so the card keeps fitting the viewport. */
+  /** Short stages tighten the row so the scene keeps the room. */
   compact?: boolean;
   onAccentChange: (color: string) => void;
   onLookChange: (look: SceneLook) => void;
   onTogglePlay: () => void;
 }
 
-export function LookCard({
+/**
+ * Look controls belong to the studio, not to the scene: they are a thin strip
+ * under the card, not a sibling card competing with the scene for the frame.
+ * The 3D scene is the subject of this presentation; anything that styles it is
+ * chrome and reads as chrome.
+ */
+export function LookStrip({
   accent,
   look,
   isPaused,
@@ -281,83 +240,78 @@ export function LookCard({
   onAccentChange,
   onLookChange,
   onTogglePlay,
-}: LookCardProps) {
+}: LookStripProps) {
   const activeStop = nearestStop(look.timeOfDay);
-  const gap = compact ? 'mt-2' : 'mt-3';
-  const innerGap = compact ? 'mt-1' : 'mt-1.5';
+  const divider = <span aria-hidden="true" className="hidden h-4 w-px bg-[var(--border-subtle)] sm:block" />;
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0b0d16] p-3 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9)]">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#a1a1aa]">Look</h3>
-        <span className="rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2 py-0.5 text-[9px] font-mono text-[#a1a1aa]">
-          {lookLabel(look)}
-        </span>
-      </div>
+    // One row, always: a wrapping strip changes its own height, and the card is
+    // sized from that height. Narrow stages drop pieces instead of stacking.
+    <div
+      aria-label="Look controls"
+      className="@container flex flex-nowrap items-center gap-x-2 overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-2.5 py-1.5"
+    >
+      <span className="hidden whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)] @[520px]:inline">
+        Look
+      </span>
 
-      <div className={gap}>
-        <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#98a0ac]">Accent</div>
-        <div className={innerGap + ' flex items-center gap-1.5'}>
-          {ACCENT_SWATCHES.map((color) => {
-            const selected = accent.toLowerCase() === color.toLowerCase();
-            return (
-              <button
-                key={color}
-                type="button"
-                onClick={() => onAccentChange(color)}
-                aria-label={'Accent ' + color}
-                aria-pressed={selected}
-                className={
-                  'h-5 w-5 rounded-full border transition active:scale-95 cursor-pointer ' +
-                  (selected
-                    ? 'border-[rgba(255,255,255,0.80)] ring-2 ring-white/25'
-                    : 'border-[rgba(255,255,255,0.15)] hover:border-[rgba(255,255,255,0.45)]')
-                }
-                style={{ backgroundColor: color }}
-              />
-            );
-          })}
-        </div>
-      </div>
 
-      <div className={gap}>
-        <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#98a0ac]">Time of day</div>
-        <div
-          className={
-            innerGap +
-            ' grid grid-cols-4 gap-1 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(0,0,0,0.20)] p-0.5'
-          }
-        >
-          {LOOK_STOPS.map((stop) => (
+      {divider}
+
+      <div className="flex items-center gap-1">
+        {ACCENT_SWATCHES.map((color) => {
+          const selected = accent.toLowerCase() === color.toLowerCase();
+          return (
             <button
-              key={stop.key}
+              key={color}
               type="button"
-              onClick={() => onLookChange({ ...look, timeOfDay: stop.at })}
-              title={stop.hint}
+              onClick={() => onAccentChange(color)}
+              aria-label={'Accent ' + color}
+              aria-pressed={selected}
               className={
-                'rounded-md px-1 py-1 text-[10px] font-medium transition cursor-pointer ' +
-                (activeStop === stop.at
-                  ? 'bg-[rgba(255,255,255,0.10)] text-[#ffffff] shadow-sm'
-                  : 'text-[#8b93a1] hover:text-[#e4e4e7]')
+                'h-4 w-4 rounded-full border transition active:scale-95 cursor-pointer ' +
+                (selected
+                  ? 'border-[var(--text-primary)] ring-2 ring-[var(--text-primary)]/20'
+                  : 'border-[var(--border-subtle)] hover:border-[var(--text-muted)]')
               }
-            >
-              {stop.label}
-            </button>
-          ))}
-        </div>
+              style={{ backgroundColor: color }}
+            />
+          );
+        })}
       </div>
 
-      <div className={gap + ' flex items-center gap-1'}>
+      {divider}
+
+      <div className="flex items-center gap-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] p-0.5">
+        {LOOK_STOPS.map((stop) => (
+          <button
+            key={stop.key}
+            type="button"
+            onClick={() => onLookChange({ ...look, timeOfDay: stop.at })}
+            title={stop.hint}
+            className={
+              'rounded-md px-1.5 py-0.5 text-[10px] font-medium transition cursor-pointer ' +
+              (activeStop === stop.at
+                ? 'bg-[var(--surface-raised)] text-[var(--text-primary)] shadow-sm'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]')
+            }
+          >
+            {stop.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="hidden items-center gap-1 @[620px]:flex">
         {(['clear', 'rain', 'snow'] as const).map((weather) => (
           <button
             key={weather}
             type="button"
             onClick={() => onLookChange({ ...look, weather })}
             className={
-              'flex-1 rounded-md border px-1.5 py-1 text-[10px] font-medium capitalize transition cursor-pointer ' +
+              'rounded-md border px-1.5 py-0.5 text-[10px] font-medium capitalize transition cursor-pointer ' +
               (look.weather === weather
-                ? 'border-indigo-400/30 bg-indigo-500/10 text-[#c7d2fe]'
-                : 'border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] text-[#8b93a1] hover:text-[#e4e4e7]')
+                ? 'border-indigo-400/40 bg-indigo-500/10 text-indigo-500'
+                : 'border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)]')
             }
           >
             {weather}
@@ -368,11 +322,15 @@ export function LookCard({
       <button
         type="button"
         onClick={onTogglePlay}
-        className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-2 py-1.5 text-[10px] font-medium text-[#d4d4d8] transition hover:bg-[rgba(255,255,255,0.07)] hover:text-[#ffffff] active:scale-[0.99] cursor-pointer"
+        aria-pressed={isPaused}
+        className={
+          'ml-auto inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md border border-[var(--border-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] active:scale-[0.99] cursor-pointer ' +
+          (compact ? '' : '')
+        }
       >
-        {isPaused ? <Play className="h-3 w-3 text-[#34d399]" /> : <Pause className="h-3 w-3 text-[#fbbf24]" />}
-        {isPaused ? 'Resume motion' : 'Pause on a still'}
+        {isPaused ? <Play className="h-3 w-3 text-emerald-500" /> : <Pause className="h-3 w-3 text-amber-500" />}
+        {isPaused ? 'Resume' : 'Pause'}
       </button>
-    </article>
+    </div>
   );
 }

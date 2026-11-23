@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { GenerationPlayground } from './GenerationPlayground';
-import { CardSectionHeader, HeroSiteChrome, LiveCardBody, LookCard, SceneSpecStrip } from './PresentationViews';
+import { CardSectionHeader, HeroSiteChrome, LiveCardBody, LookStrip } from './PresentationViews';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
@@ -186,20 +186,53 @@ function SandboxPreviewInner({
     return () => observer.disconnect();
   }, []);
 
-  // The card section is a page section, so it has to read as one band: both tiles
-  // visible without scrolling. The tiles keep their 4:3 crop and the section just
-  // gets narrower on a short stage. Modelled from the measured layout — the grid
-  // starts 110px down (section header) and each tile adds a 142px card body above
-  // its 4:3 crop — then clamped to the design width.
-  const cardSectionWidth = (() => {
-    if (currentSize !== 'card' || stageHeight <= 0) return undefined;
-    const headerAllowance = 110;
-    const bodyHeight = 142;
-    const gap = 12;
-    const usable = stageHeight - headerAllowance - bodyHeight - 8;
-    const width = gap + (usable / 0.375);
-    return Math.max(532, Math.min(1152, Math.round(width)));
-  })();
+  // The scene is the subject: the card takes as much of the stage as the height
+  // allows and the look controls ride underneath as a strip. Rather than assume a
+  // header height / caption height / gap budget (all of which drift when a scene
+  // name wraps or a chip line hides), the width is fitted against the real layout:
+  // set it, read how much the stage overflows or has spare, correct, repeat. Four
+  // passes is plenty and the result needs no constants to stay correct.
+  const cardSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (currentSize !== 'card') return;
+    const stage = stageRef.current;
+    const section = cardSectionRef.current;
+    if (!stage || !section) return;
+
+    let frame = 0;
+    const fit = () => {
+      const limit = Math.min(1152, Math.max(260, stage.clientWidth - 16));
+      let width = Math.min(limit, section.clientWidth || limit);
+      for (let pass = 0; pass < 6; pass += 1) {
+        section.style.maxWidth = `${Math.round(width)}px`;
+        // scrollHeight is clamped to the box, so it can only report overflow, not
+        // spare room: measure the section's own box instead.
+        const style = getComputedStyle(stage);
+        const paddingTop = parseFloat(style.paddingTop) || 0;
+        const paddingBottom = parseFloat(style.paddingBottom) || 0;
+        const content = section.offsetTop - stage.scrollTop + section.offsetHeight;
+        const slack = stage.clientHeight - paddingTop - paddingBottom - content;
+        if (Math.abs(slack) < 2) break;
+        // A 4:3 box gains (or loses) three quarters of a pixel of height per pixel
+        // of width, so the correction is slack * 4/3. Damped slightly to settle.
+        width = Math.max(260, Math.min(limit, width + slack * 0.72));
+      }
+      section.style.maxWidth = `${Math.round(width)}px`;
+    };
+
+    fit();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(fit);
+    });
+    observer.observe(stage);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [currentSize, stageHeight, stageWidth, format, sceneName, sceneLook.weather, sceneLook.timeOfDay]);
 
   useEffect(() => {
     if (!menuOpen && !styleMenuOpen && !cameraMenuOpen && !sizeMenuOpen) return;
@@ -910,11 +943,13 @@ function SandboxPreviewInner({
         )}
 
         <div
-          className={currentSize === 'hero'
-            ? 'absolute inset-0'
-            : 'mx-auto flex w-full flex-col ' +
-              (stageHeight > 0 && stageHeight < 820 ? 'gap-2.5' : 'gap-3')}
-          style={currentSize === 'card' && cardSectionWidth ? { maxWidth: `${cardSectionWidth}px` } : undefined}
+          ref={cardSectionRef}
+          className={
+            currentSize === 'hero'
+              ? 'absolute inset-0'
+              : 'mx-auto flex w-full flex-col ' +
+                (stageHeight > 0 && stageHeight < 820 ? 'gap-2' : 'gap-2.5')
+          }
         >
           {currentSize === 'hero' ? (
             <HeroSiteChrome
@@ -925,19 +960,11 @@ function SandboxPreviewInner({
               onSnapshot={handleSnapshotPng}
             />
           ) : (
-            <div className="flex flex-col gap-2">
+            <div className="flex shrink-0 flex-col gap-2">
               <CardSectionHeader
                 format={format}
                 columns={stageColumns}
                 compact={stageHeight > 0 && stageHeight < 820}
-              />
-              <SceneSpecStrip
-                format={format}
-                size={currentSize}
-                motion={motionLabel}
-                finish={worldFinish}
-                theme={svgTheme}
-                look={sceneLook}
               />
             </div>
           )}
@@ -946,7 +973,7 @@ function SandboxPreviewInner({
             className={
               currentSize === 'hero'
                 ? 'absolute inset-0 z-0'
-                : 'grid grid-cols-1 gap-3 @md:grid-cols-2'
+                : 'flex flex-col gap-2'
             }
           >
             <article
@@ -991,27 +1018,31 @@ function SandboxPreviewInner({
               </div>
 
               {currentSize === 'card' && (
-                <LiveCardBody
-                  sceneName={sceneName}
-                  format={format}
-                  motion={motionLabel}
-                  hoverText={hoverText}
-                  onSnapshot={handleSnapshotPng}
-                  onFullscreen={toggleFullscreen}
-                />
+                <div className="shrink-0">
+                  <LiveCardBody
+                    sceneName={sceneName}
+                    format={format}
+                    motion={motionLabel}
+                    hoverText={hoverText}
+                    onSnapshot={handleSnapshotPng}
+                    onFullscreen={toggleFullscreen}
+                  />
+                </div>
               )}
             </article>
 
             {currentSize === 'card' && (
-              <LookCard
-                accent={accentColor}
-                look={sceneLook}
-                isPaused={isPaused}
-                compact={stageHeight > 0 && stageHeight < 820}
-                onAccentChange={handleAccentChange}
-                onLookChange={handleLookChange}
-                onTogglePlay={handleTogglePlay}
-              />
+              <div className="shrink-0">
+                <LookStrip
+                  accent={accentColor}
+                  look={sceneLook}
+                  isPaused={isPaused}
+                  compact={stageHeight > 0 && stageHeight < 820}
+                  onAccentChange={handleAccentChange}
+                  onLookChange={handleLookChange}
+                  onTogglePlay={handleTogglePlay}
+                />
+              </div>
             )}
           </div>
         </div>

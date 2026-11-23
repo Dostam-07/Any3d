@@ -137,8 +137,15 @@ try {
     const text = stage?.innerText || '';
     return {
       stage: stage ? { w: Math.round(stage.clientWidth), h: Math.round(stage.clientHeight) } : null,
-      twoTiles: stage ? stage.querySelectorAll('article').length : 0,
+      tiles: stage ? stage.querySelectorAll('article').length : 0,
       specChips: /ENGINE/i.test(text) && /MOTION/i.test(text),
+      lookStrip: Boolean(stage?.querySelector('[aria-label="Look controls"]')),
+      cardLeft: stage?.querySelector('article')?.getBoundingClientRect().left ?? 0,
+      stripLeft:
+        stage?.querySelector('[aria-label="Look controls"]')?.getBoundingClientRect().left ?? 0,
+      stripTop:
+        stage?.querySelector('[aria-label="Look controls"]')?.getBoundingClientRect().top ?? 0,
+      cardBottom: stage?.querySelector('article')?.getBoundingClientRect().bottom ?? 0,
       exportCards: /Ship this scene|Export HTML/i.test(text),
       codePeek: Boolean(stage?.querySelector('div[class*="font-mono"]')),
       frameKept: frame?.dataset.probe === 'kept' && frame?.contentWindow?.__probe === 'kept',
@@ -150,10 +157,16 @@ try {
   // it was the redundancy the project header's own download button already covered.
   if (!card.exportCards) pass('card does not duplicate the export');
   else fail('card does not duplicate the export', 'an export panel is inside the card stage');
-  if (card.specChips) pass('spec lives in the card chrome');
-  else fail('spec lives in the card chrome', 'chips missing');
-  if (card.twoTiles === 2) pass('card grid keeps two tiles', `${card.twoTiles} articles`);
-  else fail('card grid keeps two tiles', `${card.twoTiles} articles`);
+  // The scene is the subject of this presentation. Everything else is chrome: the
+  // engine/motion chips repeated what the card's own caption and the look strip
+  // already say, so the stage carries one tile and nothing above it but a header.
+  if (!card.specChips) pass('spec chips do not compete with the card');
+  else fail('spec chips do not compete with the card', 'engine/motion chips are back in the stage');
+  if (card.tiles === 1) pass('the scene card stands alone', `${card.tiles} article`);
+  else fail('the scene card stands alone', `${card.tiles} articles`);
+  if (card.lookStrip && card.stripTop >= card.cardBottom - 2 && Math.abs(card.stripLeft - card.cardLeft) < 2)
+    pass('look controls sit under the card', `${Math.round(card.stripLeft)}/${Math.round(card.cardLeft)}`);
+  else fail('look controls sit under the card', JSON.stringify({ strip: card.stripTop, card: card.cardBottom }));
 
   // --- the stage toolbar exports a standalone file ------------------------
   // The toolbar sits above the @container stage, so look for the chip on the page.
@@ -312,8 +325,9 @@ try {
 
   // --- the card section fits its stage -----------------------------------
   // A wide pane on a short screen used to clip the live card and make the section
-  // scroll: the tiles were pinned to a fixed 1152px design width whatever the
-  // height. The section is a page band, so both tiles have to be visible at once.
+  // scroll: the tiles were pinned to a fixed design width whatever the height. The
+  // card is now fitted against the real layout, so the scene stays whole and keeps
+  // the lion's share of the stage on a short screen too.
   const previousViewport = page.viewportSize();
   await page.setViewportSize({ width: 2200, height: 760 });
   await openPreset(/SVG Vector/i, /pier nine/i);
@@ -322,15 +336,18 @@ try {
   const fit = await page.evaluate(() => {
     const stage = document.querySelector('div[class*="@container"]');
     if (!stage) return null;
+    const crop = stage.querySelector('iframe')?.parentElement;
     return {
       stageH: stage.clientHeight,
       stageW: stage.clientWidth,
       overflow: stage.scrollHeight - stage.clientHeight,
       tiles: stage.querySelectorAll('article').length,
+      cropShare: crop ? Math.round((crop.getBoundingClientRect().height / stage.clientHeight) * 100) : 0,
     };
   });
-  if (fit && fit.overflow <= 0 && fit.tiles === 2) pass('the card section fits a short stage', JSON.stringify(fit));
-  else fail('the card section fits a short stage', JSON.stringify(fit));
+  if (fit && fit.overflow <= 0 && fit.tiles === 1 && fit.cropShare >= 40)
+    pass('the scene card fills a short stage', JSON.stringify(fit));
+  else fail('the scene card fills a short stage', JSON.stringify(fit));
   if (previousViewport) await page.setViewportSize(previousViewport);
   await page.waitForTimeout(800);
 } catch (error) {
