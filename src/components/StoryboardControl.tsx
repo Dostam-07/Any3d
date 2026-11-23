@@ -11,6 +11,8 @@ interface StoryboardControlProps {
   sceneName: string;
   format: RenderFormat;
   disabled?: boolean;
+  /** `bar` is the toolbar chip; `menu` is a full-width row for a narrow-screen menu. */
+  variant?: 'bar' | 'menu';
 }
 
 /**
@@ -30,6 +32,7 @@ export const StoryboardControl: React.FC<StoryboardControlProps> = ({
   sceneName,
   format,
   disabled,
+  variant = 'bar',
 }) => {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -76,12 +79,16 @@ export const StoryboardControl: React.FC<StoryboardControlProps> = ({
             ? 'Canvas storyboards are not planned: the camera lives inside Three.js, so four angles is real work, not a flag'
             : 'Four camera angles of this scene in one 2400×1350 PNG'
         }
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium text-zinc-200 bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+        className={
+          variant === 'menu'
+            ? 'flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-xs text-zinc-300 transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-50'
+            : 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium text-zinc-200 bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed'
+        }
       >
         {busy ? (
-          <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-300" />
+          <Loader2 className={variant === 'menu' ? 'h-4 w-4 animate-spin text-cyan-300' : 'w-3.5 h-3.5 animate-spin text-cyan-300'} />
         ) : (
-          <LayoutGrid className="w-3.5 h-3.5 text-cyan-300" />
+          <LayoutGrid className={variant === 'menu' ? 'h-4 w-4 text-cyan-300' : 'w-3.5 h-3.5 text-cyan-300'} />
         )}
         {busy ? <span className="font-mono">{Math.round(progress * 100)}%</span> : <span>Storyboard</span>}
       </button>

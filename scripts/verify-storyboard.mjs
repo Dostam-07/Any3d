@@ -36,7 +36,8 @@ fs.mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 // The capture controls (Clip, Storyboard) sit in a group the toolbar only shows
 // from 2xl up, so the check has to look at the studio on a wide screen.
-const page = await browser.newPage({ viewport: { width: 1920, height: 1000 } });
+const context = await browser.newContext({ viewport: { width: 1920, height: 1000 } });
+const page = await context.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 
@@ -58,6 +59,7 @@ if (await card.count()) {
 // Loading a preset lands on the project page, which is where a user actually
 // works — and where the storyboard control has to be reachable too.
 check('the project page is where the work happens', /#\/project\//.test(page.url()), page.url());
+const projectUrl = page.url();
 
 // Freeze the live scene first. The stage keeps animating otherwise, and a sheet
 // built from the live mount (the regression this check exists for) would then be
@@ -201,6 +203,49 @@ if (await sizeButton.count()) {
   const resizedDelta = await difference(picked.bytes, resized.bytes, TILE_PICTURE);
   check('the sheet follows the presentation size', resizedDelta > 3, `mean delta ${resizedDelta}`);
 }
+
+/* ---- a phone reaches the same sheet through the actions menu ------------ */
+// A phone never sees the wide action row, so the sheet has to be reachable from
+// the "more actions" menu. Load the preset on its own page: resizing a desktop
+// page keeps the sidebar open and its backdrop swallows clicks.
+// Same context, so the phone page opens the very scene the desktop one loaded.
+const phone = await context.newPage();
+await phone.setViewportSize({ width: 414, height: 900 });
+phone.on('pageerror', (e) => errors.push(e.message));
+await phone.goto(projectUrl, { waitUntil: 'domcontentloaded' });
+await phone.waitForTimeout(4200);
+// On a phone the preview lives behind a tab of its own.
+const previewTab = phone.locator('button:visible', { hasText: /^\s*Preview\s*$/ }).first();
+check('a phone gets a preview tab', (await previewTab.count()) > 0);
+if (await previewTab.count()) {
+  await previewTab.click();
+  await phone.waitForTimeout(1500);
+}
+let phoneScene = false;
+for (let attempt = 0; attempt < 20 && !phoneScene; attempt += 1) {
+  phoneScene = (await phone.frameLocator('iframe').first().locator('svg').count()) > 0;
+  if (!phoneScene) await phone.waitForTimeout(1500);
+}
+check('the phone preview holds the same scene', phoneScene);
+check(
+  'the capture chips collapse on a phone',
+  (await phone.locator('button[aria-label="Storyboard"]:visible').count()) === 0
+);
+
+await phone.locator('button[aria-label="More project actions"]').first().click();
+await phone.waitForTimeout(600);
+const menu = phone.locator('#project-mobile-actions');
+const menuStoryboard = menu.locator('button[aria-label="Storyboard"]').first();
+check('the actions menu offers a storyboard', (await menuStoryboard.count()) > 0);
+check('the actions menu offers a clip', (await menu.locator('button[aria-label="Clip"]').count()) > 0);
+await menuStoryboard.click();
+const narrowDialog = phone.locator('div[aria-label="Storyboard sheet"]').first();
+await narrowDialog.waitFor({ state: 'visible', timeout: 60000 });
+const narrowText = await narrowDialog.textContent();
+check('a sheet built from the menu is a real sheet', /2400×1350 · 4 angles/.test(narrowText || ''), (narrowText || '').slice(0, 60));
+await phone.locator('div[aria-label="Storyboard sheet"] button[aria-label="Close"]').first().click();
+await phone.waitForTimeout(600);
+await phone.close();
 
 // The studio hub keeps its own entry to the same sheet.
 await page.goto(`${BASE}/#/studio`, { waitUntil: 'domcontentloaded' });

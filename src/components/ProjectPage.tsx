@@ -667,6 +667,20 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                   <Box className="h-4 w-4" aria-hidden="true" />
                   Export GLB
                 </button>
+                {/* The capture chips live in the action row, which collapses below
+                    md. The menu keeps them reachable there. They open their own
+                    portal dialogs, so the menu deliberately stays open behind one. */}
+                <div className="md:hidden">
+                  <div className="my-1 h-px bg-white/[0.06]" aria-hidden="true" />
+                  <ClipControl previewRef={previewRef} sceneName={sceneName} disabled={!html || untrusted} variant="menu" />
+                  <StoryboardControl
+                    previewRef={previewRef}
+                    sceneName={sceneName}
+                    format={format}
+                    disabled={!html || untrusted}
+                    variant="menu"
+                  />
+                </div>
                 <button
                   type="button"
                   onClick={() => {

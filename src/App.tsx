@@ -254,19 +254,27 @@ export function App() {
   useEffect(() => {
     if (route.view !== 'project') return;
     const id = route.projectId;
-    if (!id || isNewProject(id) || id === currentSessionId) return;
+    if (!id || isNewProject(id)) return;
     const sess = sessions.find((s) => s.id === id);
     if (!sess) return;
-    setCurrentSessionId(sess.id);
-    setFormat(sess.format);
-    setCode(sess.code);
-    setMessages(sess.messages || []);
-    setStageView('preview');
-    bundleCode(sess.code, sess.format)
-      .then((b) => setCurrentBundledHtml(b.html))
-      .catch((e) => console.warn('Deep link bundle error', e));
+    if (id !== currentSessionId) {
+      setCurrentSessionId(sess.id);
+      setFormat(sess.format);
+      setCode(sess.code);
+      setMessages(sess.messages || []);
+      setStageView('preview');
+    }
+    // The bundled html lives in memory only, so a reload (or a link opened on
+    // another device) restores the code but has no frame to show — the preview
+    // claimed "your scene will appear here" above a valid 121-line scene.
+    // Rebuild whenever this page has nothing to show for the loaded code.
+    if (!currentBundledHtml && sess.code.trim()) {
+      bundleCode(sess.code, sess.format)
+        .then((b) => setCurrentBundledHtml(b.html))
+        .catch((e) => console.warn('Deep link bundle error', e));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route.view, route.projectId, sessions]);
+  }, [route.view, route.projectId, sessions, currentSessionId, currentBundledHtml]);
 
   // Arriving at #/project/new by any route (deep link, back/forward, hash change)
   // always means a clean slate — never the previously open project's transcript.

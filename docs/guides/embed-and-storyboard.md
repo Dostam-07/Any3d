@@ -17,11 +17,18 @@ Four camera angles each re-mounted inside the preview and serialised, composited
 - **Labels:** the labels burned into the tiles are the labels of the angles that were rendered.
 - **The mount matters:** the stage already holds the preview's own `<svg>`, and a destroyed mount can linger, so each tile is rasterised from the *newest* svg. Picking the first one rasterised a stale mount.
 
-The control lives in two places: the project page header, next to the clip button, and the
+The control lives in three places: the project page header next to the clip button, the same
+page's "more actions" menu on a narrow screen (`variant="menu"` renders a full-width row
+instead of a chip), and the studio hub's stage toolbar. The project page is where a user
+works on a scene, so that is where the sheet has to be reachable.
 studio hub's stage toolbar. The project page is where a user works on a scene, so that is where
 the sheet has to be reachable.
 
-`scripts/test-storyboard.ts` covers the angle set (16 checks) and `scripts/verify-storyboard.mjs` drives the real project page (14 checks: 2400×1350 PNG, four labelled tiles, the picked angle leads, tile 1 ≠ tile 4, and the sheet's picture changes with the pick (mean Δ 24–25) and with the presentation size (mean Δ 20)). SVG-only (canvas engines keep their camera in Three.js; the button is disabled there with a reason). The live scene is remounted afterwards. `StoryboardControl.tsx` mirrors `ClipControl.tsx`.
+`scripts/test-storyboard.ts` covers the angle set (16 checks) and `scripts/verify-storyboard.mjs` drives the real project page (20 checks: 2400×1350 PNG, four labelled tiles, the picked angle leads, tile 1 ≠ tile 4, and the sheet's picture changes with the pick (mean Δ 24–25) and with the presentation size (mean Δ 20)). It also drives a 414×900 phone: the chips are hidden there, the sheet is built from the
+"more actions" menu, and the preview arrives through the phone's own Preview tab — which
+only works because a reopened project rebuilds its bundle (see below).
+
+SVG-only (canvas engines keep their camera in Three.js; the button is disabled there with a reason). The live scene is remounted afterwards. `StoryboardControl.tsx` mirrors `ClipControl.tsx`.
 
 ## Acceptance
 
