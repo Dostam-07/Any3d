@@ -36,6 +36,11 @@ Units: x/z form ground plane, y points up. Person faces local +z. Object primiti
 - `random()` seeded build-time noise, `phase(t,period)` returns [0,1), `smooth(x)` clamped smoothstep.
 - `THREE` for custom subject geometry; `own(resource)` registers a disposable geometry, material or texture. Add custom meshes under a W group or `mesh` parent, and set castShadow/receiveShadow deliberately. Opaque primitive meshes get auto-instanced after build; keep references for posing but do not toggle original `.visible` or assign new materials after mounting. Vary transforms instead. Transparency and per-object visibility need a separate, explicitly managed implementation.
 
+`scripts/verify-worlds-api.mjs` (wired into `npm test`) walks this list: it calls every primitive above, once with
+sane arguments and once with non-finite or out-of-range ones, and fails if a documented primitive is missing, if a
+bad number produces non-finite geometry or a non-finite transform, or if the documented `segments` argument is
+dropped.
+
 Keep `bounds` around the entire motion, including tallest pose. Wider bounds reduce scene fill; do not add arbitrary padding to hide clipping. Camera fitting already adds 12% breathing room.
 
 ## Runtime and embedding

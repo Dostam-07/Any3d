@@ -62,7 +62,7 @@ export function toolkit(parent) {
     return (c && typeof c.add === 'function') ? c : parent;
   }
   function group(x = 0, y = 0, z = 0, container = parent) {
-    const g = new THREE.Group(); g.position.set(x, y, z);
+    const g = new THREE.Group(); g.position.set(finite(x, 0), finite(y, 0), finite(z, 0));
     resolveParent(container).add(g);
     return g;
   }
@@ -96,12 +96,12 @@ export function toolkit(parent) {
   //   cylinder(topRadius, bottomRadius, height, color, x, y, z, parent, segments)
   // Without the tapered form the second shape shifts every argument and a
   // non-numeric segments count produces NaN vertices.
-  function cylinder(a, b, c, d, e, f, g, h) {
+  function cylinder(a, b, c, d, e, f, g, h, i) {
     let top, bottom, height, color, x, y, z, container, segments;
     if (typeof c === 'number' && typeof d === 'string') {
-      [top, bottom, height, color, x, y, z, container, segments] = [a, b, c, d, e, f, g, h];
+      [top, bottom, height, color, x, y, z, container, segments] = [a, b, c, d, e, f, g, h, i];
     } else {
-      [top, bottom, height, color, x, y, z, container, segments] = [a, a, b, c, d, e, f, g];
+      [top, bottom, height, color, x, y, z, container, segments] = [a, a, b, c, d, e, f, g, h];
     }
     if (typeof container === 'number') { segments = container; container = parent; }
     top = Math.max(0, finite(top, 1));
@@ -218,21 +218,21 @@ export function toolkit(parent) {
     inst.receiveShadow = true; parent.add(inst); return inst;
   }
   function tree(x, z, scale = 1, seed = 3) {
-    const g = group(x, 0, z), rng = seeded(seed); g.scale.setScalar(scale);
+    const g = group(x, 0, z), rng = seeded(finite(seed, 3)); g.scale.setScalar(Math.max(.001, finite(scale, 1)));
     cylinder(.12, 1.8, '#745139', 0, .9, 0, g);
     line([[0, 1.1, 0], [.45, 2, .1]], '#745139', .075, g);
     for (let i = 0; i < 10; i++) ball(.48 + rng() * .24, ['#748b48', '#8d9e5a', '#a3ad65', '#617e41'][i % 4], (rng() - .5) * 1.3, 1.85 + rng() * .8, (rng() - .5) * 1.2, g);
     return g;
   }
   function bench(x, z, rotation = 0) {
-    const g = group(x, 0, z); g.rotation.y = rotation;
+    const g = group(x, 0, z); g.rotation.y = finite(rotation, 0);
     for (const dx of [-.75, .75]) for (const dz of [-.19, .19]) box(.08, .5, .08, '#303b37', dx, .25, dz, g);
     for (let i = 0; i < 3; i++) box(1.85, .07, .14, '#ab794d', 0, .53, -.18 + i * .18, g);
     for (let i = 0; i < 2; i++) box(1.85, .13, .06, '#ab794d', 0, .78 + i * .18, -.27, g);
     return g;
   }
   function person(x, z, shirt = '#e8e2cc', pants = '#283a43', scale = 1, skin = '#c89670') {
-    const root = group(x, 0, z); root.scale.setScalar(scale);
+    const root = group(x, 0, z); root.scale.setScalar(Math.max(.001, finite(scale, 1)));
     const body = group(0, .95, 0, root), chest = group(0, 0, 0, body);
     // Adult silhouette: about seven head-heights; no oversized toy head.
     const torsoGeo = geometry('adult-torso', () => {
