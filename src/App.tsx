@@ -198,11 +198,15 @@ export function App() {
       const parsed = JSON.parse(saved);
       if (!Array.isArray(parsed)) return [];
       const seen = new Set<string>();
-      return parsed.filter((s: SceneSession) => {
-        if (!s || !s.id || seen.has(s.id)) return false;
-        seen.add(s.id);
-        return true;
-      });
+      return parsed
+        .filter((s: SceneSession) => {
+          if (!s || !s.id || seen.has(s.id)) return false;
+          seen.add(s.id);
+          return true;
+        })
+        // Retired engines: a saved dither scene was a Pixel.scene with bayer
+        // flags, so it keeps opening instead of turning into a blank SVG.
+        .map((s: SceneSession) => (s.format as string) === 'dither' ? { ...s, format: 'pixel' as const } : s);
     } catch {
       return [];
     }
@@ -955,7 +959,7 @@ export function App() {
     let instruction = trimmed;
     let commandUsed: SlashCommandType | undefined;
 
-    // Parse format slash commands (/svg, /worlds, /world, /pixel, /dither)
+    // Parse format slash commands (/svg, /worlds, /world, /pixel)
     if (/^\/svg\s*/i.test(trimmed)) {
       targetFormat = 'svg';
       instruction = trimmed.replace(/^\/svg\s*/i, '');
@@ -969,11 +973,6 @@ export function App() {
     } else if (/^\/pixel\s*/i.test(trimmed)) {
       targetFormat = 'pixel';
       instruction = trimmed.replace(/^\/pixel\s*/i, '');
-      commandUsed = '/pixel';
-      setFormat('pixel');
-    } else if (/^\/dither\s*/i.test(trimmed)) {
-      targetFormat = 'pixel';
-      instruction = trimmed.replace(/^\/dither\s*/i, '');
       commandUsed = '/pixel';
       setFormat('pixel');
     }
@@ -1025,7 +1024,7 @@ export function App() {
       const currentCodeEngine: RenderFormat = /\bdefineWorld\b/.test(code)
         ? 'worlds'
         : /\bPixel\.scene\b/.test(code)
-        ? (/\bbayer\s*:|\bshadow\s*:\s*['"]hard['"]/.test(code) ? 'dither' : 'pixel')
+        ? 'pixel'
         : 'svg';
 
       // Inside a conversation the default is to EDIT what is on screen. A brand-new

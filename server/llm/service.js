@@ -6,7 +6,6 @@ import {
   SVG_SYSTEM_PROMPT,
   WORLDS_SYSTEM_PROMPT,
   PIXEL_SYSTEM_PROMPT,
-  DITHER_SYSTEM_PROMPT,
 } from './prompts.js';
 import { validateScene } from '../engine/validator.js';
 import { balanceBraces } from '../engine/bundler.js';
@@ -221,7 +220,7 @@ function normalizeCode(code, format, prompt = '') {
         `defineWorld({\n  name: '${slug || 'world-scene'}',\n  title: '${(prompt.slice(0, 40) || 'Any3d World').replace(/'/g, "\\'")}',`
       );
     }
-  } else if (format === 'pixel' || format === 'dither') {
+  } else if (format === 'pixel') {
     if (!/\bname\s*:/.test(cleaned) && /\bPixel\.scene\s*\(\s*\{/.test(cleaned)) {
       cleaned = cleaned.replace(
         /\bPixel\.scene\s*\(\s*\{+/,
@@ -238,7 +237,7 @@ export async function generateScene({
   apiKey = '',
   ollamaHost = 'http://localhost:11434',
   model = '',
-  format = 'svg', // 'svg' | 'worlds' | 'pixel' | 'dither'
+  format = 'svg', // 'svg' | 'worlds' | 'pixel'
   size = 'card', // 'hero' | 'card' | 'mini'
   prompt = '',
   seed = null,
@@ -255,9 +254,6 @@ export async function generateScene({
   } else if (format === 'pixel') {
     systemPrompt = PIXEL_SYSTEM_PROMPT;
     formatLabel = 'Any3d Pixel 320x240 miniature';
-  } else if (format === 'dither') {
-    systemPrompt = DITHER_SYSTEM_PROMPT;
-    formatLabel = 'Any3d Dither yard scene';
   }
 
   const corePrompt = unwrapCorePrompt(prompt);
@@ -281,11 +277,6 @@ export async function generateScene({
 3. Build complete environments with 20-40 parts (e.g. multi-desk office, street corner with storefronts, full farmstead).
 4. Implement tick(ctx) with looping animation.
 5. Output ONLY raw JavaScript starting with "Pixel.scene({" and ending with "});".`;
-  } else if (format === 'dither') {
-    constructionRules = `CONSTRUCTION RULES FOR DITHER (follow exactly):
-1. Declare Dither.scene({ ... }).
-2. Build 20-35 parts with rich retro Bayer dithering and textures.
-3. Output ONLY raw JavaScript starting with "Dither.scene({" and ending with "});".`;
   } else {
     constructionRules = `CONSTRUCTION RULES (follow exactly):
 1. Always start with a ground slab: D.slab(11, 9, pal.ground, 0, 0, 0, null, { h: 0.6, r: 1.2, side: pal.base })
@@ -382,7 +373,7 @@ ${constructionRules}`;
         ? `Your previous output was rejected: ${failedLabels.join(', ')}.
 
 Fix the API and the scene, then return ONLY a worlds scene:
-1. import { defineWorld } from '@any3d/worlds'; — the ONLY allowed import. Never use D.*, pal.*, Any3d.figure, Pixel.scene or Dither.scene.
+1. import { defineWorld } from '@any3d/worlds'; — the ONLY allowed import. Never use D.*, pal.*, Any3d.figure or Pixel.scene.
 2. export default defineWorld({ name, title, duration, still, bounds, build(W) { ... }, tick({ t, parts, W }) { ... } });
 3. build(W) starts with W.terrain(...) and a ground slab, then 25-50 modular parts using W.box / W.cylinder / W.ball / W.group.
 4. Primary subject "${semantics.primarySubject}" must be modelled as the focus, with ${semantics.secondaryObjects.length ? semantics.secondaryObjects.join(', ') : 'at least 5 supporting props'} around it.

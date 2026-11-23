@@ -270,7 +270,7 @@ function resolveTarget(code, lower, kinds) {
     if (named) return named[1];
   }
   // "it" / "that thing" after an add in a previous turn: last named group.
-  const groups = [...code.matchAll(/var\s+(\w+)\s*=\s*(?:D|P|W|Dither)\.group\(/g)];
+  const groups = [...code.matchAll(/var\s+(\w+)\s*=\s*(?:D|P|W)\.group\(/g)];
   if (groups.length) return groups[groups.length - 1][1];
   return null;
 }
@@ -902,7 +902,7 @@ export function editSceneOffline(currentCode, instruction, format = 'svg') {
       changed: false,
     };
   }
-  if (format === 'pixel' || format === 'dither') {
+  if (format === 'pixel') {
     if (/\bPixel\.scene\b/.test(currentCode)) {
       return editPixelOffline(currentCode, instruction, format);
     }

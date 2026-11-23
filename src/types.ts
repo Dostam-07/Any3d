@@ -1,4 +1,4 @@
-export type RenderFormat = 'svg' | 'worlds' | 'pixel' | 'dither';
+export type RenderFormat = 'svg' | 'worlds' | 'pixel';
 export type SVGTheme = 'toy' | 'soft' | 'mono' | 'line' | 'night' | 'print';
 export type WorldFinish = 'miniature' | 'pixel' | 'halftone' | 'blueprint';
 export type LLMProvider = 'gemini' | 'ollama';
@@ -85,7 +85,7 @@ export interface VisualResearchData {
   decomposition: VisualDecomposition;
 }
 
-export type SlashCommandType = '/svg' | '/worlds' | '/pixel' | '/dither' | '/enhance' | '/glb' | '/html' | '/undo' | '/clear';
+export type SlashCommandType = '/svg' | '/worlds' | '/pixel' | '/enhance' | '/glb' | '/html' | '/undo' | '/clear';
 
 export interface ChatMessage {
   id: string;

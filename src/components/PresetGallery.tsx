@@ -31,11 +31,6 @@ const ENGINE_LABELS: Record<
     icon: Grid3X3,
     badgeStyle: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
   },
-  dither: {
-    label: '4×4 Dither',
-    icon: Sparkles,
-    badgeStyle: 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30',
-  },
 };
 
 export const PresetGallery: React.FC<PresetGalleryProps> = ({
@@ -244,7 +239,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
               </span>
             </h2>
             <p className="text-xs text-zinc-400 mt-1">
-              Production-tested architectural scenes across SVG Vector, Three.js 3D, Pixel Art, and Ordered Dither engines.
+              Production-tested architectural scenes across SVG Vector, Three.js 3D and Pixel Art engines.
             </p>
           </div>
           <button
@@ -268,7 +263,7 @@ export const PresetGallery: React.FC<PresetGalleryProps> = ({
             >
               All ({presets.length})
             </button>
-            {(['svg', 'worlds', 'pixel', 'dither'] as const).map((fmt) => {
+            {(['svg', 'worlds', 'pixel'] as const).map((fmt) => {
               const count = presets.filter((p) => p.format === fmt).length;
               const cfg = ENGINE_LABELS[fmt];
               const Icon = cfg.icon;

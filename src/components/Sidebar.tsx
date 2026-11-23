@@ -48,14 +48,12 @@ const FORMAT_ICONS: Record<RenderFormat, React.FC<{ className?: string }>> = {
   svg: Shapes,
   worlds: Cuboid,
   pixel: Grid3X3,
-  dither: Sparkles,
 };
 
 const FORMAT_PILLS: Record<RenderFormat, string> = {
   svg: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25',
   worlds: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/25',
   pixel: 'text-amber-400 bg-amber-500/10 border-amber-500/25',
-  dither: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25',
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({

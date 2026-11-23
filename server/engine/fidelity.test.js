@@ -97,7 +97,7 @@ const TEST_PROMPTS = [
   }
 ];
 
-const FORMATS = ['worlds', 'svg', 'pixel', 'dither'];
+const FORMATS = ['worlds', 'svg', 'pixel'];
 
 console.log('====================================================');
 console.log('RUNNING ANY3D PROMPT UNDERSTANDING & GENERATION TESTS');

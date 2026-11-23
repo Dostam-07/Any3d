@@ -5,7 +5,6 @@ import { validatePromptFidelity } from './fidelityValidator.js';
  * - Any3d SVG
  * - Any3d Worlds (Three.js)
  * - Any3d Pixel (Canvas software rasterizer)
- * - Any3d Dither (4x4 ordered dither yard miniatures)
  */
 
 const LINES = { hero: 420, card: 240, mini: 150 };
@@ -148,7 +147,7 @@ export function validateWorlds(code) {
   // figure API (D.slab / pal.* / Any3d.figure). That passes every structural
   // check here but cannot bundle (the import does not exist for world-entry),
   // so without this the safety net never runs and the preview 500s.
-  const foreignApi = /\bD\s*\.\s*(slab|box|cylinder|wedge|cone|props|person|group|smooth|phase|wave)\b|\bpal\s*\.|\bAny3d\.figure\b|\bPixel\.scene\b|\bDither\.scene\b/.exec(strip);
+  const foreignApi = /\bD\s*\.\s*(slab|box|cylinder|wedge|cone|props|person|group|smooth|phase|wave)\b|\bpal\s*\.|\bAny3d\.figure\b|\bPixel\.scene\b|/.exec(strip);
   addCheck(5, 'api', !foreignApi, foreignApi ? `World scene used the wrong API (${foreignApi[0].trim()}). Use the worlds helpers (W.box, W.cylinder, W.ball, W.group, W.terrain) only.` : '');
 
   // 6. Imports resolve for world-entry (only @any3d/worlds exists there).
@@ -204,50 +203,12 @@ export function validatePixel(code) {
   };
 }
 
-export function validateDither(code) {
-  const checks = [];
-  const addCheck = (id, label, ok, message = '') => checks.push({ id, label, ok, message });
-
-  const strip = code.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:\\])\/\/[^\n]*/g, "$1");
-
-  // 1. Declaration
-  const calls = [...strip.matchAll(/\bPixel\.scene\s*\(\s*\{/g)];
-  const nameMatch = /\bname:\s*["'`]([^"'`]*)["'`]/.exec(strip);
-  const name = nameMatch ? nameMatch[1] : null;
-  const hasBuild = /\bbuild\s*(\(|:)/.test(strip);
-  const hasTick = /\btick\s*(\(|:)/.test(strip);
-
-  const declOk = calls.length === 1 && !!name && hasBuild && hasTick;
-  addCheck(1, 'declaration', declOk, !declOk ? 'Must declare Pixel.scene({ ... }) with build, tick, and name' : '');
-
-  // 2. Length (260 lines max)
-  const lineCount = code.split('\n').length;
-  addCheck(2, 'length', lineCount <= 260, `${lineCount} lines (budget: $\\le$ 260 lines)`);
-
-  // 3. Clock Purity
-  const clockViolation = /\b(requestAnimationFrame|setTimeout|setInterval)\b/.exec(strip);
-  addCheck(3, 'clock', !clockViolation, clockViolation ? `Prohibited ${clockViolation[1]} used` : '');
-
-  // 4. Self-Contained
-  const netViolation = /\b(fetch\s*\(|XMLHttpRequest|WebSocket)\b/.exec(strip);
-  addCheck(4, 'self-contained', !netViolation, netViolation ? `Forbidden network call` : '');
-
-  return {
-    valid: checks.every(c => c.ok),
-    format: 'dither',
-    name: name || 'dither-scene',
-    checks
-  };
-}
-
 export function validateScene(code, format = 'svg', prompt = '') {
   let report;
   if (format === 'worlds' || /defineWorld/.test(code)) {
     report = validateWorlds(code);
   } else if (format === 'pixel') {
     report = validatePixel(code);
-  } else if (format === 'dither') {
-    report = validateDither(code);
   } else {
     report = validateSVG(code);
   }

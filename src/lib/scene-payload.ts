@@ -68,7 +68,7 @@ export class ScenePayloadError extends Error {
   }
 }
 
-const FORMATS: RenderFormat[] = ['svg', 'worlds', 'pixel', 'dither'];
+const FORMATS: RenderFormat[] = ['svg', 'worlds', 'pixel'];
 const CODECS = ['r', 'd', 'p'] as const;
 type Codec = (typeof CODECS)[number];
 

@@ -75,7 +75,7 @@ async function expectReject(
 
 async function main() {
   const presets = collectPresets();
-  check('found 44 presets', presets.length === 44, `found ${presets.length}`);
+  check('found 40 presets', presets.length === 40, `found ${presets.length}`);
 
   let maxEncoded = 0;
   let maxEncodedFile = '';

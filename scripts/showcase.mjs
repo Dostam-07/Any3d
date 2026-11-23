@@ -22,7 +22,7 @@ const SCENES = [
   // Hero: four presets plus two prompts with no preset behind them.
   { key: 'harbour-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'harbour', title: 'Deep-water harbour', motion: true },
   { key: 'florist-hero', size: 'hero', kind: 'preset', format: 'worlds', name: 'florist', title: 'Florist shop front' },
-  { key: 'windmill-hero', size: 'hero', kind: 'preset', format: 'dither', name: 'windmill', title: 'Dither windmill' },
+  { key: 'town-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'town', title: 'Town square' },
   { key: 'airport-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'airport', title: 'Terminal runway' },
   { key: 'market-hero', size: 'hero', kind: 'prompt', file: 'market', title: 'Night market (prompt only)', motion: true },
   { key: 'glacier-hero', size: 'hero', kind: 'prompt', file: 'glacier', title: 'Glacier lighthouse (prompt only)' },
@@ -31,7 +31,7 @@ const SCENES = [
   { key: 'bakery-card', size: 'card', kind: 'preset', format: 'worlds', name: 'bakery', title: 'Corner bakery' },
   { key: 'classroom-card', size: 'card', kind: 'preset', format: 'svg', name: 'classroom', title: 'Classroom' },
   { key: 'flowerstall-card', size: 'card', kind: 'preset', format: 'pixel', name: 'flower-stall', title: 'Pixel flower stall' },
-  { key: 'teahouse-card', size: 'card', kind: 'preset', format: 'dither', name: 'tea-house', title: 'Dither tea house' },
+  { key: 'pier-card', size: 'card', kind: 'preset', format: 'pixel', name: 'pier', title: 'Pixel fishing pier' },
   { key: 'greenhouse-card', size: 'card', kind: 'prompt', file: 'greenhouse', title: 'Rooftop greenhouse (prompt only)' },
   { key: 'coral-card', size: 'card', kind: 'prompt', file: 'coral', title: 'Coral nursery (prompt only)' },
 ];
@@ -116,7 +116,7 @@ const waitForScene = async () => {
     if (!f) return false;
     const doc = f.contentDocument;
     if (!doc) return false;
-    // SVG, pixel and dither stages are not canvas based.
+    // SVG and pixel stages are not canvas based.
     return Boolean(doc.querySelector('canvas, svg, [data-state="ready"]'));
   });
   if (ready) await page.waitForTimeout(1400);
@@ -190,7 +190,7 @@ for (const scene of scenes) {
     await page.locator('button:visible').filter({ hasText: 'Presets' }).first().click();
     const modal = page.locator('div.fixed.inset-0.z-50').filter({ hasText: 'Any3d Benchmark Gallery' }).first();
     await modal.waitFor({ state: 'visible', timeout: 15000 });
-    const FILTERS = { worlds: /Three\.js/i, pixel: /Pixel Art/i, dither: /Dither/i, svg: /SVG Vector/i };
+    const FILTERS = { worlds: /Three\.js/i, pixel: /Pixel Art/i, svg: /SVG Vector/i };
     const filter = FILTERS[scene.format] || FILTERS.svg;
     await modal.getByRole('button', { name: filter }).first().click();
     await page.waitForTimeout(500);

@@ -79,7 +79,7 @@ function Segmented({
  * "Clip" — records the live scene for a few seconds and offers it for download.
  *
  * Shared by the project page and the Studio stage so every engine is reachable:
- * presets for worlds/pixel/dither live in Studio, so a project-page-only button
+ * presets for worlds/pixel live in Studio, so a project-page-only button
  * would leave the canvas engines without a way to record.
  *
  * The popover and the dialog are portalled to <body>: this button lives in a

@@ -160,20 +160,17 @@ export const FirstRunPanel: React.FC<FirstRunPanelProps> = ({
               svg: Shapes,
               worlds: Cuboid,
               pixel: Grid3X3,
-              dither: Sparkles,
             };
             const Icon = iconMap[f];
             const labels: Record<RenderFormat, string> = {
               svg: 'SVG Vector',
               worlds: 'Worlds 3D',
               pixel: 'Pixel Art',
-              dither: 'Dither',
             };
             const accents: Record<RenderFormat, string> = {
               svg: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5',
               worlds: 'text-indigo-400 border-indigo-500/20 bg-indigo-500/5',
               pixel: 'text-amber-400 border-amber-500/20 bg-amber-500/5',
-              dither: 'text-cyan-400 border-cyan-500/20 bg-cyan-500/5',
             };
             return (
               <button

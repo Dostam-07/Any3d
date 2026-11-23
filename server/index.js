@@ -26,7 +26,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', product: 'Any3d', timestamp: new Date().toISOString() });
 });
 
-// Presets Inventory for all 4 engines
+// Presets Inventory for every engine
 app.get('/api/presets', (req, res) => {
   try {
     const presets = [];
@@ -34,7 +34,6 @@ app.get('/api/presets', (req, res) => {
       { format: 'svg', dir: path.join(rootDir, 'server', 'presets', 'svg') },
       { format: 'worlds', dir: path.join(rootDir, 'server', 'presets', 'worlds') },
       { format: 'pixel', dir: path.join(rootDir, 'server', 'presets', 'pixel') },
-      { format: 'dither', dir: path.join(rootDir, 'server', 'presets', 'dither') },
     ];
 
     for (const { format, dir } of dirs) {

@@ -24,4 +24,4 @@ Dawn (0), Noon (1/3), Dusk (2/3), Night (1). `LOOK_CHIPS` adds "Golden hour" (0.
 
 ## Status
 
-SVG only. Worlds / Pixel / Dither keep their camera and lighting inside their engines; atmosphere there is future work. `scripts/verify-look.mjs` passes (noon→night luma −20.5%, 0 `/api/bundle` calls during scrub, 6.7 ms avg repaint).
+SVG only. Worlds and Pixel keep their camera and lighting inside their engines; atmosphere there is future work. `scripts/verify-look.mjs` passes (noon→night luma −20.5%, 0 `/api/bundle` calls during scrub, 6.7 ms avg repaint).

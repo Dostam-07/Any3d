@@ -19,7 +19,7 @@ const CASES = [
   { prompt: 'A morning bakery with a baker rolling dough', format: 'worlds' },
   { prompt: 'A coffee cart on a street corner', format: 'svg' },
   { prompt: 'A flower stall on wet cobblestone', format: 'pixel' },
-  { prompt: 'A mountain forge with glowing embers', format: 'dither' },
+  { prompt: 'A mountain forge with glowing embers', format: 'pixel' },
   { prompt: 'A lighthouse island with a docking boat', format: 'worlds' },
   { prompt: 'A kitchen with a steaming kettle', format: 'svg' },
 ];

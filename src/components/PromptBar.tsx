@@ -45,13 +45,6 @@ const PIXEL_SUGGESTIONS = [
   'A cozy village bakery with warm lantern glow, chimney smoke puffing, and a delivery bicycle',
 ];
 
-const DITHER_SUGGESTIONS = [
-  'A weathered mountain forge with an anvil, water wheel turning, glowing embers, and iron ingots',
-  'A solitary cliffside lighthouse in storm winds with revolving beam and wave spray hitting rocks',
-  'A traditional hillside tea house with bamboo railings, stone lanterns, and raked gravel garden',
-  'A rural Dutch windmill with turning four-blade sail, wooden canal sluice, and swimming ducks',
-];
-
 export const PromptBar: React.FC<PromptBarProps> = ({
   prompt,
   setPrompt,
@@ -82,7 +75,6 @@ export const PromptBar: React.FC<PromptBarProps> = ({
     svg: 'Describe an isometric Any3d scene... (e.g. Airport with planes running on the runway)',
     worlds: 'Describe an Any3d Three.js narrative world... (e.g. A craftsman carving wood in a sunlit workshop)',
     pixel: 'Describe a 320×240 Any3d pixel art scene... (e.g. A sunlit flower stall with potted hydrangeas and blooming petunias)',
-    dither: 'Describe an Any3d 4×4 ordered dither scene... (e.g. A hillside forge with hammer clinking and water wheel spinning)',
   };
 
   const handleSubmit = (e: React.FormEvent) => {

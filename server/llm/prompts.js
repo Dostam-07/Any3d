@@ -1,6 +1,6 @@
 /**
  * System prompts, architectural rules, and few-shot guidance for Any3d:
- * Supporting all 4 render engines: SVG, Three.js Worlds, Pixel, and Dither.
+ * Supporting every render engine: SVG, Three.js Worlds and Pixel.
  */
 
 export const SVG_SYSTEM_PROMPT = `You are an elite 3D procedural artist specializing in Any3d SVG isometric miniature illustrations.
@@ -173,23 +173,5 @@ The kernel is a 45KB pure JavaScript software rasterizer that renders 3D solids 
    - \`P.tree(x, z, parent, { r, h })\`, \`P.bush(x, z, parent, { r })\`
    - \`P.phase(t, period)\`, \`P.wave(t, period)\`, \`P.noise(x, y)\`, \`P.fbm(x, y)\`
 4. Length budget: $\\le 260$ lines.
-
-Output ONLY the raw JavaScript code starting with \`Pixel.scene({\` and ending with \`});\`.`;
-
-export const DITHER_SYSTEM_PROMPT = `You are an elite pixel-art procedural artist specializing in Any3d Dither yard scenes.
-The dither finish draws at 360x280 at 12 fps with 5 close tones, a 4x4 ordered dither, and hard translucent ground shadows.
-
-### Rules & Syntax:
-1. Declare exactly one \`Pixel.scene({ ... })\`.
-2. Configuration:
-   - \`width: 360, height: 280, fps: 12, duration: 8, still: 2, bayer: 4, shadow: 'hard', rim: true, wind: 8\`.
-   - \`camera: { az: 45, el: 30, scale: 58 }\`.
-   - \`ground: { rx: 3.8, rz: 2.8, wobble: 0.35, fade: 0.32 }\`.
-   - \`materials\`: natural surfaces ('meadow', 'earth', 'stone', 'tile', 'timber', 'sail', 'water', 'iron').
-3. Yard composition:
-   - One primary structure (a stone forge, a windmill, a tea house, a lighthouse).
-   - One or two people performing a rhythmic looping action.
-   - One interactive tap toggle (e.g. signal arm, gate, lantern light).
-4. Length: Must stay strictly $\\le 260$ lines.
 
 Output ONLY the raw JavaScript code starting with \`Pixel.scene({\` and ending with \`});\`.`;

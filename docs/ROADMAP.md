@@ -13,7 +13,7 @@ The previous roadmap ran phases 0–6. Most of it shipped; this version records 
 | 0 | Versioned scene payload + `#/s/` route | **Shipped** | `src/lib/scene-payload.ts`, trust gate, `npm run test:payload` — 369 assertions over 44 presets |
 | 1 | Share/remix links + "Remix this" | **Shipped, 1b open** | Share dialog and trust gate work; the preview iframe is still `allow-same-origin`; preset and export cards have no Remix entry point |
 | 2 | Turntable video/GIF export | **Shipped** | `src/lib/turntable.ts`, `ClipControl.tsx`, `scripts/verify-clip.mjs` (1080² WebM, 640² GIF); SVG video still lands at 9–12 fps |
-| 3 | Atmosphere: time of day + weather | **Partial** | Payload carries `look`; all four kernels contain the look path; SVG verified (mean luma 0.533 → 0.424 at night, 0 bundle requests while scrubbing). Worlds, Pixel and Dither visual parity is unmeasured |
+| 3 | Atmosphere: time of day + weather | **Partial** | Payload carries `look`; all four kernels contain the look path; SVG verified (mean luma 0.533 → 0.424 at night, 0 bundle requests while scrubbing). Worlds and Pixel visual parity is unmeasured (the ordered-dither engine has since been removed) |
 | 4 | Diff, seed lock, surprise deck, Ask | **Shipped, one gap** | `src/lib/diff.ts` + `VersionDiff.tsx` (now also on the project page), seed plumbing, `surprise-deck.ts`, `/api/ask-scene`; locked-seed reproduction is still unmeasured |
 | 5 | Embed snippet + storyboard | **Shipped, verification gaps** | `public/embed.js` at 1,355 B gzipped; storyboard 2400×1350 with burned-in name; `file://` untested; no published demo; storyboard is SVG-only |
 | 6 | Image→palette, product-shot, multi-scene | **Partial** | `/api/extract-palette` + `PaletteFromPhoto` + guide shipped; product-shot and multi-scene not started |
@@ -21,7 +21,7 @@ The previous roadmap ran phases 0–6. Most of it shipped; this version records 
 ### Shipped outside the old roadmap
 
 - **Deterministic offline editor** (`server/llm/offline-editor.js`): add/remove, move/scale, motion (spin, bob, sway, pulse, orbit), hover lift and themes without a model call. 67 assertions. Currently SVG-only.
-- **10 new SVG presets** — barbershop, gym, laundromat, library, arcade, classroom, food truck, greenhouse, campsite, patisserie — bringing the library to **44** (30 SVG, 7 Worlds, 3 Pixel, 4 Dither).
+- **10 new SVG presets** — barbershop, gym, laundromat, library, arcade, classroom, food truck, greenhouse, campsite, patisserie — bringing the library to **40** (30 SVG, 7 Worlds, 3 Pixel; the 4 ordered-dither presets were removed with that engine).
 - **Responsive UI pass** — chat overlays the stage on phones, project toolbar collapses secondary actions into a menu, scene header no longer clips, light-mode contrast fixed, `100dvh` layout.
 - **Local telemetry + debug panel** — opt-in counters for scenes, edits, exports and remixes; no network.
 - **README refresh** — 44 presets, engine-specific validation, offline-edit capabilities, responsive workspace.
@@ -31,7 +31,7 @@ The previous roadmap ran phases 0–6. Most of it shipped; this version records 
 - Payload tests are **369 assertions**, not 182.
 - Presets are **44**, not “30+”.
 - The project page now has version diff, not only the Studio.
-- “Atmosphere is SVG-only” is no longer true at the code level: all four kernels handle the look message. What is missing is **measured parity** on Worlds, Pixel and Dither.
+- “Atmosphere is SVG-only” is no longer true at the code level: every kernel handles the look message. What is missing is **measured parity** on Worlds and Pixel.
 
 ---
 
@@ -75,13 +75,13 @@ Fixture moved from `.tmp/embed/` into `docs/embed/`: `demo.html` (static demo pa
 Chat editing is the product’s differentiator, but the instant path only covers SVG.
 
 **B1 · Offline look and theme on every engine.** — DONE (Phase 2)
-`editSceneOffline` now handles theme/finish switches and live look changes for SVG, Worlds, Pixel, and Dither. It is wired into `handleSendMessage` (`src/App.tsx`): the deterministic offline editor runs first (zero model calls), and the LLM fallback (`mutateSceneApi`) only runs when it cannot apply the edit. Unsupported requests return a short, accurate reply with two concrete rephrasings plus a one-click **Use model** path.
+`editSceneOffline` now handles theme/finish switches and live look changes for SVG, Worlds and Pixel. It is wired into `handleSendMessage` (`src/App.tsx`): the deterministic offline editor runs first (zero model calls), and the LLM fallback (`mutateSceneApi`) only runs when it cannot apply the edit. Unsupported requests return a short, accurate reply with two concrete rephrasings plus a one-click **Use model** path.
 
 **B2 · Undo the last edit from chat.** — DONE (Phase 2)
 Added an **Undo** button in the ProjectPage composer (next to Surprise), backed by `/undo`. It restores the previous checkpoint (`codeVersions[length-2]`) without creating a new one; repeated Undo walks back versions. No new checkpoint is added.
 
 **B3 · Resolve references and recover from failure.** — DONE (Phase 2)
-Pronoun resolution ("it"/"that"/"the last thing") works for add/remove/move across all four engines via `/*a3d:...*/` markers. Color change ("make it red", "change it to blue") works on SVG, Pixel, Dither, and Worlds (when the target's creation line carries visible hex colors). Failed offline edits reply with two concrete rephrasings instead of a generic failure.
+Pronoun resolution ("it"/"that"/"the last thing") works for add/remove/move across all four engines via `/*a3d:...*/` markers. Color change ("make it red", "change it to blue") works on SVG, Pixel and Worlds (when the target's creation line carries visible hex colors). Failed offline edits reply with two concrete rephrasings instead of a generic failure.
 
 ---
 
@@ -98,7 +98,7 @@ Pronoun resolution ("it"/"that"/"the last thing") works for add/remove/move acro
 *Acceptance:* two clicks from a blank project to a rendered scene with one version and a sensible title.
 
 **C3 · First-run panel.** — DONE (Phase 3)
-New `FirstRunPanel` component (`src/components/FirstRunPanel.tsx`) shows model status (Ollama models detected / Gemini key missing), an engine picker (SVG/Worlds/Pixel/Dither), and three starters (Coffee Cart SVG, Lighthouse Island Worlds, Mountain Forge Pixel). Wired into App.tsx: shown on Home when `sessions.length === 0` and no model is configured; replaced by the normal Homepage once a model is available or a session exists. Gives new users one clear next action with no dead ends when the API is down.
+New `FirstRunPanel` component (`src/components/FirstRunPanel.tsx`) shows model status (Ollama models detected / Gemini key missing), an engine picker (SVG/Worlds/Pixel), and three starters (Coffee Cart SVG, Lighthouse Island Worlds, Mountain Forge Pixel). Wired into App.tsx: shown on Home when `sessions.length === 0` and no model is configured; replaced by the normal Homepage once a model is available or a session exists. Gives new users one clear next action with no dead ends when the API is down.
 *Acceptance:* a new user can tell whether a model is available before typing; no dead ends when the API is down.
 
 ---

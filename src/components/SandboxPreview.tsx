@@ -201,8 +201,6 @@ function SandboxPreviewInner({
         ? 'any3d-world'
         : format === 'pixel'
         ? 'any3d-pixel'
-        : format === 'dither'
-        ? 'any3d-dither'
         : 'any3d';
     iframeRef.current.contentWindow.postMessage({ type, ...msg }, '*');
   };
@@ -236,9 +234,6 @@ function SandboxPreviewInner({
         if (typeof d.finish === 'string') setFinishState(d.finish as WorldFinish);
         if (d.state === 'ready') sendMessage({ look: lookRef.current });
       } else if (d.type === 'any3d-pixel') {
-        if (typeof d.read === 'string') setReadoutText(d.read);
-        if (d.ready) sendMessage({ look: lookRef.current });
-      } else if (d.type === 'any3d-dither') {
         if (typeof d.read === 'string') setReadoutText(d.read);
         if (d.ready) sendMessage({ look: lookRef.current });
       }
@@ -536,7 +531,7 @@ function SandboxPreviewInner({
                   ) : (
                     <>
                       <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                      <span className="text-[11px] font-mono">{format === 'pixel' ? 'Pixel' : 'Dither'}</span>
+                      <span className="text-[11px] font-mono">Pixel</span>
                     </>
                   )}
                   <ChevronDown className={`w-3 h-3 text-zinc-500 transition-transform shrink-0 ${styleMenuOpen ? 'rotate-180' : ''}`} />
@@ -625,7 +620,7 @@ function SandboxPreviewInner({
                       </div>
                     ) : (
                       <div className="text-xs text-zinc-400">
-                        {format === 'pixel' ? 'Pixel Art engine 320×240' : 'Ordered Dither engine 360×280'}
+                        Pixel Art engine 320×240
                       </div>
                     )}
                   </div>
@@ -633,7 +628,7 @@ function SandboxPreviewInner({
               </div>
 
               {/* Club 3: Camera Angles — a 2D engine has no camera to move. */}
-              {format !== 'pixel' && format !== 'dither' && (
+              {format !== 'pixel' && (
                 <div className="relative shrink-0" ref={cameraMenuRef}>
                   <button
                     type="button"

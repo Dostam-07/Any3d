@@ -22,7 +22,7 @@ check('Worlds night changes light, sun position, and sky', night.hemi < noon.hem
 check('Worlds clamps out-of-range time', worldLook(2).background === night.background);
 check('Worlds uses noon for non-finite time', worldLook(Number.NaN).background === noon.background);
 
-for (const engine of ['any3d-pixel.js', 'any3d-dither.js']) {
+for (const engine of ['any3d-pixel.js']) {
   const module = { exports: {} as Record<string, unknown> };
   const source = fs.readFileSync(path.join(ROOT, 'core', 'kernels', engine), 'utf8');
   vm.runInNewContext(source, { module, exports: module.exports }, { filename: engine });

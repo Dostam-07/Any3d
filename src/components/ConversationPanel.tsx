@@ -77,11 +77,6 @@ const INSPIRATIONS: Record<RenderFormat, string[]> = {
     'A peaceful riverside allotment with raised vegetable patches and shed',
     'An old wooden fishing pier with drying nets and a gull on a bollard',
   ],
-  dither: [
-    'A weathered mountain forge with water wheel turning and glowing embers',
-    'A solitary cliffside lighthouse in storm winds with revolving beam',
-    'A traditional hillside tea house with bamboo railings and gravel garden',
-  ],
 };
 
 const QUICK_MUTATIONS = [

@@ -25,7 +25,6 @@ export const FORMAT_META: Record<RenderFormat, { label: string; tone: string; do
   svg: { label: 'SVG Vector', tone: 'border-emerald-400/30 bg-emerald-500/10 text-[#6ee7b7]', dot: 'bg-emerald-400' },
   worlds: { label: 'Three.js', tone: 'border-indigo-400/30 bg-indigo-500/10 text-[#a5b4fc]', dot: 'bg-indigo-400' },
   pixel: { label: 'Pixel Art', tone: 'border-amber-400/30 bg-amber-500/10 text-[#fcd34d]', dot: 'bg-amber-400' },
-  dither: { label: '4×4 Dither', tone: 'border-cyan-400/30 bg-cyan-500/10 text-[#67e8f9]', dot: 'bg-cyan-400' },
 };
 
 export const ACCENT_SWATCHES = ['#e0604b', '#5b4ae0', '#10b981', '#f59e0b', '#06b6d4', '#ec4899'];

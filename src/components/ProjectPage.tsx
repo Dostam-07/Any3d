@@ -114,7 +114,6 @@ const ENGINE_META: Record<RenderFormat, { label: string; blurb: string }> = {
   svg: { label: 'SVG Vector', blurb: 'Crisp isometric vector scene' },
   worlds: { label: 'Three.js', blurb: 'Narrative miniature 3D world' },
   pixel: { label: 'Pixel Art', blurb: '320×240 pixel micro-scene' },
-  dither: { label: '4×4 Dither', blurb: 'Retro ordered-dither scene' },
 };
 
 const STARTERS: Record<RenderFormat, { title: string; prompt: string }[]> = {
@@ -132,11 +131,6 @@ const STARTERS: Record<RenderFormat, { title: string; prompt: string }[]> = {
     { title: 'Wet cobblestone', prompt: 'A flower stall on wet cobblestone with buckets of tulips and an awning' },
     { title: 'Fishing pier', prompt: 'An old wooden fishing pier with drying nets and a gull on a bollard' },
     { title: 'Allotment', prompt: 'A peaceful riverside allotment with raised vegetable patches and shed' },
-  ],
-  dither: [
-    { title: 'Mountain forge', prompt: 'A weathered mountain forge with water wheel turning and glowing embers' },
-    { title: 'Cliff lighthouse', prompt: 'A solitary cliffside lighthouse in storm winds with revolving beam' },
-    { title: 'Tea house', prompt: 'A traditional hillside tea house with bamboo railings and gravel garden' },
   ],
 };
 

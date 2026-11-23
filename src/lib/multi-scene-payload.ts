@@ -381,7 +381,7 @@ function validateSingleScene(value: unknown): ScenePayload {
     throw new MultiScenePayloadError('missing-scene', 'Multi-scene entry scene needs code');
   }
   const format = raw.format as RenderFormat;
-  const validFormats: RenderFormat[] = ['svg', 'worlds', 'pixel', 'dither'];
+  const validFormats: RenderFormat[] = ['svg', 'worlds', 'pixel'];
   if (!validFormats.includes(format)) {
     throw new MultiScenePayloadError('invalid-format', 'Multi-scene entry scene has unknown engine');
   }

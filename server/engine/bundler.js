@@ -8,8 +8,6 @@ import {
   getWorldsBenchTemplate,
   getPixelKernel,
   getPixelBenchTemplate,
-  getDitherKernel,
-  getDitherBenchTemplate,
 } from './kernels.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -102,26 +100,6 @@ export function bundlePixel(pixelCode, look = null) {
     .replace('/*TITLE*/', () => title)
     .replace('/*KERNEL*/', () => `\n${lookPrelude}${kernel}\n`)
     .replace('/*SCENE*/', () => `\n${pixelCode.replace(/\r\n/g, '\n').trim()}\n`);
-}
-
-/**
- * Assemble a standalone offline HTML file for an Any3d Dither scene.
- */
-export function bundleDither(ditherCode, look = null) {
-  const benchTemplate = getDitherBenchTemplate();
-  const kernel = getDitherKernel();
-  const title = extractTitle(ditherCode, 'Dither Scene') + ' · Any3d';
-  const lookPrelude = look
-    ? `window.__any3dLook = ${JSON.stringify({
-        timeOfDay: Math.min(1, Math.max(0, Number(look.timeOfDay) || 0)),
-        weather: ['clear', 'rain', 'snow'].includes(look.weather) ? look.weather : 'clear',
-      })};\n`
-    : '';
-
-  return benchTemplate
-    .replace('/*TITLE*/', () => title)
-    .replace('/*KERNEL*/', () => `\n${lookPrelude}${kernel}\n`)
-    .replace('/*SCENE*/', () => `\n${ditherCode.replace(/\r\n/g, '\n').trim()}\n`);
 }
 
 /**
@@ -326,6 +304,9 @@ if (runtime) {
  * Unified bundler supporting all 4 engines with smart auto-detection.
  */
 export async function bundleScene(code, format = 'svg', look = null) {
+  // The ordered-dither engine was removed; its scenes were Pixel.scene documents
+  // with `bayer`/`shadow` flags, so old shares still open through the pixel kernel.
+  if (format === 'dither') format = 'pixel';
   if (!code || !code.trim()) {
     return bundleSVG('Any3d.figure({ name: "empty", title: "Empty Scene", build: function(o) { var D=o.D, pal=o.pal; return { ground: D.slab(8, 6, pal.ground, 0, 0, 0, null, { h: 0.5, r: 0.8, side: pal.base }) }; } });');
   }
@@ -339,9 +320,6 @@ export async function bundleScene(code, format = 'svg', look = null) {
     return await bundleWorlds(code, look);
   }
   if (hasPixel) {
-    if (format === 'dither' || /\bbayer\s*:|\bshadow\s*:\s*['"]hard['"]/.test(code)) {
-      return bundleDither(code, look);
-    }
     return bundlePixel(code, look);
   }
   if (hasSVG) {
@@ -355,9 +333,6 @@ export async function bundleScene(code, format = 'svg', look = null) {
   }
   if (format === 'pixel') {
     return bundlePixel(code, look);
-  }
-  if (format === 'dither') {
-    return bundleDither(code, look);
   }
   return bundleSVG(code, look);
 }

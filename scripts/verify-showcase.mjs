@@ -5,7 +5,7 @@
 //
 // It fails (exit 1) when the frame reloads on a presentation switch, when a
 // console error appears, when the card CTA stops exporting or copying, when the
-// "Editable source" link stops reaching the editor, or when a pixel/dither frame
+// "Editable source" link stops reaching the editor, or when a pixel frame
 // collapses back into a postage stamp.
 import { chromium } from 'playwright';
 import * as fs from 'node:fs';
@@ -88,22 +88,19 @@ const switchSize = async (label) => {
 };
 
 try {
-  // --- gallery coverage: every engine tab exists, including dither ----------
+  // --- gallery coverage: three engines, and no dither tab ------------------
   await page.goto(`${APP}/#/studio`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1600);
   await page.locator('button:visible').filter({ hasText: 'Presets' }).first().click();
   const modal = page.locator('div.fixed.inset-0.z-50').filter({ hasText: 'Any3d Benchmark Gallery' }).first();
   await modal.waitFor({ state: 'visible', timeout: 20000 });
   const tabs = await modal.locator('button').allInnerTexts();
-  for (const engine of [/SVG Vector/i, /Three\.js/i, /Pixel Art/i, /Dither/i]) {
+  for (const engine of [/SVG Vector/i, /Three\.js/i, /Pixel Art/i]) {
     if (tabs.some((t) => engine.test(t))) pass(`gallery tab ${engine}`);
     else fail(`gallery tab ${engine}`, 'missing engine filter');
   }
-  await modal.getByRole('button', { name: /Dither/i }).first().click();
-  await page.waitForTimeout(400);
-  const ditherCards = await modal.locator('div.p-4.rounded-2xl').count();
-  if (ditherCards >= 3) pass('dither presets reachable', `${ditherCards} cards`);
-  else fail('dither presets reachable', `${ditherCards} cards`);
+  if (!tabs.some((t) => /dither/i.test(t))) pass('dither engine is gone');
+  else fail('dither engine is gone', 'a dither filter is still offered');
   await page.keyboard.press('Escape');
 
   // --- one scene, both presentations, frame must survive -------------------

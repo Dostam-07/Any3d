@@ -252,8 +252,8 @@ Twelve captures taken straight from the running studio with `node scripts/showca
   </tr>
   <tr>
     <td align="center">
-      <img src="docs/assets/showcase/windmill-hero.png" alt="Dithered windmill on a hillside in a hero banner" /><br />
-      <sub><b>windmill</b> · 4×4 Dither · preset — ordered-dither landscape with turning blades</sub>
+      <img src="docs/assets/showcase/town-hero.png" alt="Isometric town square as a full-bleed hero banner" /><br />
+      <sub><b>town square</b> · SVG Vector · preset — a whole town block with roads and traffic</sub>
     </td>
     <td align="center">
       <img src="docs/assets/showcase/airport-hero.png" alt="SVG airport terminal and runway in a hero banner" /><br />
@@ -291,8 +291,8 @@ Twelve captures taken straight from the running studio with `node scripts/showca
   </tr>
   <tr>
     <td align="center">
-      <img src="docs/assets/showcase/teahouse-card.png" alt="Dithered tea house embedded as a card" /><br />
-      <sub><b>tea house</b> · 4×4 Dither · preset</sub>
+      <img src="docs/assets/showcase/pier-card.png" alt="Pixel art fishing pier embedded as a card" /><br />
+      <sub><b>fishing pier</b> · Pixel Art · preset</sub>
     </td>
     <td align="center">
       <img src="docs/assets/showcase/greenhouse-card.png" alt="Rooftop greenhouse with watering arm embedded as a card" /><br />
@@ -312,13 +312,13 @@ The two prompt-only worlds per presentation were sent through the same `POST /ap
 | Found while shooting the showcase | Fix |
 |---|---|
 | Any prompt outside a hand-written category produced the same courtyard: pergola, table, one person. | `server/engine/custom-world.js` now composes from the prompt's own nouns — palette profile (`ice`, `underwater`, `volcanic`, `orbital`, `market`, `industrial`, `garden`, `desert`) plus set pieces (stalls, lanterns, lamp posts, greenhouse, crop rows, watering arm, coral, bubbles, huts, glaciers, domes, solar arrays). |
-| Worlds written with the SVG API passed validation, then failed bundling with `Could not resolve "@any3d/figure"` → HTTP 500. | `validateWorlds()` rejects `D.*`, `pal.*`, `Any3d.*`, `Pixel.*`, `Dither.*` and any import other than `@any3d/worlds`. |
-| The four dither presets were unreachable: the gallery filtered `format !== 'dither'`. | Dither is a first-class filter tab, and its four presets open, bundle and render. |
-| Pixel and dither scenes appeared as a postage stamp in the middle of the stage, because the canvas kept its native 320×240 box. | `fit()` scales to the largest whole-number multiple of both stage axes — in the studio and in exported files. |
+| Worlds written with the SVG API passed validation, then failed bundling with `Could not resolve "@any3d/figure"` → HTTP 500. | `validateWorlds()` rejects `D.*`, `pal.*`, `Any3d.*`, `Pixel.*` and any import other than `@any3d/worlds`. |
+| The ordered-dither engine shipped as a fourth format nobody asked for, doubling the bundle and kernel surface for a look the pixel engine already covers. | Removed: kernel, bench template, four presets, prompt/validator/bundler branches and the gallery tab are gone. Two showcase tiles that used it were re-shot with SVG and pixel scenes. |
+| Pixel scenes appeared as a postage stamp in the middle of the stage, because the canvas kept its native 320×240 box. | `fit()` scales to the largest whole-number multiple of both stage axes — in the studio and in exported files. |
 | The default (noon) look painted the stage pure white behind every scene. | Noon background is a soft studio tone (`#e6ebf3`). |
 | Every Three.js scene sat on a near-black backdrop under bright noon lighting, so a hero banner read as a black rectangle on any light page: `world-bench.html` ignored the studio's `look` message and the runtime never applied a profile at mount. | The world runtime applies the default look on mount and honours `look` / `size` / `finish` / `paused` / `camera` messages; exports carry the look for every format, not just SVG. Guarded by a *world look reaches the runtime* check (noon sky 236 → night 47). |
 | Hero framing zoomed out 1.35×, leaving a wide dead margin around the scene. | 1.08× — the scene reaches the banner edges and tall props still clear the top. |
-| The camera menu (isometric / top / front / side) changed its own label and nothing else: the world bench dropped `camera` messages too, and the SVG runtime had no runtime camera at all. | Worlds accept `{ az, el, dist }` and refit; SVG gained `ctx.setCamera` that sets the rest angle and refits the frustum; *Isometric View* restores each scene's authored angle; the control is hidden for the pixel and dither engines, which have no camera. Guarded by three checks (`world camera presets apply`, `svg camera presets apply`, `camera hidden for the 2D engines`). |
+| The camera menu (isometric / top / front / side) changed its own label and nothing else: the world bench dropped `camera` messages too, and the SVG runtime had no runtime camera at all. | Worlds accept `{ az, el, dist }` and refit; SVG gained `ctx.setCamera` that sets the rest angle and refits the frustum; *Isometric View* restores each scene's authored angle; the control is hidden for the pixel engine, which has no camera. Guarded by three checks (`world camera presets apply`, `svg camera presets apply`, `camera hidden for the 2D engines`). |
 | Generated scenes showed a slug in the headline and exports: “a-bustling-night-market-with-n”. | `src/lib/scene-title.ts` prefers the scene description, drops a truncated tail, and trims dangling connectors. |
 | A 4:3 card section left a tall empty tail in a squarish stage. | The card section measures its content and compacts itself; the showcase crops stills to the content box. |
 | Switching Hero ↔ Card rewrote the scene source, re-bundled it and reloaded the frame — the camera pose was lost and the code editor quietly changed. | The size is a runtime message to the live frame; only the exported file is stamped (`src/lib/presentation-size.ts`). Verified: the iframe document survives every switch. |

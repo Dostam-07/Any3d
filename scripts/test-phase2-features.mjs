@@ -56,12 +56,6 @@ check('Pixel make it blue changed', p1.changed, p1.summary);
 let vp1 = validateScene(p1.code, 'pixel');
 check('Pixel make it blue valid', vp1.valid);
 
-// --- Dither: forge preset → make it red ---
-const ditherCode = fs.readFileSync(path.join(ROOT, 'server/presets/dither/forge.js'), 'utf8');
-
-let d1 = editSceneOffline(ditherCode, 'make it red', 'dither');
-check('Dither make it red changed', d1.changed, d1.summary);
-
 // --- Failure message has rephrasings ---
 let bad = editSceneOffline(svgCode, 'make it fly to the moon', 'svg');
 check('Failure has rephrasing', bad.summary.includes('Try:') && bad.summary.includes('or'), bad.summary);

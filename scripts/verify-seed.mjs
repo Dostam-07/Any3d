@@ -29,7 +29,7 @@ const prompts = [
   'A corner bookshop with a cat sleeping in the window',
   'A night-time rocket launchpad with floodlights and a gantry',
 ];
-const formats = ['svg', 'worlds', 'pixel', 'dither'];
+const formats = ['svg', 'worlds', 'pixel'];
 
 for (const prompt of prompts) {
   for (const format of formats) {

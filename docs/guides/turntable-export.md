@@ -4,7 +4,7 @@ Source: `src/lib/turntable.ts`, `src/components/ClipControl.tsx`, `core/template
 
 ## What it does
 
-Records a short looping clip of the live scene and downloads it as WebM or GIF. SVG scenes are serialised frame-by-frame and rasterised at the target pixel size; canvas engines (Worlds / Pixel / Dither) use `MediaRecorder` over the live canvas.
+Records a short looping clip of the live scene and downloads it as WebM or GIF. SVG scenes are serialised frame-by-frame and rasterised at the target pixel size; canvas engines (Worlds / Pixel) use `MediaRecorder` over the live canvas.
 
 ## Entry points
 

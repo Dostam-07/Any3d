@@ -44,7 +44,7 @@ export const SURPRISE_DECK: SurpriseCard[] = [
     activity: 'a revolving beam sweeping the water',
     light: 'night',
     palette: 'deep indigo and bone white',
-    format: 'dither',
+    format: 'worlds',
     prompt:
       'A solitary cliffside lighthouse at night in storm winds with a revolving beam, deep indigo and bone white palette',
   },
@@ -74,7 +74,7 @@ export const SURPRISE_DECK: SurpriseCard[] = [
     activity: 'a water wheel turning beside glowing embers',
     light: 'dusk',
     palette: 'charcoal and ember orange',
-    format: 'dither',
+    format: 'pixel',
     prompt:
       'A weathered mountain forge at dusk with a water wheel turning and glowing embers, charcoal and ember orange palette',
   },
@@ -104,7 +104,7 @@ export const SURPRISE_DECK: SurpriseCard[] = [
     activity: 'steam rising from a kettle',
     light: 'overcast afternoon',
     palette: 'moss green and paper',
-    format: 'dither',
+    format: 'worlds',
     prompt:
       'A traditional hillside tea house on an overcast afternoon with bamboo railings, a gravel garden and steam rising from a kettle, moss green and paper palette',
   },

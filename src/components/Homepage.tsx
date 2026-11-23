@@ -136,14 +136,12 @@ const FORMAT_ICONS: Record<RenderFormat, React.FC<{ className?: string }>> = {
   svg: Shapes,
   worlds: Cuboid,
   pixel: Grid3X3,
-  dither: Sparkles,
 };
 
 const FORMAT_BADGES: Record<RenderFormat, string> = {
   svg: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
   worlds: 'text-indigo-400 border-indigo-500/30 bg-indigo-500/10',
   pixel: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
-  dither: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
 };
 
 function formatRelativeTime(ts?: number): string {

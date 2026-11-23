@@ -11,7 +11,7 @@ Source: [`src/lib/scene-payload.ts`](../../src/lib/scene-payload.ts)
 ```ts
 interface ScenePayload {
   v: 1;                       // format version
-  format: 'svg' | 'worlds' | 'pixel' | 'dither';
+  format: 'svg' | 'worlds' | 'pixel';
   code: string;               // the scene source
   prompt?: string;            // what produced it, shown in the transcript
   theme?: SVGTheme;           // toy | soft | mono | line | night | print

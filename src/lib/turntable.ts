@@ -3,7 +3,7 @@
  * entirely in the browser. No ffmpeg, no upload, no server round-trip.
  *
  * Two capture paths:
- *  - canvas engines (worlds / pixel / dither): MediaRecorder on the scene canvas,
+ *  - canvas engines (worlds / pixel): MediaRecorder on the scene canvas,
  *    or a copy canvas when the stage is resized/letterboxed
  *  - SVG engine: the figure is live DOM, so frames are serialised to an <img>,
  *    rasterised at the target pixel size and drawn into a canvas
