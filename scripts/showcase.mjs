@@ -7,6 +7,7 @@ import { chromium } from 'playwright';
 import * as fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { buildPromptScenes } from './showcase-prompts.mjs';
+import { SCENES } from './showcase-scenes.mjs';
 
 const BASE = process.env.A3D_URL || 'http://localhost:5174';
 // A3D_OUT lets a check (or a preview run) capture somewhere other than the
@@ -20,23 +21,6 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.mkdirSync(FRAMES, { recursive: true });
 fs.mkdirSync('browser-results/showcase', { recursive: true });
 
-const SCENES = [
-  // Hero: four presets plus two prompts with no preset behind them.
-  { key: 'harbour-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'harbour', title: 'Deep-water harbour', motion: true },
-  { key: 'florist-hero', size: 'hero', kind: 'preset', format: 'worlds', name: 'florist', title: 'Florist shop front' },
-  { key: 'town-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'town', title: 'Town square' },
-  { key: 'airport-hero', size: 'hero', kind: 'preset', format: 'svg', name: 'airport', title: 'Terminal runway' },
-  { key: 'market-hero', size: 'hero', kind: 'prompt', file: 'market', title: 'Night market (prompt only)', motion: true },
-  { key: 'glacier-hero', size: 'hero', kind: 'prompt', file: 'glacier', title: 'Glacier lighthouse (prompt only)' },
-
-  // Card: four presets plus two prompts with no preset behind them.
-  { key: 'bakery-card', size: 'card', kind: 'preset', format: 'worlds', name: 'bakery', title: 'Corner bakery' },
-  { key: 'classroom-card', size: 'card', kind: 'preset', format: 'svg', name: 'classroom', title: 'Classroom' },
-  { key: 'flowerstall-card', size: 'card', kind: 'preset', format: 'pixel', name: 'flower-stall', title: 'Pixel flower stall' },
-  { key: 'pier-card', size: 'card', kind: 'preset', format: 'pixel', name: 'pier', title: 'Pixel fishing pier' },
-  { key: 'greenhouse-card', size: 'card', kind: 'prompt', file: 'greenhouse', title: 'Rooftop greenhouse (prompt only)' },
-  { key: 'coral-card', size: 'card', kind: 'prompt', file: 'coral', title: 'Coral nursery (prompt only)' },
-];
 
 // Scene keys as positional args; --gifs only toggles recording and must not
 // be mistaken for a scene filter (a bare filter matches nothing and exits silently).
@@ -159,7 +143,19 @@ const stageLocator = () => page.locator('div[class*="@container"]').first();
 // of mixing 1240- and 2480-pixel files side by side.
 const STILL_WIDTH = 1240;
 const GIF_WIDTH = 640;
+const hasFfmpeg = () => {
+  try {
+    execFileSync('ffmpeg', ['-version'], { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+};
+const FFMPEG = hasFfmpeg();
+if (!FFMPEG) console.log('ffmpeg: not installed — stills stay at capture size and GIFs are skipped');
+
 const normalizeStill = (file) => {
+  if (!FFMPEG) return;
   const tmp = `${file}.tmp.png`;
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', file, '-vf', `scale=${STILL_WIDTH}:-1:flags=lanczos`, '-frames:v', '1', tmp]);
   fs.renameSync(tmp, file);
@@ -226,7 +222,7 @@ for (const scene of scenes) {
   normalizeStill(still);
   // Only scenes whose motion is the point get a GIF; the rest animate by a few
   // pixels per frame and would just triple the repository size.
-  const gif = RECORD_GIFS && scene.motion ? await shootGif(scene.key, clip) : null;
+  const gif = RECORD_GIFS && scene.motion && FFMPEG ? await shootGif(scene.key, clip) : null;
 
   const entry = { ...scene, loaded, ...metrics, still, gif, bytes: [fs.statSync(still).size, gif ? fs.statSync(gif).size : 0] };
   report.push(entry);

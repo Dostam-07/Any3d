@@ -12,6 +12,9 @@
 import fs from 'node:fs';
 import * as THREE from 'three';
 import { toolkit } from '../core/kernels/any3d-world.js';
+import { validateScene } from '../server/engine/validator.js';
+import { SCENES } from './showcase-scenes.mjs';
+import { buildPromptScenes } from './showcase-prompts.mjs';
 
 // `surface` needs a canvas to build its wear texture.
 if (typeof global.document === 'undefined') {
@@ -211,6 +214,37 @@ check('every exercised builder is documented', undocumented.length === 0, undocu
   const eight = count(8);
   check('segment counts are clamped', huge <= 1200, `${huge} vertices at 100000 segments`);
   check('too-few segments fall back to 8', tooSmall === eight, `${tooSmall} vs ${eight} vertices`);
+}
+
+// The worlds validator must accept a real world and still reject the SVG API.
+// A stray trailing `|` in its foreign-API pattern once made it match the empty
+// string, so every world in the product was reported invalid.
+{
+  const real = `import { defineWorld } from '@any3d/worlds';
+export default defineWorld({
+  name: 'probe', title: 'Probe', duration: 4, still: 2,
+  bounds: [[-3, -.5, -3], [3, 3, 3]],
+  build(W) { W.terrain(6, 6); W.box(1, 1, 1, '#b45309', 0, .5, 0); return {}; },
+  tick() {},
+});`;
+  const accepted = validateScene(real, 'worlds', null);
+  check('a real world validates', accepted.valid === true,
+    accepted.checks.filter((c) => !c.ok).map((c) => c.label).join(', '));
+
+  const foreign = real.replace('W.box(1, 1, 1', 'D.slab(1, 1');
+  const rejected = validateScene(foreign, 'worlds', null);
+  const api = rejected.checks.find((c) => c.id === 5);
+  check('the SVG API is still rejected in a world', rejected.valid === false && Boolean(api) && /D\.slab/.test(api.message),
+    api ? api.message : 'no api check');
+}
+
+// The README promises prompt-only showcase scenes that no preset covers; they
+// are rebuilt on every capture, so they have to pass the same validator.
+{
+  const built = buildPromptScenes('.tmp/worlds-api/novel');
+  check('prompt-only showcase scenes validate',
+    built.length === SCENES.filter((scene) => scene.kind === 'prompt').length && built.every((scene) => scene.valid),
+    built.map((scene) => `${scene.file}:${scene.valid ? 'ok' : 'INVALID'}`).join(' '));
 }
 
 const realKeys = new Set(Object.keys(W));

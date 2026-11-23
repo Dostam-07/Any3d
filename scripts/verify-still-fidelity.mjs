@@ -17,6 +17,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { SCENES } from './showcase-scenes.mjs';
 
 const COMMITTED = 'docs/assets/showcase';
 const FRESH = '.tmp/fidelity';
@@ -34,16 +35,23 @@ function check(name, ok, detail = '') {
   }
 }
 
+// Presets only: a prompt-only scene is re-composed from its prompt on every run,
+// and that composer is not reproducible across machines, so its still is not a
+// stable baseline. Those are covered by re-shooting the showcase.
+const presetKeys = SCENES.filter((scene) => scene.kind === 'preset').map((scene) => scene.key);
 const keys = fs.readdirSync(COMMITTED)
   .filter((f) => f.endsWith('.png'))
   .map((f) => f.replace(/\.png$/, ''))
+  .filter((key) => presetKeys.includes(key))
   .sort();
-check('committed stills exist', keys.length >= 12, `${keys.length} stills`);
+const promptOnly = SCENES.filter((scene) => scene.kind === 'prompt').length;
+check('committed preset stills exist', keys.length >= 8,
+  `${keys.length} presets${promptOnly ? `, ${promptOnly} prompt-only skipped` : ''}`);
 
 fs.rmSync(FRESH, { recursive: true, force: true });
 fs.mkdirSync(FRESH, { recursive: true });
 
-console.log(`\ncapturing ${keys.length} stills into ${FRESH} …`);
+console.log(`\ncapturing every showcase still into ${FRESH} …`);
 const started = Date.now();
 execFileSync(process.execPath, ['scripts/showcase.mjs'], {
   env: { ...process.env, A3D_OUT: FRESH, A3D_GIFS: '0' },

@@ -79,6 +79,11 @@ jobs:
         if: always()
         run: npm run verify:pixel-api
 
+      # ffmpeg normalises a still to the committed width; without it the capture
+      # keeps the device-pixel size and the grid comparison would shift.
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
       # Re-shoot every README still through the studio and compare it with the
       # committed one on a coarse luminance grid: a scene that still draws but
       # stopped looking like itself fails here.

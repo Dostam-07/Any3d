@@ -147,7 +147,7 @@ export function validateWorlds(code) {
   // figure API (D.slab / pal.* / Any3d.figure). That passes every structural
   // check here but cannot bundle (the import does not exist for world-entry),
   // so without this the safety net never runs and the preview 500s.
-  const foreignApi = /\bD\s*\.\s*(slab|box|cylinder|wedge|cone|props|person|group|smooth|phase|wave)\b|\bpal\s*\.|\bAny3d\.figure\b|\bPixel\.scene\b|/.exec(strip);
+  const foreignApi = /\bD\s*\.\s*(slab|box|cylinder|wedge|cone|props|person|group|smooth|phase|wave)\b|\bpal\s*\.|\bAny3d\.figure\b|\bPixel\.scene\b/.exec(strip);
   addCheck(5, 'api', !foreignApi, foreignApi ? `World scene used the wrong API (${foreignApi[0].trim()}). Use the worlds helpers (W.box, W.cylinder, W.ball, W.group, W.terrain) only.` : '');
 
   // 6. Imports resolve for world-entry (only @any3d/worlds exists there).
