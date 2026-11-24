@@ -15,6 +15,10 @@ const BASE = process.env.A3D_URL || 'http://localhost:5174';
 const OUT = process.env.A3D_OUT || 'docs/assets/showcase';
 // GIFs are opt-in: they are large, and only the two animated heroes need them.
 const RECORD_GIFS = process.env.A3D_GIFS === '1' || process.argv.includes('--gifs');
+// A3D_LOOK re-shoots the hero scenes under another time of day, through the same
+// look control a user would touch. The dusk set lives beside the noon set.
+const LOOK = (process.env.A3D_LOOK || '').toLowerCase();
+const LOOK_LABELS = { dawn: 'Dawn', noon: 'Noon', dusk: 'Dusk', night: 'Night' };
 const FRAMES = '.tmp/showcase-frames';
 const REPORT = 'browser-results/showcase/report.json';
 fs.mkdirSync(OUT, { recursive: true });
@@ -25,7 +29,11 @@ fs.mkdirSync('browser-results/showcase', { recursive: true });
 // Scene keys as positional args; --gifs only toggles recording and must not
 // be mistaken for a scene filter (a bare filter matches nothing and exits silently).
 const only = process.argv.slice(2).filter((a) => !a.startsWith('--'));
-const scenes = only.length ? SCENES.filter((s) => only.some((k) => s.key.includes(k))) : SCENES;
+const chosen = only.length ? SCENES.filter((s) => only.some((k) => s.key.includes(k))) : SCENES;
+// A look is a property of the framed hero scene; the card presentation keeps the
+// strips that own look out of the picture, so it has nothing to shoot here.
+const scenes = LOOK ? chosen.filter((s) => s.size === 'hero') : chosen;
+if (LOOK) console.log(`look: ${LOOK} (${scenes.length} hero scenes)`);
 
 // --- prompt scenes: rebuild the sources, then seed the sessions the studio
 // would have written. Rebuilding keeps CI honest: .tmp/ starts empty there.
@@ -93,6 +101,45 @@ const setSize = async (size) => {
   const label = size === 'hero' ? /^Hero Section/ : /^Cards Section/;
   await page.getByRole('button', { name: label }).first().click();
   await page.waitForTimeout(1600);
+};
+
+// Pick a time of day the way a user does: open the look popover, choose the stop,
+// close it again so it is not in the picture.
+const applyLook = async () => {
+  if (!LOOK) return false;
+  const label = LOOK_LABELS[LOOK];
+  if (!label) { console.warn(`unknown A3D_LOOK "${LOOK}"`); return false; }
+  const trigger = page.locator('button[title="Atmosphere, lighting & weather controls"]').first();
+  if (!await trigger.count()) { console.warn('look control not reachable'); return false; }
+  // Read the stops out of the popover, not the page: the trigger itself carries
+  // the current stop's label, so a page-wide "Dusk" match hits the trigger and
+  // toggles the panel instead of changing the look.
+  const panel = page.locator('div.w-72').filter({ hasText: /Lighting & Atmosphere/i }).first();
+  const openPanel = async () => {
+    if (await panel.count()) return true;
+    await trigger.click();
+    await page.waitForTimeout(400);
+    return Boolean(await panel.count());
+  };
+  const stopIn = (name) => panel.getByRole('button').filter({ hasText: new RegExp(`^${name}$`) }).first();
+
+  if (!await openPanel()) { console.warn('look popover did not open'); return false; }
+
+  // A scene loaded while the look was already dusk is lit dusk from its first
+  // frame, so "did the picture change" is the wrong question. Ask the control what
+  // it now reads, and let the stage repaint after the message.
+  const nudge = label === 'Noon' ? 'Dusk' : 'Noon';
+  if (await panel.getByRole('button').filter({ hasText: new RegExp(`^${nudge}$`) }).count()) {
+    await stopIn(nudge).click();
+    await page.waitForTimeout(700);
+    await openPanel();
+  }
+  await stopIn(label).click();
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(1800);
+  const shown = ((await trigger.textContent()) || '').trim();
+  if (shown !== label) console.warn(`look reads "${shown}", expected "${label}"`);
+  return shown === label;
 };
 
 const waitForScene = async () => {
@@ -211,6 +258,8 @@ for (const scene of scenes) {
   }
 
   await setSize(scene.size);
+  const lookApplied = await applyLook();
+  if (LOOK && !lookApplied) report.push({ ...scene, look: LOOK, lookApplied: false });
   const metrics = await stageMetrics();
   const box = await stageLocator().boundingBox();
   const clipHeight = scene.size === 'card' && metrics.contentBottom > 200
@@ -224,7 +273,7 @@ for (const scene of scenes) {
   // pixels per frame and would just triple the repository size.
   const gif = RECORD_GIFS && scene.motion && FFMPEG ? await shootGif(scene.key, clip) : null;
 
-  const entry = { ...scene, loaded, ...metrics, still, gif, bytes: [fs.statSync(still).size, gif ? fs.statSync(gif).size : 0] };
+  const entry = { ...scene, look: LOOK || 'noon', lookApplied, loaded, ...metrics, still, gif, bytes: [fs.statSync(still).size, gif ? fs.statSync(gif).size : 0] };
   report.push(entry);
   console.log(`\n${scene.key} (${scene.size}) loaded=${loaded} stage=${metrics.stage?.w}x${metrics.stage?.h} meshes=${metrics.meshes}`);
   console.log(`  still ${still}${gif ? `  gif ${gif}` : ''}`);

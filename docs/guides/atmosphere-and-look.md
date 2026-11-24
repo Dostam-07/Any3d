@@ -56,4 +56,18 @@ pixel bundle is identical either way.
 
 ## Status
 
-SVG only. Worlds and Pixel keep their camera and lighting inside their engines; atmosphere there is future work. `scripts/verify-look.mjs` passes (noon→night luma −20.9%: 0.54 → 0.427, 0 `/api/bundle` calls during scrub, 5.7 ms avg repaint, p95 8.9 ms). It opens the look popover itself and honours `A3D_URL`.
+Every engine honours the look: the SVG painter grades its fills from keyframes, the
+pixel kernel tints its palette, and the world runtime maps `timeOfDay` onto a light
+and sky profile (`worldLook`) on mount and on every `look` message. `bundleCode(code,
+format, look, camera)` bakes it into exports and share links, and every studio
+rebuild — preset load, project restore, format switch, generation — now passes the
+same pair, so the first frame is already the one the controls describe.
+
+`scripts/verify-look.mjs` passes (noon→night luma −20.9%: 0.54 → 0.427, 0
+`/api/bundle` calls during scrub, 5.7 ms avg repaint, p95 8.9 ms). It opens the look
+popover itself and honours `A3D_URL`.
+
+The README keeps a dusk set beside the noon one (`docs/assets/showcase/dusk/`),
+shot through this control with `A3D_LOOK=dusk`. `npm run verify:dusk` compares each
+dusk still with its noon twin on a luminance grid, so a look that stops reaching the
+picture fails the build instead of shipping a noon screenshot under a dusk name.

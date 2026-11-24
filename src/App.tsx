@@ -269,7 +269,7 @@ export function App() {
     // claimed "your scene will appear here" above a valid 121-line scene.
     // Rebuild whenever this page has nothing to show for the loaded code.
     if (!currentBundledHtml && sess.code.trim()) {
-      bundleCode(sess.code, sess.format)
+      bundleCode(sess.code, sess.format, stageLook, stageCamera)
         .then((b) => setCurrentBundledHtml(b.html))
         .catch((e) => console.warn('Deep link bundle error', e));
     }
@@ -436,7 +436,7 @@ export function App() {
     if (!code) return;
     setIsBundling(true);
     try {
-      const res = await bundleCode(code, format);
+      const res = await bundleCode(code, format, stageLook, stageCamera);
       setCurrentBundledHtml(res.html);
     } catch (err) {
       console.error('Bundling error:', err);
@@ -460,7 +460,7 @@ export function App() {
     if (candidate) {
       setCurrentPresetId(candidate.id);
       setCode(candidate.code);
-      bundleCode(candidate.code, newFormat)
+      bundleCode(candidate.code, newFormat, stageLook, stageCamera)
         .then((b) => setCurrentBundledHtml(b.html))
         .catch((e) => console.warn('Format change bundle error', e));
       const nextVer = (messages.filter((m) => m.role === 'assistant' && m.version).length || 0) + 1;
@@ -521,7 +521,7 @@ export function App() {
     setStageView('preview');
     // Opening a project always lands on its own page, not the Studio.
     openProject(sess.id);
-    bundleCode(sess.code, sess.format)
+    bundleCode(sess.code, sess.format, stageLook, stageCamera)
       .then((b) => setCurrentBundledHtml(b.html))
       .catch((e) => console.warn('Select session bundle error', e));
   };
@@ -611,7 +611,7 @@ export function App() {
       countSceneCreated();
       setStageView('preview');
       try {
-        const bundled = await bundleCode(res.code, targetFormat);
+        const bundled = await bundleCode(res.code, targetFormat, stageLook, stageCamera);
         setCurrentBundledHtml(bundled.html);
       } catch (bundleErr) {
         console.warn('Initial bundle warning', bundleErr);
@@ -677,7 +677,7 @@ export function App() {
     setCurrentSessionId(sessId);
     openProject(sessId);
     setStageView('preview');
-    bundleCode(preset.code, preset.format)
+    bundleCode(preset.code, preset.format, stageLook, stageCamera)
       .then((b) => setCurrentBundledHtml(b.html))
       .catch((e) => console.warn('Preset bundle error', e));
 
@@ -747,7 +747,7 @@ export function App() {
     ]);
     countSceneCreated();
     openProject(newSessId);
-    bundleCode(preset.code, preset.format)
+    bundleCode(preset.code, preset.format, stageLook, stageCamera)
       .then((b) => setCurrentBundledHtml(b.html))
       .catch((e) => console.warn('Remix bundle error', e));
   };
@@ -803,7 +803,7 @@ export function App() {
       countSceneCreated();
       setStageView('preview');
       try {
-        const bundled = await bundleCode(res.code, format);
+        const bundled = await bundleCode(res.code, format, stageLook, stageCamera);
         setCurrentBundledHtml(bundled.html);
       } catch (bundleErr) {
         console.warn('Initial bundle warning', bundleErr);
@@ -1073,7 +1073,7 @@ export function App() {
           setStageView('preview');
           countSceneCreated();
           try {
-            const bundled = await bundleCode(res.code, targetFormat);
+            const bundled = await bundleCode(res.code, targetFormat, stageLook, stageCamera);
             setCurrentBundledHtml(bundled.html);
           } catch (bundleErr) {
             console.warn('Bundle error', bundleErr);
@@ -1107,7 +1107,7 @@ export function App() {
           setStageView('preview');
           countEdit(currentSessionId || 'unknown');
           try {
-            const bundled = await bundleCode(offline.code, targetFormat);
+            const bundled = await bundleCode(offline.code, targetFormat, stageLook, stageCamera);
             setCurrentBundledHtml(bundled.html);
           } catch (bundleErr) {
             console.warn('Bundle error', bundleErr);
@@ -1147,7 +1147,7 @@ export function App() {
           setStageView('preview');
           countEdit(currentSessionId || 'unknown');
           try {
-            const bundled = await bundleCode(res.code, targetFormat);
+            const bundled = await bundleCode(res.code, targetFormat, stageLook, stageCamera);
             setCurrentBundledHtml(bundled.html);
           } catch (bundleErr) {
             console.warn('Bundle error', bundleErr);

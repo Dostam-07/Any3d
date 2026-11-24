@@ -23,6 +23,7 @@
     "verify:svg-api": "node scripts/verify-svg-api.mjs",
     "verify:pixel-api": "node scripts/verify-pixel-api.mjs",
     "verify:fidelity": "node scripts/verify-still-fidelity.mjs",
+    "verify:dusk": "node scripts/verify-dusk.mjs",
     "verify:camera": "node scripts/verify-export-camera.mjs",
     "verify:storyboard": "node scripts/verify-storyboard.mjs",
     "verify:reload": "node scripts/verify-reload.mjs",

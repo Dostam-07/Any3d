@@ -104,6 +104,13 @@ jobs:
         env:
           A3D_URL: http://localhost:5174
           A3D_API: http://localhost:3001
+      # The dusk set goes through the look control, the bundle and the runtime;
+      # any of the three can silently drop it and leave a noon picture. Pure file
+      # comparison, no browser stage, so it costs seconds.
+      - name: Verify the dusk stills are lit dusk
+        if: always()
+        run: npm run verify:dusk
+
       - name: Server logs
         if: failure()
         run: tail -n 80 .tmp-api.log .tmp-vite.log

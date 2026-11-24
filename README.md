@@ -305,6 +305,29 @@ Twelve captures taken straight from the running studio with `node scripts/showca
   </tr>
 </table>
 
+### The same six heroes at dusk
+
+The look is a runtime message, not a rewrite, so the same presets re-shot under `A3D_LOOK=dusk` should be the same compositions lit differently — and they are, which is the point of keeping the set beside the noon one.
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/assets/showcase/dusk/florist-hero.png" alt="Three.js florist shop front as a hero banner, lit at dusk" /><br />
+      <sub><b>florist shop front</b> · Three.js · <i>dusk</i></sub>
+    </td>
+    <td align="center">
+      <img src="docs/assets/showcase/dusk/town-hero.png" alt="Isometric town square as a hero banner, lit at dusk" /><br />
+      <sub><b>town square</b> · SVG · <i>dusk</i></sub>
+    </td>
+    <td align="center">
+      <img src="docs/assets/showcase/dusk/market-hero.png" alt="Night market as a hero banner, lit at dusk" /><br />
+      <sub><b>night market</b> · Three.js · <i>prompt only, dusk</i></sub>
+    </td>
+  </tr>
+</table>
+
+`npm run verify:dusk` compares each dusk still with its noon twin on the same luminance grid the fidelity check uses: an unapplied look leaves the two files the same picture, so a whole time of day cannot be lost quietly. Mutation-tested by copying a noon still over its dusk twin (mean Δ 0.0, check fails).
+
 The two prompt-only worlds per presentation were sent through the same `POST /api/generate` path the studio uses. On this CPU-only machine the local 7B model exceeded the generation timeout, so the request fell back to the built-in procedural composer — that composer output is what the screenshots show, and it is the reason the fallback was rebuilt (see below).
 
 ### What this audit run fixed
@@ -335,6 +358,7 @@ The two prompt-only worlds per presentation were sent through the same `POST /ap
 | The camera pick was studio-only: the menu moved the live stage, but the exported file reopened at the angle the scene was authored for, and a share link forgot it entirely. | The pick is lifted to the app (`CameraPick` in `src/lib/camera.ts`), rides `POST /api/bundle` into the file (`window.__any3dCamera` for SVG, `initialCamera` for worlds) and into `ScenePayload.camera`, and a pick that cannot be applied is dropped instead of reaching `setCamera`. Guarded by `scripts/verify-export-camera.mjs` (11 checks) and three payload round-trip assertions. |
 | A project opened cold — a refresh, a bookmark, a link on another machine — restored the transcript and the code but not the frame, because the bundled html lives in memory only. The regression was only guarded from inside the storyboard suite, so a change to the deep-link effect could have broken the plain reload unnoticed. | `scripts/verify-reload.mjs` (5 checks, wired into CI) loads a preset, reloads the project URL and asserts a live frame with the scene drawn in it, no empty-state copy, and enabled capture actions. Mutation-tested: restoring `if (false && !currentBundledHtml …)` produces 0 iframes and the empty-state text. |
 | The home page's "Curated Inspirations" were six written prompts with nothing to look at — a scene generator whose landing page showed no scenes — and clicking a card did nothing at all, because the preview frame inside it swallowed the click. | The grid shows six real presets, each bundling and running on the card, loaded only when scrolled into view. The frames are `pointer-events-none` by default so the card gets the click (`interactive` opts back in), the arrow rode onto the picture to give the title its width, and every card carries the same single meta line so the rows keep one height. `verify:showcase` asserts the six cards draw scenes, share one height, fit their titles, and that one opens a project. |
+| Every bundle path except export and share was built without the look and the camera, so a scene's first frame was painted at noon from its authored angle and only corrected when the runtime reported ready. On this machine that flash is visible, and it meant two code paths disagreed about what "the scene the user set up" means. | All ten `bundleCode` calls now carry `stageLook` and `stageCamera`, the same pair the export and the share link already used. The showcase shoots the dusk set through the real look control (`A3D_LOOK=dusk`), and `npm run verify:dusk` compares each dusk still against its noon twin so a look that stops reaching the picture fails the build. |
 | The preset gallery — the screen where you browse forty scenes — listed names, file paths and line counts and showed no scenes at all. | It is a split view now: compact rows on the left, the chosen preset bundled and running in a live frame on the right, with the bundle cached per preset and the pointer driving the preview. `verify:showcase` asserts the frame draws the scene (776 SVG shapes), and that hovering a Three.js preset swaps in a canvas. |
 | Two controls were doing one job in the editor: the engine was selectable in the app bar *and* again under the composer, and the card presentation repeated the look and the play state it already had in its own strip. | The composer's engine switcher is gone (the app bar owns the format), and in Card the toolbar drops `LookScrubber` and the play/pause chip. `verify:showcase` counts them in the card presentation and fails if either comes back (mutation-tested). |
 | The card stage carried a marketing band (“Cards section / Your scene as a card in a section”) above the scene being edited, which cost 54px of scene height at every width. | The band and its `CardSectionHeader` component are gone; the card fitted to the empty stage grows from 687px to 773px wide on a 2200×950 pane, with the crop 578px tall instead of 514px. Guarded by `the stage has no demo band above the scene`. |
@@ -342,7 +366,7 @@ The two prompt-only worlds per presentation were sent through the same `POST /ap
 | A 4:3 card section left a tall empty tail in a squarish stage. | The card section measures its content and compacts itself; the showcase crops stills to the content box. |
 | Switching Hero ↔ Card rewrote the scene source, re-bundled it and reloaded the frame — the camera pose was lost and the code editor quietly changed. | The size is a runtime message to the live frame; only the exported file is stamped (`src/lib/presentation-size.ts`). Verified: the iframe document survives every switch. |
 
-To regenerate everything: start the API (`node server/index.js`) and the app (`npm run dev`), then run `npm run showcase` (pass scene keys to re-shoot a subset, and `npm run showcase:gifs` to record the two animated banners). The four prompt-only scenes are rebuilt deterministically by the script itself, so a clean checkout can reproduce every image.
+To regenerate everything: start the API (`node server/index.js`) and the app (`npm run dev`), then run `npm run showcase` (pass scene keys to re-shoot a subset, `npm run showcase:gifs` to record the two animated banners, and `A3D_LOOK=dusk A3D_OUT=docs/assets/showcase/dusk npm run showcase` to re-shoot the dusk set — it drives the look control, not a fixture). The four prompt-only scenes are rebuilt deterministically by the script itself, so a clean checkout can reproduce every image.
 
 Stills are normalised to 1240 px wide and GIFs to 640 px, so GitHub renders every tile at the same scale.
 
@@ -352,7 +376,7 @@ CI keeps this honest:
 
 | Workflow | What it does |
 |---|---|
-| `.github/workflows/ci.yml` | `npm test`, `tsc --noEmit`, `npm run build`, then boots the API and app and runs `npm run verify:showcase` — 31 presentation invariants (the home grid runs six real scenes and one of them opens, the frame survives Hero ↔ Card, the gallery previews the scene it lists and marks the row it shows, the card stage carries no demo band and does not repeat the toolbar's look or play controls, no duplicate export, the stage toolbar exports a standalone file, the card fits a short stage, light mode has no black surfaces, pixel art fills its frame, console clean) — plus the contract walks for each kernel (`verify:pixel-finish`, `verify:svg-api`, `verify:pixel-api`, `verify:worlds-api`), `npm run verify:camera` for the camera an export carries, `npm run verify:storyboard` for the storyboard framing on the project page, `npm run verify:reload` for a project opened cold (the bundle is memory-only, so a refresh has to rebuild it), and `npm run verify:fidelity` to re-shoot the README stills. |
+| `.github/workflows/ci.yml` | `npm test`, `tsc --noEmit`, `npm run build`, then boots the API and app and runs `npm run verify:showcase` — 31 presentation invariants (the home grid runs six real scenes and one of them opens, the frame survives Hero ↔ Card, the gallery previews the scene it lists and marks the row it shows, the card stage carries no demo band and does not repeat the toolbar's look or play controls, no duplicate export, the stage toolbar exports a standalone file, the card fits a short stage, light mode has no black surfaces, pixel art fills its frame, console clean) — plus the contract walks for each kernel (`verify:pixel-finish`, `verify:svg-api`, `verify:pixel-api`, `verify:worlds-api`), `npm run verify:camera` for the camera an export carries, `npm run verify:storyboard` for the storyboard framing on the project page, `npm run verify:reload` for a project opened cold (the bundle is memory-only, so a refresh has to rebuild it), `npm run verify:fidelity` to re-shoot the README stills, and `npm run verify:dusk` to prove the dusk stills below are actually lit dusk rather than a noon picture filed under a new name. |
 | `.github/workflows/showcase.yml` | Weekly / on demand: re-captures all twelve scenes with `showcase:gifs`, uploads them as an artifact, and commits the refreshed images only when `commit_images` is set. |
 
 ---
