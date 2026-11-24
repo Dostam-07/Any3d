@@ -326,6 +326,49 @@ try {
       `toolbar repeats look x${card.lookControlsInToolbar}, loop x${card.loopControlsInToolbar}`,
     );
 
+  // --- expanding the card shows the scene, not a bigger card --------------
+  const frameBox = () =>
+    page.evaluate(() => {
+      const r = (el) => { if (!el) return null; const b = el.getBoundingClientRect(); return [Math.round(b.width), Math.round(b.height)]; };
+      const stage = document.querySelector('div[class*="@container"]');
+      return {
+        stage: r(stage),
+        frame: r(document.querySelector('div[class*="@container"] iframe')),
+        cardChrome: Boolean(document.querySelector('[data-card-expand]')),
+        exit: Boolean(document.querySelector('button[title^="Exit full screen"]')),
+      };
+    });
+
+  const expander = page.locator('[data-card-expand]').first();
+  if (await expander.count()) {
+    const before = await frameBox();
+    await expander.click();
+    await page.waitForTimeout(1200);
+    const after = await frameBox();
+    const fills = after.stage && after.frame
+      && after.frame[0] >= after.stage[0] * 0.97 && after.frame[1] >= after.stage[1] * 0.97;
+    if (fills && !after.cardChrome && after.exit)
+      pass('expanding the card fills the screen with the scene', `${after.frame[0]}x${after.frame[1]} from ${before.frame[0]}x${before.frame[1]}`);
+    else
+      fail(
+        'expanding the card fills the screen with the scene',
+        JSON.stringify({ before, after, fills: Boolean(fills) }),
+      );
+
+    const exited = page.locator('button[title^="Exit full screen"]').first();
+    await exited.click();
+    await page.waitForTimeout(1000);
+    const restored = await frameBox();
+    // The card is fitted to the stage width, so the width barely moves; what comes
+    // back is the 4:3 box (a fraction of the stage height) and the chrome.
+    const back = restored.stage && restored.frame
+      && restored.frame[1] <= restored.stage[1] * 0.85 && restored.cardChrome && !restored.exit;
+    if (back) pass('exiting restores the card');
+    else fail('exiting restores the card', JSON.stringify(restored));
+  } else {
+    fail('expanding the card fills the screen with the scene', 'no expand control in the card');
+  }
+
   // --- the stage toolbar exports a standalone file ------------------------
   // The toolbar sits above the @container stage, so look for the chip on the page.
   const htmlButton = page.locator('button[title*="standalone offline HTML"]:visible').first();

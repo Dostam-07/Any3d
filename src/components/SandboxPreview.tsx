@@ -132,6 +132,9 @@ function SandboxPreviewInner({
   cameraRef.current = camera ?? null;
   const accentColor = accent ?? accentState;
   const [isFullscreen, setIsFullscreen] = useState(false);
+  // Expanding the card means "show me the scene", not "show me a card on a bigger
+  // screen": the frame goes edge to edge and the card chrome steps out of it.
+  const [isImmersive, setIsImmersive] = useState(false);
   const [showPlayground, setShowPlayground] = useState<boolean>(false);
   const [isExportingGlb, setIsExportingGlb] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -203,6 +206,13 @@ function SandboxPreviewInner({
 
   useEffect(() => {
     if (currentSize !== 'card') return;
+    // The card is fitted to the stage height so the whole card is visible. Expanded
+    // is not a card any more: keeping that width would letterbox the scene inside
+    // the fullscreen frame.
+    if (isImmersive) {
+      cardSectionRef.current?.style.removeProperty('max-width');
+      return;
+    }
     const stage = stageRef.current;
     const section = cardSectionRef.current;
     if (!stage || !section) return;
@@ -239,7 +249,7 @@ function SandboxPreviewInner({
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
-  }, [currentSize, stageHeight, stageWidth, format, sceneName, sceneLook.weather, sceneLook.timeOfDay]);
+  }, [currentSize, isImmersive, stageHeight, stageWidth, format, sceneName, sceneLook.weather, sceneLook.timeOfDay]);
 
   useEffect(() => {
     if (!menuOpen && !styleMenuOpen && !cameraMenuOpen && !sizeMenuOpen) return;
@@ -409,14 +419,47 @@ function SandboxPreviewInner({
     sendMessage({ speed: val });
   };
 
+  useEffect(() => {
+    const onChange = () => {
+      const on = Boolean(document.fullscreenElement);
+      setIsFullscreen(on);
+      if (!on) setIsImmersive(false);
+    };
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
+  // Esc when the browser never entered fullscreen: the expanded view still needs a
+  // way back to the card.
+  useEffect(() => {
+    if (!isImmersive) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      setIsFullscreen(false);
+      setIsImmersive(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isImmersive]);
+
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen();
+      // The hero is already a full-bleed page; a card is not, so expanding it
+      // drops the card chrome and gives the scene the whole frame.
+      setIsImmersive(currentSize === 'card');
       setIsFullscreen(true);
+      // A blocked Fullscreen API (an iframe without allow-fullscreen, a refused
+      // gesture) must not strand the stage in an expanded layout with no way out:
+      // the expanded fill is still a usable view, and Esc/reload restores it.
+      containerRef.current.requestFullscreen?.().catch(() => setIsFullscreen(false));
     } else {
-      document.exitFullscreen();
+      // Not every expanded state came from the Fullscreen API (a refused request
+      // still expands the fill), and exiting from one throws instead of resolving.
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       setIsFullscreen(false);
+      setIsImmersive(false);
     }
   };
 
@@ -536,7 +579,7 @@ function SandboxPreviewInner({
       <div
         className={
           'min-h-11 px-2.5 py-1.5 border-b border-white/[0.08] bg-[#0c0e17]/95 backdrop-blur-md items-center justify-between gap-2 z-10 shrink-0 w-full overflow-x-auto scrollbar-none flex-nowrap ' +
-          (hideControls ? 'hidden' : 'flex')
+          (hideControls || isImmersive ? 'hidden' : 'flex')
         }
       >
         {/* If mini-game/generation playground is active: Show clean focused arcade bar */}
@@ -927,7 +970,7 @@ function SandboxPreviewInner({
         ref={stageRef}
         className={
           '@container relative w-full flex-1 min-h-0 ' +
-          (currentSize === 'hero'
+          (currentSize === 'hero' || isImmersive
             ? 'overflow-hidden bg-[#05070d]'
             : 'no-scrollbar overflow-y-auto bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/25 via-[#0a0c13] to-[#0a0c13] px-3 ' +
             (stageHeight > 0 && stageHeight < 820 ? 'py-3 sm:py-3' : 'py-4 sm:py-5'))
@@ -952,6 +995,24 @@ function SandboxPreviewInner({
           </div>
         )}
 
+        {isImmersive && (
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-3 sm:p-4">
+            <span className="pointer-events-auto flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(6,8,14,0.72)] px-3 py-1.5 text-[11px] font-medium text-[rgba(255,255,255,0.88)] backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              {sceneName}
+            </span>
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              title="Exit full screen (Esc)"
+              className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.14)] bg-[rgba(6,8,14,0.72)] px-3 py-1.5 text-[11px] font-medium text-[rgba(255,255,255,0.88)] backdrop-blur-md transition hover:bg-[rgba(6,8,14,0.9)] active:scale-[0.98] cursor-pointer"
+            >
+              <Minimize2 className="h-3 w-3" />
+              Exit
+            </button>
+          </div>
+        )}
+
         {isLoading && !showPlayground && !isGenerating && (
           html ? (
             <div className="absolute top-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950/90 border border-white/10 text-zinc-300 text-xs shadow-xl backdrop-blur-md">
@@ -969,13 +1030,13 @@ function SandboxPreviewInner({
         <div
           ref={cardSectionRef}
           className={
-            currentSize === 'hero'
+            currentSize === 'hero' || isImmersive
               ? 'absolute inset-0'
               : 'mx-auto flex w-full flex-col ' +
                 (stageHeight > 0 && stageHeight < 820 ? 'gap-2' : 'gap-2.5')
           }
         >
-          {currentSize === 'hero' ? (
+          {currentSize === 'hero' && !isImmersive ? (
             <HeroSiteChrome
               sceneName={sceneName}
               format={format}
@@ -987,21 +1048,21 @@ function SandboxPreviewInner({
 
           <div
             className={
-              currentSize === 'hero'
+              currentSize === 'hero' || isImmersive
                 ? 'absolute inset-0 z-0'
                 : 'flex flex-col gap-2'
             }
           >
             <article
               className={
-                currentSize === 'hero'
-                  ? 'absolute inset-0 overflow-hidden'
+                currentSize === 'hero' || isImmersive
+                  ? 'absolute inset-0 overflow-hidden bg-[#080a11]'
                   : 'group flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-primary)] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--text-muted)]/40'
               }
             >
               <div
                 className={
-                  currentSize === 'hero'
+                  currentSize === 'hero' || isImmersive
                     ? 'relative h-full w-full overflow-hidden'
                     : 'relative aspect-[4/3] w-full overflow-hidden bg-[#080a11]'
                 }
@@ -1030,14 +1091,14 @@ function SandboxPreviewInner({
                         one in its copy card, and this chip was drawn at 45% white
                         over a black pill — the faint "ghost" in the corner. */}
                   </div>
-                ) : (
+                ) : isImmersive ? null : (
                   <span className="pointer-events-none absolute left-2.5 top-2.5 z-10 rounded-md border border-white/10 bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/70 backdrop-blur-sm">
                     Live embed
                   </span>
                 )}
               </div>
 
-              {currentSize === 'card' && (
+              {currentSize === 'card' && !isImmersive && (
                 <div className="shrink-0">
                   <LiveCardBody
                     sceneName={sceneName}
@@ -1051,7 +1112,7 @@ function SandboxPreviewInner({
               )}
             </article>
 
-            {currentSize === 'card' && (
+            {currentSize === 'card' && !isImmersive && (
               <div className="shrink-0">
                 <LookStrip
                   accent={accentColor}

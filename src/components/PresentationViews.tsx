@@ -161,6 +161,8 @@ export function LiveCardBody({ sceneName, format, motion, hoverText, onSnapshot,
         <button
           type="button"
           onClick={onFullscreen}
+          title="Expand to full screen"
+          data-card-expand=""
           className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] px-2 py-1 text-[10px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)] active:scale-[0.98] cursor-pointer"
         >
           <Maximize2 className="h-3 w-3 text-[#818cf8]" />
