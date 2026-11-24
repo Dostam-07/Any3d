@@ -233,7 +233,7 @@ Switch between **Hero** and **Card** with one click in the stage toolbar to see 
 
 Twelve captures taken straight from the running studio with `node scripts/showcase.mjs` — no retouching, no mock layout:
 
-- **Six hero sections** (full-bleed banner: nav, one headline, one CTA) and **six card sections** (one live 4:3 card, as large as the stage height allows, with the look controls as a thin strip under it). The scene is the only subject of the frame: nothing in the card presentation competes with it. The card is sized by fitting the real layout — set the width, read how much the stage overflows or has spare, correct — so no assumed header or caption height can drift. The export lives once, in the stage toolbar next to the PNG snapshot; it used to be a third card called *Ship this scene*, which only repeated the download the project header already offers.
+- **Six hero sections** (the scene, edge to edge — no nav bar, no headline card, no scrims: the exported hero page carries none of those, so the preview shows exactly the file) and **six card sections** (one live 4:3 card, as large as the stage height allows, with the look controls as a thin strip under it). The scene is the only subject of the frame: nothing in the card presentation competes with it. The card is sized by fitting the real layout — set the width, read how much the stage overflows or has spare, correct — so no assumed header or caption height can drift. The export lives once, in the stage toolbar next to the PNG snapshot; it used to be a third card called *Ship this scene*, which only repeated the download the project header already offers.
 - Each presentation mixes **four presets** with **two prompt-only scenes that are not in the preset library** (night market, glacier lighthouse, rooftop greenhouse, coral nursery). Those four were typed as prompts and generated end to end, which is how the framing and coverage bugs below were caught.
 - Two hero banners are looping GIFs because their motion is the point: crane travel on the harbour, lantern sway in the night market. Everything else is a still.
 
@@ -242,31 +242,31 @@ Twelve captures taken straight from the running studio with `node scripts/showca
 <table>
   <tr>
     <td width="50%" align="center">
-      <a href="docs/assets/showcase/harbour-hero.png" title="Open the full-resolution still"><img src="docs/assets/showcase/harbour-hero.gif" alt="SVG harbour scene as a full-bleed hero banner with nav and headline" /></a><br />
+      <a href="docs/assets/showcase/harbour-hero.png" title="Open the full-resolution still"><img src="docs/assets/showcase/harbour-hero.gif" alt="SVG harbour scene as a full-bleed hero, edge to edge" /></a><br />
       <sub><b>harbour</b> · SVG Vector · preset — blueprint gantry cranes over water</sub>
     </td>
     <td width="50%" align="center">
-      <img src="docs/assets/showcase/florist-hero.png" alt="Three.js florist shop front as a full-bleed hero banner" /><br />
+      <img src="docs/assets/showcase/florist-hero.png" alt="Three.js florist shop front as a full-bleed hero" /><br />
       <sub><b>florist</b> · Three.js · preset — warm shop front with a street of planters</sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="docs/assets/showcase/town-hero.png" alt="Isometric town square as a full-bleed hero banner" /><br />
+      <img src="docs/assets/showcase/town-hero.png" alt="Isometric town square as a full-bleed hero" /><br />
       <sub><b>town square</b> · SVG Vector · preset — a whole town block with roads and traffic</sub>
     </td>
     <td align="center">
-      <img src="docs/assets/showcase/airport-hero.png" alt="SVG airport terminal and runway in a hero banner" /><br />
+      <img src="docs/assets/showcase/airport-hero.png" alt="SVG airport terminal and runway as a full-bleed hero" /><br />
       <sub><b>airport</b> · SVG Vector · preset — terminal, apron and runway lights</sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <a href="docs/assets/showcase/market-hero.png" title="Open the full-resolution still"><img src="docs/assets/showcase/market-hero.gif" alt="Night market with lanterns and stalls as a hero banner" /></a><br />
+      <a href="docs/assets/showcase/market-hero.png" title="Open the full-resolution still"><img src="docs/assets/showcase/market-hero.gif" alt="Night market with lanterns and stalls as a full-bleed hero" /></a><br />
       <sub><b>night market</b> · Three.js · <i>prompt only</i> — “a bustling night market with noodle stalls and paper lanterns”</sub>
     </td>
     <td align="center">
-      <img src="docs/assets/showcase/glacier-hero.png" alt="Glacier lighthouse and research hut as a hero banner" /><br />
+      <img src="docs/assets/showcase/glacier-hero.png" alt="Glacier lighthouse and research hut as a full-bleed hero" /><br />
       <sub><b>glacier lighthouse</b> · Three.js · <i>prompt only</i> — “a lighthouse at the edge of a glacier with a stranded research hut”</sub>
     </td>
   </tr>
@@ -372,6 +372,7 @@ To regenerate everything: start the API (`node server/index.js`) and the app (`n
 Stills are normalised to 1240 px wide and GIFs to 640 px, so GitHub renders every tile at the same scale.
 | The stage toolbar scrolls horizontally to stay one row, and a scroll container clips every absolutely positioned descendant — so every dropdown opened from it (`Finish`, the camera menu, the presentation menu, the `Look` popover) was laid out correctly and painted nowhere. The buttons looked dead; the hero also washed its whole scene under a black gradient to make room for two blocks of text, and carried a third floating hint pill. | The panels are portalled out of the scrolling row (`AnchoredPanel`: fixed coordinates under the trigger, re-placed on scroll and resize, and the panel element joins the trigger in the outside-click check so a choice still lands), the hero scrims are gone in favour of a slim glass nav bar and a compact copy card, and the hero keeps one hint. The hero chrome paints literal colours instead of theme tokens, because the light-theme remap turned `text-white` into near-black and the copy card's headline vanished. `verify:showcase` opens a toolbar menu, hit-tests the point under it, and picks an option to confirm the finish actually changed. |
 | The card's **Expand** asked the browser for fullscreen and then kept the card: the same 4:3 tile, the title block, the look strip, on a black field. Expanding a card that says *live scene* and getting a bigger card is the wrong answer, and the scene was still boxed into a quarter of the screen. | Expanding from Card drops the card chrome and the toolbar and gives the iframe the whole frame, with a scene-name pill and one **Exit** control drawn over it; Esc and the browser's own exit restore the card, because the layout follows `fullscreenchange` rather than the click that started it. The card's fitted `max-width` is cleared while expanded — without that the scene kept its card width and letterboxed itself inside the fullscreen frame. `verify:showcase` asserts the expanded frame covers at least 97% of the stage and that exiting brings the 4:3 card and its chrome back (mutation-tested: keeping the fitted width fails it with a 692-of-1600-pixel frame). |
+| The Hero presentation drew a nav bar, an eyebrow, a headline and two CTA buttons over the scene. None of it was real: the exported hero page is the scene and nothing else, so the preview was promising a page the file never contained — and the brandings sat in the way of the thing being previewed. | The overlay is gone. Hero is the scene, edge to edge, at the stage's aspect; Card keeps its caption row because a card is a real component. The stage is now its own stacking context (`isolate` + `z-0`) so the iframe cannot paint over a popover opened elsewhere in the app, `AnchoredPanel` mounts into the fullscreen element when there is one (a portal into `document.body` is invisible while the stage is fullscreen), and the card's fitted `max-width` is cleared on every non-card view instead of only when the presentation changed. `verify:showcase` asserts the hero iframe covers 97% of the stage with no chrome in or over it (mutation-tested: a stray `Start free` span fails it). |
 
 Before pushing, `npm run check` runs the test suite, the typechecker and the production build — it is also wired to `.githooks/pre-push` (`git config core.hooksPath .githooks` once per clone), so a red build cannot be pushed; `SKIP_CHECK=1 git push` bypasses it. `npm run verify:showcase` covers the live presentation invariants and needs the API and app running. Point the checks at the address the dev server actually bound (`A3D_URL=http://127.0.0.1:5174` if Vite bound IPv4 only): `localhost` can resolve to the other family and a stale server then answers, which makes an edit look like it had no effect.
 
@@ -379,7 +380,7 @@ CI keeps this honest:
 
 | Workflow | What it does |
 |---|---|
-| `.github/workflows/ci.yml` | `npm test`, `tsc --noEmit`, `npm run build`, then boots the API and app and runs `npm run verify:showcase` — 35 presentation invariants (expanding the card fills the screen with the scene and exiting restores the card, a toolbar menu paints above the scene and its choice lands, the home grid runs six real scenes and one of them opens, the frame survives Hero ↔ Card, the gallery previews the scene it lists and marks the row it shows, the card stage carries no demo band and does not repeat the toolbar's look or play controls, no duplicate export, the stage toolbar exports a standalone file, the card fits a short stage, light mode has no black surfaces, pixel art fills its frame, console clean) — plus the contract walks for each kernel (`verify:pixel-finish`, `verify:svg-api`, `verify:pixel-api`, `verify:worlds-api`), `npm run verify:camera` for the camera an export carries, `npm run verify:storyboard` for the storyboard framing on the project page, `npm run verify:reload` for a project opened cold (the bundle is memory-only, so a refresh has to rebuild it), `npm run verify:fidelity` to re-shoot the README stills, `npm run verify:bounds` to mount every procedural world and check it fills its frame without being clipped (against a recorded baseline, so a scene cannot quietly shrink), and `npm run verify:dusk` to prove the dusk stills below are actually lit dusk rather than a noon picture filed under a new name. |
+| `.github/workflows/ci.yml` | `npm test`, `tsc --noEmit`, `npm run build`, then boots the API and app and runs `npm run verify:showcase` — 35 presentation invariants (the hero is the scene edge to edge with no chrome, expanding the card fills the screen with the scene and exiting restores the card, a toolbar menu paints above the scene and its choice lands, the home grid runs six real scenes and one of them opens, the frame survives Hero ↔ Card, the gallery previews the scene it lists and marks the row it shows, the card stage carries no demo band and does not repeat the toolbar's look or play controls, no duplicate export, the stage toolbar exports a standalone file, the card fits a short stage, light mode has no black surfaces, pixel art fills its frame, console clean) — plus the contract walks for each kernel (`verify:pixel-finish`, `verify:svg-api`, `verify:pixel-api`, `verify:worlds-api`), `npm run verify:camera` for the camera an export carries, `npm run verify:storyboard` for the storyboard framing on the project page, `npm run verify:reload` for a project opened cold (the bundle is memory-only, so a refresh has to rebuild it), `npm run verify:fidelity` to re-shoot the README stills, `npm run verify:bounds` to mount every procedural world and check it fills its frame without being clipped (against a recorded baseline, so a scene cannot quietly shrink), and `npm run verify:dusk` to prove the dusk stills below are actually lit dusk rather than a noon picture filed under a new name. |
 | `.github/workflows/showcase.yml` | Weekly / on demand: re-captures all twelve scenes with `showcase:gifs`, uploads them as an artifact, and commits the refreshed images only when `commit_images` is set. |
 
 ---

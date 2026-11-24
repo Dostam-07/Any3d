@@ -81,6 +81,10 @@ export function AnchoredPanel({
 
   if (!open || !pos) return null;
 
+  // Inside a fullscreen element only its subtree is painted, so a panel portalled
+  // into `document.body` would be invisible exactly when the stage is expanded.
+  const host = (typeof document !== 'undefined' && document.fullscreenElement) || document.body;
+
   return createPortal(
     <div
       ref={(node) => {
@@ -93,6 +97,6 @@ export function AnchoredPanel({
     >
       {children}
     </div>,
-    document.body,
+    host,
   );
 }

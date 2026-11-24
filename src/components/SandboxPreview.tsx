@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { RenderFormat, SVGTheme, WorldFinish, WebPresentationSize } from '../types';
 import { GenerationPlayground } from './GenerationPlayground';
-import { HeroSiteChrome, LiveCardBody, LookStrip } from './PresentationViews';
+import { LiveCardBody, LookStrip } from './PresentationViews';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
@@ -205,11 +205,10 @@ function SandboxPreviewInner({
   const cardSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (currentSize !== 'card') return;
-    // The card is fitted to the stage height so the whole card is visible. Expanded
-    // is not a card any more: keeping that width would letterbox the scene inside
-    // the fullscreen frame.
-    if (isImmersive) {
+    // The card is fitted to the stage height so the whole card is visible. Neither
+    // Hero (full-bleed) nor the expanded view is a card, and both would be
+    // letterboxed by the width the card fitted to: clear it outside Card.
+    if (currentSize !== 'card' || isImmersive) {
       cardSectionRef.current?.style.removeProperty('max-width');
       return;
     }
@@ -846,7 +845,7 @@ function SandboxPreviewInner({
                   className="w-60 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1"
                 >
                     {[
-                      { key: 'hero', label: 'Hero Section', desc: 'Full-bleed banner: nav, headline, one CTA' },
+                      { key: 'hero', label: 'Hero Section', desc: 'Full-bleed scene: edge to edge, no chrome' },
                       { key: 'card', label: 'Cards Section', desc: 'Compact 4:3 card in a responsive grid' },
                     ].map((sz) => (
                       <button
@@ -969,7 +968,10 @@ function SandboxPreviewInner({
       <div
         ref={stageRef}
         className={
-          '@container relative w-full flex-1 min-h-0 ' +
+          // `isolate` + z-0 keeps the scene in its own stacking context: an
+          // absolutely positioned panel elsewhere in the app can no longer end up
+          // underneath the iframe, whatever order the browser paints in.
+          '@container relative z-0 isolate w-full flex-1 min-h-0 ' +
           (currentSize === 'hero' || isImmersive
             ? 'overflow-hidden bg-[#05070d]'
             : 'no-scrollbar overflow-y-auto bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/25 via-[#0a0c13] to-[#0a0c13] px-3 ' +
@@ -1036,15 +1038,9 @@ function SandboxPreviewInner({
                 (stageHeight > 0 && stageHeight < 820 ? 'gap-2' : 'gap-2.5')
           }
         >
-          {currentSize === 'hero' && !isImmersive ? (
-            <HeroSiteChrome
-              sceneName={sceneName}
-              format={format}
-              motion={motionLabel}
-              onFullscreen={toggleFullscreen}
-              onSnapshot={handleSnapshotPng}
-            />
-          ) : null}
+          {/* Hero is the scene and nothing else: the exported hero page has no
+              nav, no headline and no scrims, so the preview must not invent them.
+              Card keeps its caption row because that card is a real component. */}
 
           <div
             className={
@@ -1075,23 +1071,7 @@ function SandboxPreviewInner({
                   className="absolute inset-0 h-full w-full border-none block"
                 />
 
-                {currentSize === 'hero' ? (
-                  <div className="pointer-events-none absolute bottom-4 right-4 z-20 flex flex-col items-end gap-1.5">
-                    {/* The hover readout was a third floating pill in the hero's
-                        bottom-right corner, and on a narrower stage it ran under
-                        the copy card. The card already carries the orbit hint, so
-                        the hero keeps one hint and no floating chrome. */}
-                    {currentSize !== 'hero' && hoverText && (
-                      <div className="flex items-center gap-1.5 rounded-full border border-indigo-400/30 bg-zinc-950/80 px-2.5 py-1 text-[10px] font-mono text-indigo-200 backdrop-blur-md">
-                        <Eye className="h-3 w-3 text-indigo-400" />
-                        {hoverText}
-                      </div>
-                    )}
-                    {/* No second orbit hint here: the hero chrome already carries
-                        one in its copy card, and this chip was drawn at 45% white
-                        over a black pill — the faint "ghost" in the corner. */}
-                  </div>
-                ) : isImmersive ? null : (
+                {currentSize === 'hero' || isImmersive ? null : (
                   <span className="pointer-events-none absolute left-2.5 top-2.5 z-10 rounded-md border border-white/10 bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/70 backdrop-blur-sm">
                     Live embed
                   </span>

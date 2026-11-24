@@ -210,14 +210,22 @@ try {
       elementKept: frame?.dataset.probe === 'kept',
       windowKept: frame?.contentWindow?.__probe === 'kept',
       stage: area(stage),
-      heroChrome: Boolean(document.querySelector('[data-hero-chrome]')) || /Start free/.test(document.body.innerText || ''),
+      frame: area(frame),
+      // The exported hero page is the scene, edge to edge. The old preview drew a
+      // nav bar and a headline card over it, so the preview promised a page the
+      // file never contained.
+      chrome: Boolean(document.querySelector('[data-hero-chrome]'))
+        || /Start free/.test(document.body.innerText || '')
+        || Boolean(document.querySelector('[data-card-expand]')),
       specChips: /ENGINE/i.test(stage?.innerText || '') && /MOTION/i.test(stage?.innerText || ''),
     };
   });
   if (hero.elementKept && hero.windowKept) pass('iframe survives hero switch');
   else fail('iframe survives hero switch', JSON.stringify(hero));
-  if (hero.heroChrome) pass('hero renders site chrome');
-  else fail('hero renders site chrome', 'no nav/CTA copy found');
+  const heroFills = hero.frame && hero.stage
+    && hero.frame.w >= hero.stage.w * 0.97 && hero.frame.h >= hero.stage.h * 0.97;
+  if (!hero.chrome && heroFills) pass('hero is the scene and nothing else', `${hero.frame.w}x${hero.frame.h} of ${hero.stage.w}x${hero.stage.h}`);
+  else fail('hero is the scene and nothing else', JSON.stringify(hero));
   if (!hero.specChips) pass('hero has no spec chips');
   else fail('hero has no spec chips', 'spec chips leaked into the hero');
 
