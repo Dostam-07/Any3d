@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { RenderFormat, LLMProvider, OllamaModelInfo, PresetScene, VisualReference, WebPresentationSize } from '../types';
 import { SceneSession } from './Sidebar';
+import { PresetPreview } from './PresetPreview';
 
 interface HomepageProps {
   onStartScene: (prompt: string, format: RenderFormat, size: WebPresentationSize) => void;
@@ -49,78 +50,18 @@ interface HomepageProps {
   onSelectSession?: (session: SceneSession) => void;
 }
 
-interface InspirationItem {
-  id: string;
-  title: string;
-  format: RenderFormat;
-  description: string;
-  prompt: string;
-  badge: string;
-  accent: string;
-  bgGlow: string;
-}
-
-const INSPIRATIONS: InspirationItem[] = [
-  {
-    id: 'coffee-cart',
-    title: 'Retro Tokyo Coffee Cart',
-    format: 'svg',
-    description: 'A cozy corner coffee cart with steam rising, a barista pulling espresso shots, and a calm street cat sitting on a stool.',
-    prompt: 'A retro coffee cart on a street corner with a barista pulling shots and a cat on a chair',
-    badge: 'SVG Vector',
-    accent: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
-    bgGlow: 'from-emerald-500/10 via-transparent to-transparent',
-  },
-  {
-    id: 'rocket-complex',
-    title: 'Orbital Rocket Launchpad',
-    format: 'worlds',
-    description: 'Nocturnal launch complex with articulated gantry swing arms, floodlights cutting through mist, and flame trench.',
-    prompt: 'A rocket launchpad at night with floodlights and arm gantries, a towering orbital rocket ready on the pad',
-    badge: 'Worlds 3D',
-    accent: 'text-indigo-400 border-indigo-500/30 bg-indigo-500/10',
-    bgGlow: 'from-indigo-500/10 via-transparent to-transparent',
-  },
-  {
-    id: 'lighthouse-island',
-    title: 'Seaside Lighthouse Atoll',
-    format: 'svg',
-    description: 'An isolated stone lighthouse on jagged wave-swept rocks with rotating Fresnel beam, seabirds, and tide pools.',
-    prompt: 'A seaside lighthouse island with breathing waves and a turning beacon light',
-    badge: 'SVG Vector',
-    accent: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
-    bgGlow: 'from-cyan-500/10 via-transparent to-transparent',
-  },
-  {
-    id: 'village-bakery',
-    title: 'Morning Village Bakery',
-    format: 'worlds',
-    description: 'Warm street patisserie with fresh baguette displays, glowing brick oven chimney, striped awning, and outdoor cafe table.',
-    prompt: 'A warm morning village bakery with pastry displays, glowing brick oven, and striped canopy awning',
-    badge: 'Worlds 3D',
-    accent: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
-    bgGlow: 'from-amber-500/10 via-transparent to-transparent',
-  },
-  {
-    id: 'cyberpunk-alley',
-    title: 'Neon Cyberpunk Noodle Bar',
-    format: 'pixel',
-    description: 'Densely packed rainy night alley with glowing holographic signage, steaming ramen counter, and vintage vending machines.',
-    prompt: 'A cyberpunk ramen shop with glowing neon signs, steam rising from broth kettles, and wet asphalt reflections',
-    badge: 'Pixel Art',
-    accent: 'text-fuchsia-400 border-fuchsia-500/30 bg-fuchsia-500/10',
-    bgGlow: 'from-fuchsia-500/10 via-transparent to-transparent',
-  },
-  {
-    id: 'floating-citadel',
-    title: 'Floating Sky Citadel',
-    format: 'worlds',
-    description: 'Ancient monolithic fortress ruins suspended on an aerated floating rock chunk with cascading vines and atmospheric clouds.',
-    prompt: 'An ancient fortress floating on a rock island in the clouds with hanging ruins and mystical obelisks',
-    badge: 'Worlds 3D',
-    accent: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
-    bgGlow: 'from-purple-500/10 via-transparent to-transparent',
-  },
+/**
+ * The home grid used to be six written prompts with no scenes attached. It now
+ * shows six real presets, each running live, so what you click is what you get —
+ * the prompt deck still exists in the composer for people who want to write.
+ */
+const FEATURED_PRESET_IDS = [
+  'svg-harbour',
+  'worlds-pottery-studio',
+  'pixel-flower-stall',
+  'svg-foodtruck',
+  'worlds-cricket',
+  'svg-greenhouse',
 ];
 
 const QUICK_PROMPTS = [
@@ -137,6 +78,9 @@ const FORMAT_ICONS: Record<RenderFormat, React.FC<{ className?: string }>> = {
   worlds: Cuboid,
   pixel: Grid3X3,
 };
+
+const formatLabel = (format: RenderFormat) =>
+  format === 'worlds' ? 'Three.js' : format === 'svg' ? 'SVG vector' : 'Pixel';
 
 const FORMAT_BADGES: Record<RenderFormat, string> = {
   svg: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
@@ -218,16 +162,14 @@ export const Homepage: React.FC<HomepageProps> = ({
     }
   };
 
-  const handleLaunchInspiration = (item: InspirationItem) => {
-    setFormat(item.format);
-    // If a matching preset exists in our presets library, we can load it directly
-    const match = presets.find((p) => p.format === item.format && (p.name.includes(item.id) || item.prompt.toLowerCase().includes(p.name.toLowerCase())));
-    if (match) {
-      onSelectPreset(match);
-    } else {
-      onStartScene(item.prompt, item.format, size);
-    }
-  };
+  const featuredPresets = (() => {
+    const picked = FEATURED_PRESET_IDS.map((id) => presets.find((p) => p.id === id)).filter(
+      (p): p is PresetScene => Boolean(p),
+    );
+    if (picked.length >= 3) return picked;
+    // A build without those ids still has scenes to show.
+    return presets.slice(0, 6);
+  })();
 
   return (
     <div className="flex-1 h-full overflow-y-auto bg-[#090b11] text-zinc-100 relative selection:bg-indigo-500/30">
@@ -404,9 +346,12 @@ export const Homepage: React.FC<HomepageProps> = ({
         <div className="w-full flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-indigo-400" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-300">
-              Curated Inspirations
-            </h2>
+            <div>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-300">Curated scenes</h2>
+              <p className="mt-1 text-xs text-zinc-500">
+                Six of the {presets.length} presets, running live. Click one to open it.
+              </p>
+            </div>
           </div>
           <button
             type="button"
@@ -418,40 +363,47 @@ export const Homepage: React.FC<HomepageProps> = ({
           </button>
         </div>
 
-        {/* Inspiration Bento Grid (6 Cards) */}
+        {/* Featured presets: real scenes, drawn by their own runtimes — not a
+            written description of a scene you have not seen yet. */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-14">
-          {INSPIRATIONS.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => handleLaunchInspiration(item)}
-              className="group relative bg-[#0c0e17] hover:bg-[#10131f] border border-white/[0.08] hover:border-white/[0.18] rounded-2xl p-4 transition-all duration-200 cursor-pointer flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl hover:shadow-indigo-950/20"
-            >
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${item.bgGlow} pointer-events-none rounded-tr-2xl`} />
-
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2.5">
-                  <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${item.accent}`}>
-                    {item.badge}
-                  </span>
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-mono">
-                    Any3d
+          {featuredPresets.map((preset) => {
+            const Icon = FORMAT_ICONS[preset.format];
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => onSelectPreset(preset)}
+                aria-label={`Open ${preset.title}`}
+                className="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-[#0c0e17] p-2.5 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/[0.18] hover:shadow-xl hover:shadow-indigo-950/20 cursor-pointer"
+              >
+                <div className="relative">
+                  <PresetPreview preset={preset} footer={false} lazy aspect="aspect-[4/3]" />
+                  {/* The arrow rides the picture instead of the title row: it was
+                      costing the title the width it needed to fit on one line. */}
+                  <span className="pointer-events-none absolute right-1.5 top-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
+                    <ArrowRight className="h-3 w-3" />
                   </span>
                 </div>
-
-                <h3 className="font-bold text-sm text-zinc-100 group-hover:text-white mb-1.5 transition">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-zinc-400 leading-relaxed mb-4 line-clamp-2">
-                  {item.description}
+                <div className="flex items-center gap-1.5 px-1 pb-0.5 pt-2.5">
+                  <span
+                    className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-mono font-semibold uppercase ${FORMAT_BADGES[preset.format]}`}
+                  >
+                    <Icon className="h-2.5 w-2.5" />
+                    {preset.format === 'worlds' ? '3D' : preset.format}
+                  </span>
+                  <span className="truncate text-[13px] font-semibold text-zinc-100 group-hover:text-white">
+                    {preset.title}
+                  </span>
+                </div>
+                {/* The same line on every card: mixing a prose blurb with a meta
+                    line made one card taller and the row's bottoms uneven. The
+                    prose belongs where there is room for it — the gallery pane. */}
+                <p className="truncate px-1 pb-1 pt-0.5 text-[11px] leading-5 text-zinc-500">
+                  {formatLabel(preset.format)} scene · {preset.code.split(String.fromCharCode(10)).length} lines
                 </p>
-              </div>
-
-              <div className="pt-2 border-t border-white/[0.05] flex items-center justify-between text-xs text-indigo-400 font-semibold group-hover:text-indigo-300">
-                <span>Create this scene</span>
-                <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          ))}
+              </button>
+            );
+          })}
         </div>
 
         {/* Feature Highlights / Capabilities Row */}

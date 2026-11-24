@@ -149,6 +149,51 @@ try {
   await page.waitForTimeout(400);
   await page.keyboard.press('Escape');
 
+  // --- the home grid shows scenes, not written prompts --------------------
+  // It used to be six prompt cards with no picture: a scene generator whose landing
+  // page showed no scenes. Each card now mounts its preset's real bundle.
+  await page.goto(`${APP}/#/`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2200);
+  await page.evaluate(() =>
+    document.querySelectorAll('button[aria-label^="Open "]')[0]?.scrollIntoView({ block: 'center' }),
+  );
+  await page.waitForTimeout(6000);
+  const home = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('button[aria-label^="Open "]')];
+    const draws = cards.map((card) => {
+      const doc = card.querySelector('iframe')?.contentDocument;
+      if (!doc) return 0;
+      return doc.querySelectorAll('svg *').length + doc.querySelectorAll('canvas').length;
+    });
+    return {
+      cards: cards.length,
+      draws,
+      // An equal-height grid: the descriptions are one line everywhere.
+      heights: [...new Set(cards.map((c) => Math.round(c.getBoundingClientRect().height)))],
+      clipped: cards.filter((card) => {
+        const title = [...card.querySelectorAll('span')].find((s) => s.className.includes('truncate'));
+        return title ? title.scrollWidth > title.clientWidth + 1 : false;
+      }).length,
+    };
+  });
+  if (home.cards >= 3 && home.draws.every((n) => n > 20 || n === 1))
+    pass('the home grid runs real scenes', `${home.cards} cards, ${home.draws.join('/')}`);
+  else fail('the home grid runs real scenes', JSON.stringify(home));
+  if (home.heights.length === 1) pass('the home grid keeps one card height', `${home.heights[0]}px`);
+  else fail('the home grid keeps one card height', JSON.stringify(home.heights));
+  if (home.clipped === 0) pass('home card titles fit their line');
+  else fail('home card titles fit their line', `${home.clipped} truncated`);
+
+  await page.locator('button[aria-label^="Open "]').first().click();
+  await page.waitForTimeout(3500);
+  const openedFromHome = await page.evaluate(() => ({
+    hash: location.hash,
+    frame: Boolean(document.querySelector('div[class*="@container"] iframe')),
+  }));
+  if (/#\/project\//.test(openedFromHome.hash) && openedFromHome.frame)
+    pass('a home card opens the scene', openedFromHome.hash);
+  else fail('a home card opens the scene', JSON.stringify(openedFromHome));
+
   // --- one scene, both presentations, frame must survive -------------------
   await openPreset(/Three\.js/i, /bakery/i);
   await page.evaluate(() => {

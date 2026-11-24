@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Loader2, Play } from 'lucide-react';
 import { bundleCode } from '../lib/api';
+import { presetSummary, summaryIsThin } from '../lib/preset-summary';
 import type { PresetScene } from '../types';
 
 /** One bundled document per preset id: the gallery is browsed by hovering, and a
@@ -34,6 +35,11 @@ interface PresetPreviewProps {
   footer?: boolean;
   /** Frame ratio. Presets are wide scenes, so a square frame letterboxes them. */
   aspect?: string;
+  /** Only bundle once the frame is on screen: the home grid shows six of these. */
+  lazy?: boolean;
+  /** Let the frame take pointer events (orbit). Off by default: a preview sits
+   *  inside a clickable card, and an iframe swallows the click. */
+  interactive?: boolean;
 }
 
 /**
@@ -49,10 +55,34 @@ export function PresetPreview({
   preset,
   footer = true,
   aspect = 'aspect-[16/9]',
+  lazy = false,
+  interactive = false,
 }: PresetPreviewProps) {
   const [html, setHtml] = useState<string | null>(null);
   const [state, setState] = useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
+  const [visible, setVisible] = useState(!lazy);
+  const frameRef = useRef<HTMLDivElement>(null);
   const mounted = useRef(true);
+
+  useEffect(() => {
+    if (!lazy || visible) return;
+    const node = frameRef.current;
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [lazy, visible]);
 
   useEffect(() => {
     mounted.current = true;
@@ -73,6 +103,7 @@ export function PresetPreview({
       setState('ready');
       return;
     }
+    if (!visible) return;
     setState('loading');
     let cancelled = false;
     loadBundle(preset)
@@ -88,11 +119,12 @@ export function PresetPreview({
     return () => {
       cancelled = true;
     };
-  }, [preset?.id, preset?.format]);
+  }, [preset?.id, preset?.format, visible]);
 
   return (
     <div className="flex flex-col gap-2.5">
       <div
+        ref={frameRef}
         className={
           'relative w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-secondary)] ' +
           aspect
@@ -103,7 +135,8 @@ export function PresetPreview({
             key={`${preset?.id}-${preset?.format}`}
             title={preset ? `${preset.title} preview` : 'Preset preview'}
             srcDoc={html}
-            className="h-full w-full border-0"
+            tabIndex={-1}
+            className={'h-full w-full border-0 ' + (interactive ? '' : 'pointer-events-none')}
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-[var(--text-muted)]">
@@ -130,8 +163,13 @@ export function PresetPreview({
         <div className="shrink-0 px-0.5">
           <div className="truncate text-sm font-semibold tracking-tight text-[var(--text-primary)]">{preset.title}</div>
           <div className="mt-0.5 truncate font-mono text-[10px] text-[var(--text-muted)]">
-            presets/{preset.format}/{preset.name}.js · {preset.code.split('\n').length} lines
+            presets/{preset.format}/{preset.name}.js · {preset.code.split(String.fromCharCode(10)).length} lines
           </div>
+          {summaryIsThin(presetSummary(preset.code)) ? null : (
+            <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--text-muted)]">
+              {presetSummary(preset.code)}
+            </p>
+          )}
         </div>
       )}
     </div>
