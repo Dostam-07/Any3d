@@ -12,7 +12,10 @@ import { SCENES } from './showcase-scenes.mjs';
 const BASE = process.env.A3D_URL || 'http://localhost:5174';
 // A3D_OUT lets a check (or a preview run) capture somewhere other than the
 // committed set without touching it.
-const OUT = process.env.A3D_OUT || 'docs/assets/showcase';
+// A re-look run writes to its own folder by default: A3D_LOOK=dusk without
+// A3D_OUT used to overwrite the noon stills with dusk ones.
+const OUT = process.env.A3D_OUT
+  || (process.env.A3D_LOOK ? `docs/assets/showcase/${process.env.A3D_LOOK.toLowerCase()}` : 'docs/assets/showcase');
 // GIFs are opt-in: they are large, and only the two animated heroes need them.
 const RECORD_GIFS = process.env.A3D_GIFS === '1' || process.argv.includes('--gifs');
 // A3D_LOOK re-shoots the hero scenes under another time of day, through the same

@@ -27,6 +27,7 @@ import { HeroSiteChrome, LiveCardBody, LookStrip } from './PresentationViews';
 import { convertAny3dToThree, exportThreeToGlb, downloadGlbFile } from '../lib/glbExporter';
 import { recordSceneFromIframe } from '../lib/turntable';
 import { LookScrubber } from './LookScrubber';
+import { AnchoredPanel } from './AnchoredPanel';
 import { DEFAULT_LOOK, type SceneLook } from '../lib/look';
 import { CAMERA_PRESETS, cameraLabel, type CameraPick } from '../lib/camera';
 import { renderStoryboard } from '../lib/storyboard';
@@ -142,6 +143,12 @@ function SandboxPreviewInner({
   const [stageHeight, setStageHeight] = useState<number>(0);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  // The toolbar menus are portalled out of the scrolling row (see AnchoredPanel)
+  // so its overflow cannot clip them; these refs cover clicks inside the panel
+  // when deciding whether a mousedown is "outside".
+  const stylePanelRef = useRef<HTMLDivElement>(null);
+  const cameraPanelRef = useRef<HTMLDivElement>(null);
+  const sizePanelRef = useRef<HTMLDivElement>(null);
   const [styleMenuOpen, setStyleMenuOpen] = useState<boolean>(false);
   const [cameraMenuOpen, setCameraMenuOpen] = useState<boolean>(false);
   const [activeCamera, setActiveCamera] = useState<'iso' | 'top' | 'front' | 'side'>('iso');
@@ -238,9 +245,9 @@ function SandboxPreviewInner({
     if (!menuOpen && !styleMenuOpen && !cameraMenuOpen && !sizeMenuOpen) return;
     const onPointerDown = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
-      if (styleMenuRef.current && !styleMenuRef.current.contains(e.target as Node)) setStyleMenuOpen(false);
-      if (cameraMenuRef.current && !cameraMenuRef.current.contains(e.target as Node)) setCameraMenuOpen(false);
-      if (sizeMenuRef.current && !sizeMenuRef.current.contains(e.target as Node)) setSizeMenuOpen(false);
+      if (styleMenuRef.current && !styleMenuRef.current.contains(e.target as Node) && !stylePanelRef.current?.contains(e.target as Node)) setStyleMenuOpen(false);
+      if (cameraMenuRef.current && !cameraMenuRef.current.contains(e.target as Node) && !cameraPanelRef.current?.contains(e.target as Node)) setCameraMenuOpen(false);
+      if (sizeMenuRef.current && !sizeMenuRef.current.contains(e.target as Node) && !sizePanelRef.current?.contains(e.target as Node)) setSizeMenuOpen(false);
     };
     document.addEventListener('mousedown', onPointerDown);
     return () => document.removeEventListener('mousedown', onPointerDown);
@@ -574,7 +581,7 @@ function SandboxPreviewInner({
               {currentSize !== 'card' && <LookScrubber look={sceneLook} onChange={handleLookChange} />}
 
               {/* Club 2: Material Style / Finish / Theme */}
-              <div className="relative shrink-0" ref={styleMenuRef}>
+              <div className="relative shrink-0" ref={styleMenuRef} data-anchor="style">
                 <button
                   type="button"
                   onClick={() => {
@@ -613,7 +620,12 @@ function SandboxPreviewInner({
                 </button>
 
                 {styleMenuOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-64 p-3 rounded-2xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl shadow-black/80 z-50 backdrop-blur-xl animate-fade-in space-y-3">
+                  <AnchoredPanel
+                  anchor={styleMenuRef}
+                  panelRef={stylePanelRef}
+                  open
+                  className="w-64 p-3 rounded-2xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl shadow-black/80 z-50 backdrop-blur-xl animate-fade-in space-y-3"
+                >
                     {format === 'worlds' ? (
                       <div>
                         <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-2 flex items-center gap-1.5">
@@ -698,13 +710,13 @@ function SandboxPreviewInner({
                         Pixel Art engine 320×240
                       </div>
                     )}
-                  </div>
+                  </AnchoredPanel>
                 )}
               </div>
 
               {/* Club 3: Camera Angles — a 2D engine has no camera to move. */}
               {format !== 'pixel' && (
-                <div className="relative shrink-0" ref={cameraMenuRef}>
+                <div className="relative shrink-0" ref={cameraMenuRef} data-anchor="camera">
                   <button
                     type="button"
                     onClick={() => {
@@ -725,7 +737,12 @@ function SandboxPreviewInner({
                   </button>
 
                   {cameraMenuOpen && (
-                    <div className="absolute left-0 top-full mt-2 w-48 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1">
+                    <AnchoredPanel
+                  anchor={cameraMenuRef}
+                  panelRef={cameraPanelRef}
+                  open
+                  className="w-48 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1"
+                >
                       {[
                         { key: 'iso', label: 'Isometric View', desc: 'Standard 3D angle' },
                         { key: 'top', label: 'Top (Plan)', desc: 'Overhead view' },
@@ -752,13 +769,13 @@ function SandboxPreviewInner({
                           <span className="text-[9px] text-zinc-500">{cam.desc}</span>
                         </button>
                       ))}
-                    </div>
+                    </AnchoredPanel>
                   )}
                 </div>
               )}
 
               {/* Club 4: Stage Size (Hero vs Card) */}
-              <div className="relative shrink-0" ref={sizeMenuRef}>
+              <div className="relative shrink-0" ref={sizeMenuRef} data-anchor="size">
                 <button
                   type="button"
                   onClick={() => {
@@ -779,7 +796,12 @@ function SandboxPreviewInner({
                 </button>
 
                 {sizeMenuOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-60 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1">
+                  <AnchoredPanel
+                  anchor={sizeMenuRef}
+                  panelRef={sizePanelRef}
+                  open
+                  className="w-60 p-1.5 rounded-xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl z-50 backdrop-blur-xl animate-fade-in space-y-1"
+                >
                     {[
                       { key: 'hero', label: 'Hero Section', desc: 'Full-bleed banner: nav, headline, one CTA' },
                       { key: 'card', label: 'Cards Section', desc: 'Compact 4:3 card in a responsive grid' },
@@ -804,7 +826,7 @@ function SandboxPreviewInner({
                         <span className="text-[9px] text-zinc-500">{sz.desc}</span>
                       </button>
                     ))}
-                  </div>
+                  </AnchoredPanel>
                 )}
               </div>
             </div>
@@ -994,15 +1016,19 @@ function SandboxPreviewInner({
 
                 {currentSize === 'hero' ? (
                   <div className="pointer-events-none absolute bottom-4 right-4 z-20 flex flex-col items-end gap-1.5">
-                    {hoverText && (
+                    {/* The hover readout was a third floating pill in the hero's
+                        bottom-right corner, and on a narrower stage it ran under
+                        the copy card. The card already carries the orbit hint, so
+                        the hero keeps one hint and no floating chrome. */}
+                    {currentSize !== 'hero' && hoverText && (
                       <div className="flex items-center gap-1.5 rounded-full border border-indigo-400/30 bg-zinc-950/80 px-2.5 py-1 text-[10px] font-mono text-indigo-200 backdrop-blur-md">
                         <Eye className="h-3 w-3 text-indigo-400" />
                         {hoverText}
                       </div>
                     )}
-                    <span className="rounded-full border border-white/10 bg-black/40 px-2.5 py-1 text-[10px] font-mono text-white/45 backdrop-blur-sm [@media(max-height:420px)]:hidden">
-                      Drag to orbit · scroll to zoom
-                    </span>
+                    {/* No second orbit hint here: the hero chrome already carries
+                        one in its copy card, and this chip was drawn at 45% white
+                        over a black pill — the faint "ghost" in the corner. */}
                   </div>
                 ) : (
                   <span className="pointer-events-none absolute left-2.5 top-2.5 z-10 rounded-md border border-white/10 bg-black/35 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/70 backdrop-blur-sm">

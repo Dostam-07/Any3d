@@ -32,56 +32,58 @@ export function HeroSiteChrome({ sceneName, format, motion, onFullscreen, onSnap
   const meta = FORMAT_META[format];
   return (
     <>
-      {/* Readability scrims: the copy keeps the left third, the scene keeps the right.
-          Kept as a wide gradient rather than a dark panel so a noon scene stays
-          bright across most of the banner instead of sitting in a black field. */}
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(5,7,13,0.88)_0%,rgba(5,7,13,0.66)_28%,rgba(5,7,13,0.3)_52%,rgba(5,7,13,0.06)_74%,rgba(5,7,13,0)_90%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-[#05070d]/70 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[56%] bg-gradient-to-t from-[#05070d]/95 from-20% via-[#05070d]/72 via-54% to-transparent" />
+      {/* No full-frame scrims. The copy and the nav each carry their own small
+          glass surface instead, so the scene keeps its edges and its light: a
+          banner-wide dark gradient washed the whole picture out to make room for
+          two blocks of text. */}
 
       {/* Mock site navigation: a hero belongs to a page, so the page header shows. */}
       <div
         data-hero-chrome="nav"
-        className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between gap-4 px-4 py-3.5 sm:px-8 sm:py-5"
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 px-3 py-2.5 sm:px-4 sm:py-3"
       >
+        {/* The nav is a thin glass bar of its own: white labels over a noon scene
+            need a surface, and a header is a surface anyway. */}
+        <div className="flex items-center justify-between gap-4 rounded-2xl border border-[rgba(255,255,255,0.10)] bg-[rgba(6,8,14,0.72)] px-3 py-1.5 backdrop-blur-md sm:px-4">
         <div className="flex items-center gap-2.5">
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-[10px] font-bold tracking-tight text-[#ffffff] shadow-lg shadow-indigo-950/50">
             A3
           </span>
-          <span className="text-[13px] font-semibold tracking-tight text-white/90">Any3d</span>
-          <span className="ml-1 hidden rounded-full border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/55 sm:inline">
+          <span className="text-[13px] font-semibold tracking-tight text-[rgba(255,255,255,0.90)]">Any3d</span>
+          <span className="ml-1 hidden rounded-full border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-[rgba(255,255,255,0.55)] sm:inline">
             Hero layout
           </span>
         </div>
-        <nav aria-hidden="true" className="hidden items-center gap-6 text-[12px] font-medium text-white/45 md:flex">
+        <nav aria-hidden="true" className="hidden items-center gap-6 text-[12px] font-medium text-[rgba(255,255,255,0.45)] md:flex">
           <span>Overview</span>
-          <span className="text-white/85">Scene</span>
+          <span className="text-[rgba(255,255,255,0.85)]">Scene</span>
           <span>Docs</span>
           <span>Pricing</span>
         </nav>
         <div aria-hidden="true" className="hidden items-center gap-2 sm:flex">
-          <span className="rounded-full border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] px-3 py-1 text-[11px] font-medium text-white/70">
+          <span className="rounded-full border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] px-3 py-1 text-[11px] font-medium text-[rgba(255,255,255,0.70)]">
             {meta.label}
           </span>
           <span className="rounded-full bg-[#ffffff] px-3 py-1.5 text-[11px] font-semibold text-[#09090b]">Start free</span>
         </div>
+        </div>
       </div>
 
       {/* Hero copy block: one headline, one line of support, one primary action. */}
-      <div className="absolute inset-x-0 bottom-0 z-20 px-4 pb-5 sm:px-8 sm:pb-7 lg:px-10 lg:pb-9">
-        <div className="max-w-xl">
-          <div className="mb-2.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/55">
+      <div className="absolute inset-x-0 bottom-0 z-20 px-3 pb-3 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6">
+        <div className="max-w-xl rounded-2xl border border-[rgba(255,255,255,0.10)] bg-[rgba(6,8,14,0.80)] px-4 py-3.5 shadow-2xl shadow-black/40 backdrop-blur-md sm:px-5 sm:py-4">
+          <div className="mb-2.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[rgba(255,255,255,0.55)]">
             <span className={`h-1.5 w-1.5 rounded-full ${meta.dot} animate-pulse`} />
             Live 3D
-            <span className="text-white/25">/</span>
+            <span className="text-[rgba(255,255,255,0.25)]">/</span>
             {meta.label}
-            <span className="hidden text-white/25 sm:inline">/</span>
+            <span className="hidden text-[rgba(255,255,255,0.25)] sm:inline">/</span>
             <span className="hidden sm:inline">{motion}</span>
           </div>
           <h1 className="text-balance text-[26px] font-semibold leading-[1.05] tracking-tight text-[#ffffff] sm:text-4xl lg:text-[44px]">
             {sceneName}
           </h1>
-          <p className="mt-2.5 max-w-md text-[12px] leading-relaxed text-white/60 sm:text-[13px] [@media(max-height:560px)]:hidden">
+          <p className="mt-2.5 max-w-md text-[12px] leading-relaxed text-[rgba(255,255,255,0.60)] sm:text-[13px] [@media(max-height:560px)]:hidden">
             Edge-to-edge scenery with room for one headline, one line of support,
             and a single call to action.
           </p>
@@ -97,12 +99,12 @@ export function HeroSiteChrome({ sceneName, format, motion, onFullscreen, onSnap
             <button
               type="button"
               onClick={onSnapshot}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.20)] bg-[rgba(255,255,255,0.06)] px-3.5 py-1.5 text-[11px] font-semibold text-white/85 backdrop-blur-sm transition hover:border-[rgba(255,255,255,0.35)] hover:bg-[rgba(255,255,255,0.10)] active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.20)] bg-[rgba(255,255,255,0.06)] px-3.5 py-1.5 text-[11px] font-semibold text-[rgba(255,255,255,0.85)] backdrop-blur-sm transition hover:border-[rgba(255,255,255,0.35)] hover:bg-[rgba(255,255,255,0.10)] active:scale-[0.98] cursor-pointer"
             >
               <Camera className="h-3.5 w-3.5" />
               Save still
             </button>
-            <span className="ml-1 hidden items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.10)] bg-[rgba(0,0,0,0.25)] px-2.5 py-1 text-[10px] font-medium text-white/45 sm:inline-flex">
+            <span className="ml-1 hidden items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.10)] bg-[rgba(0,0,0,0.25)] px-2.5 py-1 text-[10px] font-medium text-[rgba(255,255,255,0.45)] sm:inline-flex">
               Drag to orbit · scroll to zoom
             </span>
           </div>

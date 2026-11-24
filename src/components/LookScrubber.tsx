@@ -9,6 +9,7 @@ import {
   Cloud,
   ChevronDown,
 } from 'lucide-react';
+import { AnchoredPanel } from './AnchoredPanel';
 import {
   LOOK_CHIPS,
   LOOK_STOPS,
@@ -45,6 +46,7 @@ const WEATHERS: { key: SceneWeather; label: string; icon: typeof Cloud }[] = [
 export const LookScrubber: React.FC<LookScrubberProps> = ({ look, onChange }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const activeStop = nearestStop(look.timeOfDay);
 
   const matchedStop = LOOK_STOPS.reduce((prev, curr) =>
@@ -56,7 +58,13 @@ export const LookScrubber: React.FC<LookScrubberProps> = ({ look, onChange }) =>
   useEffect(() => {
     if (!open) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      // The panel is portalled out of the toolbar's scrolling row, so a click
+      // inside it is outside `containerRef` but still inside the menu.
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node) &&
+        !panelRef.current?.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -86,7 +94,7 @@ export const LookScrubber: React.FC<LookScrubberProps> = ({ look, onChange }) =>
 
       {/* Floating Popover Panel */}
       {open && (
-        <div className="absolute left-0 top-full mt-2 w-72 p-3.5 rounded-2xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl shadow-black/80 z-50 backdrop-blur-xl animate-fade-in space-y-3">
+<AnchoredPanel anchor={containerRef} panelRef={panelRef} open gap={8} className="w-72 p-3.5 rounded-2xl bg-[#0c0e17] border border-white/[0.12] shadow-2xl shadow-black/80 z-50 backdrop-blur-xl animate-fade-in space-y-3">
           {/* Header */}
           <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
             <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
@@ -187,7 +195,7 @@ export const LookScrubber: React.FC<LookScrubberProps> = ({ look, onChange }) =>
               })}
             </div>
           </div>
-        </div>
+        </AnchoredPanel>
       )}
     </div>
   );

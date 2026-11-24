@@ -267,6 +267,51 @@ try {
   if (card.lookStrip && card.stripTop >= card.cardBottom - 2 && Math.abs(card.stripLeft - card.cardLeft) < 2)
     pass('look controls sit under the card', `${Math.round(card.stripLeft)}/${Math.round(card.cardLeft)}`);
   else fail('look controls sit under the card', JSON.stringify({ strip: card.stripTop, card: card.cardBottom }));
+  // --- a toolbar menu paints above the preview ----------------------------
+  // The toolbar scrolls horizontally to stay one row, and a scroll container clips
+  // absolutely positioned descendants. Every menu opened from it was laid out
+  // correctly and painted nowhere — a button that looks like it does nothing.
+  // AnchoredPanel renders them into a portal instead.
+  const finishTrigger = page.locator('button[title^="Render style and finish"]').first();
+  if (await finishTrigger.count()) {
+    await finishTrigger.click();
+    await page.waitForTimeout(500);
+    const menu = await page.evaluate(() => {
+      const panel = document.querySelector('[data-any3d-panel]');
+      if (!panel) return { panel: false };
+      const r = panel.getBoundingClientRect();
+      return {
+        panel: true,
+        sized: r.width > 80 && r.height > 40,
+        inside: panel.contains(document.elementFromPoint(r.x + r.width / 2, r.y + 20)),
+      };
+    });
+    if (menu.panel && menu.sized && menu.inside) pass('a toolbar menu paints above the scene');
+    else fail('a toolbar menu paints above the scene', JSON.stringify(menu));
+
+    // ...and choosing an option has to land. A menu that paints but cannot be
+    // clicked is just a different way of being broken.
+    const finishBefore = await page.evaluate(() => {
+      try { return document.querySelector('div[class*="@container"] iframe')?.contentWindow?.__world?.stats?.().finish ?? null; } catch { return null; }
+    });
+    const panel = page.locator('[data-any3d-panel]').first();
+    const pixelOption = panel.getByRole('button').filter({ hasText: /^pixel/i }).first();
+    if (finishBefore && (await pixelOption.count())) {
+      await pixelOption.click();
+      await page.waitForTimeout(1500);
+      const finishAfter = await page.evaluate(() => {
+        try { return document.querySelector('div[class*="@container"] iframe')?.contentWindow?.__world?.stats?.().finish ?? null; } catch { return null; }
+      });
+      const reopened = page.locator('[data-any3d-panel]').first();
+      const stillOpen = await reopened.count();
+      if (finishAfter && finishAfter !== finishBefore && stillOpen === 0)
+        pass('a toolbar menu applies its choice', `${finishBefore} -> ${finishAfter}`);
+      else fail('a toolbar menu applies its choice', `${finishBefore} -> ${finishAfter}, panels left ${stillOpen}`);
+    }
+  } else {
+    fail('a toolbar menu paints above the scene', 'no finish control in the toolbar');
+  }
+
   // Nothing above the card but the stage toolbar: the section band was demo copy
   // in an editor, and it pushed the scene down by its own height.
   if (!card.sectionBand) pass('the stage has no demo band above the scene');
