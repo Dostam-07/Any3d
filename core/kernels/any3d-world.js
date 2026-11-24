@@ -428,8 +428,13 @@ export function mountWorld(def, { el, finish = 'miniature', size = 'card', pause
     camera.updateMatrixWorld();
   }
   applyCam();
-  // Fit all declared motion bounds, not merely whatever pose happened to build.
-  const bounds = def.bounds ? new THREE.Box3(new THREE.Vector3(...def.bounds[0]), new THREE.Vector3(...def.bounds[1])) : new THREE.Box3().setFromObject(content);
+  // Fit the declared motion bounds plus whatever pose actually built. Declared
+  // bounds describe where the motion goes; when the geometry reaches past them
+  // (a crane boom, a rocket, the roof of a pavilion) framing from the declaration
+  // alone cut the top of the scene off. The union keeps the motion envelope and
+  // can never clip.
+  const declared = def.bounds ? new THREE.Box3(new THREE.Vector3(...def.bounds[0]), new THREE.Vector3(...def.bounds[1])) : null;
+  const bounds = declared ? declared.union(new THREE.Box3().setFromObject(content)) : new THREE.Box3().setFromObject(content);
   const corners = []; for (const x of [bounds.min.x, bounds.max.x]) for (const y of [bounds.min.y, bounds.max.y]) for (const z of [bounds.min.z, bounds.max.z]) corners.push(new THREE.Vector3(x, y, z).applyMatrix4(camera.matrixWorldInverse));
   const minX = Math.min(...corners.map(v => v.x)), maxX = Math.max(...corners.map(v => v.x));
   const minY = Math.min(...corners.map(v => v.y)), maxY = Math.max(...corners.map(v => v.y));

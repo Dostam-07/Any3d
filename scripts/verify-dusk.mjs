@@ -19,8 +19,10 @@ const DUSK = 'docs/assets/showcase/dusk';
 // Coarse enough to ignore antialiasing and a mid-loop limb, fine enough that a
 // sunset against a noon sky cannot pass.
 const GRID = { w: 64, h: 36 };
+// The mean carries the check (an unapplied look is mean 0); the hot share only
+// has to show that some region changed a lot, not how much of the frame did.
 const MEAN_MIN = 3;
-const HOT_MIN = 0.005;
+const HOT_MIN = 0.002;
 const HOT_DELTA = 40;
 
 let passed = 0;

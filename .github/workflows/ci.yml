@@ -104,6 +104,13 @@ jobs:
         env:
           A3D_URL: http://localhost:5174
           A3D_API: http://localhost:3001
+      # A world is framed from the box it declares, so a box that stopped matching
+      # its geometry either clips the scene or shrinks it in its own frame. Runs
+      # the composer and the bundler in-process: no dev server, no stills.
+      - name: Verify each world fills its frame and is not clipped
+        if: always()
+        run: npm run verify:bounds
+
       # The dusk set goes through the look control, the bundle and the runtime;
       # any of the three can silently drop it and leave a noon picture. Pure file
       # comparison, no browser stage, so it costs seconds.

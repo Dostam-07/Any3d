@@ -1953,7 +1953,9 @@ export default defineWorld({
   duration: 6.0,
   still: 1.5,
   description: '${cleanMeans}',
-  bounds: [[-3.2, -0.6, -3.2], [3.2, 3.5, 3.2]],
+  // Measured: the gimbal reaches ±1.78 x ±1.59 and y 2.95. The old box was nearly
+  // twice that, which left the sculpture filling a fifth of the frame.
+  bounds: [[-1.9, -0.1, -1.75], [1.9, 3.05, 1.75]],
   build(W) {
     const { ball, cylinder, group } = W;
 
@@ -2342,7 +2344,10 @@ export default defineWorld({
   duration: 4.0,
   still: 1.0,
   description: '${cleanMeans}',
-  bounds: [[-3.5, -0.6, -3.5], [3.5, 3.6, 3.5]],
+  // Measured, not guessed: the slab spans ±3.2 x ±2.4 and the tallest variant (the
+  // pavilion roof) reaches y 2.8. The old [-3.5..3.5] x [-0.6..3.6] box framed a
+  // volume twice the content, so a character sat small in its own frame.
+  bounds: [[-3.4, -0.55, -2.7], [3.4, 2.9, 2.7]],
   build(W) {
     const { box, ball, cylinder, line, group } = W;
 
